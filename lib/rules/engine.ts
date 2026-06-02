@@ -8,6 +8,16 @@ export interface ResolveInput {
   now?: Date;
 }
 
+// Classify an LA County Assessor use code. Verify/extend the code sets against the
+// official LA County use-code reference when adding condo-specific codes.
+//   01xx = single-family residence, 05xx = 5+ unit apartment building.
+export function useCodeKind(useCode: string | null): 'apartment' | 'sfr' | 'condo' | 'ambiguous' {
+  if (!useCode) return 'ambiguous';
+  if (useCode.startsWith('05')) return 'apartment';
+  if (useCode.startsWith('01')) return 'sfr';
+  return 'ambiguous';
+}
+
 export function resolveRegime({ jurisdiction, facts, answers = {}, now = new Date() }: ResolveInput): RegimeResult {
   if (!jurisdiction.inLACity) {
     if (jurisdiction.placeName === null) {
@@ -51,9 +61,12 @@ export function resolveRegime({ jurisdiction, facts, answers = {}, now = new Dat
     questions.push('BUILT_BEFORE_OCT_1978');
   }
 
-  // --- Unit count / single-family ---
+  // --- Unit count / single-family (an explicit answer overrides parcel data) ---
   let multiUnit: boolean | null;
-  if (answers.isSeparateHouse === true) {
+  if (answers.isCondo === true) {
+    multiUnit = false;
+    reasons.push('You said this is an individually-owned condo (treated like a single-family home for rent-cap rules)');
+  } else if (answers.isSeparateHouse === true) {
     multiUnit = false;
     reasons.push('You said the other unit is a separate house (treated as single-family)');
   } else if (facts.units == null) {
@@ -69,6 +82,12 @@ export function resolveRegime({ jurisdiction, facts, answers = {}, now = new Dat
   } else {
     multiUnit = false;
     reasons.push('Single unit on the parcel (single-family)');
+  }
+
+  // Condo confirming question: multi-unit on paper, but the use code does not clearly
+  // say "apartment" — it could be individually-owned condos (AB 1482 treats those like SFRs).
+  if (multiUnit === true && answers.isCondo === undefined && useCodeKind(facts.useCode) !== 'apartment') {
+    questions.push('IS_CONDO');
   }
 
   const conf = (): Confidence => (questions.length === 0 ? 'high' : 'medium');

@@ -87,4 +87,26 @@ describe('resolveRegime', () => {
     expect(r.confidence).toBe('high');
     expect(r.reasons.some((x) => x.toLowerCase().includes('unincorporated'))).toBe(true);
   });
+
+  it('asks the condo question for a multi-unit building whose use code is not clearly an apartment', () => {
+    const r = resolveRegime({ jurisdiction: LA, facts: { yearBuilt: 1990, units: 4, useCode: '0200' }, now: NOW });
+    expect(r.questions).toContain('IS_CONDO');
+  });
+
+  it('does not ask the condo question for a clear apartment building (use code 05xx)', () => {
+    const r = resolveRegime({ jurisdiction: LA, facts: { yearBuilt: 1931, units: 6, useCode: '0500' } });
+    expect(r.questions).not.toContain('IS_CONDO');
+  });
+
+  it('routes a confirmed condo to the single-family/condo path', () => {
+    const r = resolveRegime({
+      jurisdiction: LA,
+      facts: { yearBuilt: 1990, units: 4, useCode: '0200' },
+      answers: { isCondo: true },
+      now: NOW,
+    });
+    expect(r.regime).toBe('JCO_ONLY');
+    expect(r.questions).toContain('AB1482_EXEMPTION_NOTICE');
+    expect(r.questions).not.toContain('IS_CONDO');
+  });
 });
