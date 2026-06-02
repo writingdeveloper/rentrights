@@ -4,6 +4,7 @@ export interface DatedValue<T> {
   effectiveTo?: string; // inclusive
   source: string;
   note?: string;
+  expectedUpdate?: string; // 'YYYY-MM-DD' — when a fresh figure is expected to be published
 }
 
 export function selectDated<T>(items: DatedValue<T>[], onDate: Date): DatedValue<T> | null {

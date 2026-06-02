@@ -1,5 +1,5 @@
 import { RegimeResult } from '@/lib/rules/types';
-import { RIGHTS_TEXT, capLabel } from '@/lib/content/rights';
+import { RIGHTS_TEXT, capLabel, capStaleness, stalenessMessage } from '@/lib/content/rights';
 
 const CONF_LABEL: Record<string, string> = { high: 'High confidence', medium: 'Medium confidence', low: 'Low confidence' };
 
@@ -19,6 +19,10 @@ export function ResultCard({ result }: { result: RegimeResult }) {
           </span>
           <p className="mt-3 text-sm text-gray-500">Legal annual increase (current)</p>
           <p className="text-2xl font-extrabold text-green-700">{capLabel(result.regime)}</p>
+          {(() => {
+            const s = capStaleness(result.regime);
+            return s?.stale ? <p className="mt-1 text-xs text-gray-400">⚠ {stalenessMessage(s, result.regime)}</p> : null;
+          })()}
         </>
       )}
       <ul className="mt-3 list-disc pl-5 text-sm text-gray-700">

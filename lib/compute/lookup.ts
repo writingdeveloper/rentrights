@@ -34,6 +34,7 @@ export async function lookup(
   address: string,
   answers: UserAnswers = {},
   deps: LookupDeps = defaultDeps,
+  now: Date = new Date(),
 ): Promise<LookupResult> {
   const jurisdiction = await deps.getJurisdiction(address);
   if (!jurisdiction) throw new AddressNotFoundError(address);
@@ -55,6 +56,6 @@ export async function lookup(
     }
   }
 
-  const result = resolveRegime({ jurisdiction, facts, answers });
+  const result = resolveRegime({ jurisdiction, facts, answers, now });
   return { address, jurisdiction, facts, result, dataWarnings, lastVerified: LEGAL.lastVerified };
 }

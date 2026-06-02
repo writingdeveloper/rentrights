@@ -16,21 +16,22 @@ export const LEGAL = {
 
   // RSO allowable annual increase (%). value=null means "pending LAHD publication".
   rsoCapPct: [
-    { value: 3, effectiveFrom: '2025-07-01', effectiveTo: '2026-06-30', source: 'LAHD' },
+    { value: 3, effectiveFrom: '2025-07-01', effectiveTo: '2026-06-30', source: 'LAHD', expectedUpdate: '2026-07-01' },
     {
       value: null,
       floorPct: 1,
       ceilingPct: 4,
       effectiveFrom: '2026-07-01',
       source: 'LAHD',
+      expectedUpdate: '2026-07-01',
       note: 'New formula: 90% of CPI, floor 1% / ceiling 4%. LAHD publishes the exact % ~July 1.',
     },
   ] as RsoCapPeriod[],
 
   // AB 1482 allowable annual increase (%) for the LA metro region.
   ab1482CapPct: [
-    { value: 8.0, effectiveFrom: '2025-08-01', effectiveTo: '2026-07-31', source: 'CA Civ §1947.12 / CPI' },
-    { value: 8.7, effectiveFrom: '2026-08-01', effectiveTo: '2027-07-31', source: 'CA Civ §1947.12 / CPI' },
+    { value: 8.0, effectiveFrom: '2025-08-01', effectiveTo: '2026-07-31', source: 'CA Civ §1947.12 / CPI', expectedUpdate: '2026-08-01' },
+    { value: 8.7, effectiveFrom: '2026-08-01', effectiveTo: '2027-07-31', source: 'CA Civ §1947.12 / CPI', expectedUpdate: '2027-08-01' },
   ] as DatedValue<number>[],
 
   // Rent-increase notice periods (CA Civ §827, amended SB1103 eff. 2025-01-01).

@@ -38,4 +38,12 @@ describe('lookup', () => {
     );
     expect(res.dataWarnings.length).toBeGreaterThan(0);
   });
+
+  it('applies the AB1482 15-year new-construction exemption through lookup', async () => {
+    const res = await lookup('x', {}, deps(
+      { inLACity: true, placeName: 'Los Angeles city', incorporated: true },
+      { yearBuilt: 2020, units: 8, useCode: '0500' },
+    ), new Date('2026-06-02'));
+    expect(res.result.regime).toBe('JCO_ONLY');
+  });
 });

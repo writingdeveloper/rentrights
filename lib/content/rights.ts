@@ -1,5 +1,6 @@
 import { LEGAL } from '@/lib/legal/constants';
 import { Regime } from '@/lib/rules/types';
+import { stalenessFor, Staleness } from '@/lib/legal/staleness';
 
 export function capLabel(regime: Regime, onDate = new Date()): string {
   const d = onDate.toISOString().slice(0, 10);
@@ -45,3 +46,21 @@ export const RIGHTS_TEXT: Record<Regime, { title: string; points: string[] }> = 
   OUT_OF_JURISDICTION: { title: 'Outside the City of Los Angeles', points: ['This tool currently covers the City of LA only. Your city or unincorporated LA County may have its own rules.'] },
   UNKNOWN: { title: 'We need a little more info', points: ['Answer the questions below so we can estimate your rights.'] },
 };
+
+export function capStaleness(regime: Regime, onDate = new Date()): Staleness | null {
+  if (regime === 'RSO') return stalenessFor(LEGAL.rsoCapPct, onDate);
+  if (regime === 'AB1482') return stalenessFor(LEGAL.ab1482CapPct, onDate);
+  return null;
+}
+
+export function stalenessMessage(s: Staleness, regime?: Regime): string {
+  const when = s.expectedUpdate ? ` around ${s.expectedUpdate}` : '';
+  const who = regime === 'AB1482' ? 'the state (CA Civil Code §1947.12 / CPI)' : 'LAHD';
+  if (s.reason === 'pending publication') {
+    return `This figure is pending publication${when}. Confirm the latest with ${who}.`;
+  }
+  if (s.reason === 'past expected update') {
+    return `This figure was due to update${when}. Confirm the latest with ${who}.`;
+  }
+  return `This figure may be out of date. Confirm the latest with ${who}.`;
+}
