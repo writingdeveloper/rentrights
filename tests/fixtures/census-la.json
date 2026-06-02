@@ -1,0 +1,12 @@
+{
+  "result": {
+    "addressMatches": [
+      {
+        "matchedAddress": "1411 MURRAY DR, LOS ANGELES, CA, 90026",
+        "geographies": {
+          "Incorporated Places": [{ "NAME": "Los Angeles city", "GEOID": "0644000" }]
+        }
+      }
+    ]
+  }
+}
