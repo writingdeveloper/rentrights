@@ -53,13 +53,14 @@ export function capStaleness(regime: Regime, onDate = new Date()): Staleness | n
   return null;
 }
 
-export function stalenessMessage(s: Staleness): string {
+export function stalenessMessage(s: Staleness, regime?: Regime): string {
   const when = s.expectedUpdate ? ` around ${s.expectedUpdate}` : '';
+  const who = regime === 'AB1482' ? 'the state (CA Civil Code §1947.12 / CPI)' : 'LAHD';
   if (s.reason === 'pending publication') {
-    return `This figure is pending LAHD publication${when}. Confirm the latest with LAHD.`;
+    return `This figure is pending publication${when}. Confirm the latest with ${who}.`;
   }
   if (s.reason === 'past expected update') {
-    return `This figure was due to update${when}. Confirm the latest with LAHD.`;
+    return `This figure was due to update${when}. Confirm the latest with ${who}.`;
   }
-  return 'This figure may be out of date. Confirm the latest with LAHD.';
+  return `This figure may be out of date. Confirm the latest with ${who}.`;
 }

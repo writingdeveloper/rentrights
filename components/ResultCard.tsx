@@ -21,7 +21,7 @@ export function ResultCard({ result }: { result: RegimeResult }) {
           <p className="text-2xl font-extrabold text-green-700">{capLabel(result.regime)}</p>
           {(() => {
             const s = capStaleness(result.regime);
-            return s?.stale ? <p className="mt-1 text-xs text-gray-400">⚠ {stalenessMessage(s)}</p> : null;
+            return s?.stale ? <p className="mt-1 text-xs text-gray-400">⚠ {stalenessMessage(s, result.regime)}</p> : null;
           })()}
         </>
       )}

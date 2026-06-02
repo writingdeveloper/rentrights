@@ -24,4 +24,10 @@ describe('stalenessMessage', () => {
     expect(msg).toContain('2026-08-01');
     expect(msg.toLowerCase()).toContain('lahd');
   });
+
+  it('points AB1482 figures to the state, not LAHD', () => {
+    const msg = stalenessMessage({ stale: true, reason: 'pending publication', expectedUpdate: '2027-08-01' }, 'AB1482');
+    expect(msg.toLowerCase()).not.toContain('lahd');
+    expect(msg).toContain('state');
+  });
 });
