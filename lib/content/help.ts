@@ -28,7 +28,7 @@ export const HELP_ORGS: HelpOrg[] = [
     url: 'https://www.stayhousedla.org',
     phone: '(888) 694-0040',
     languages: ['English', 'Spanish'],
-    tags: ['legal-aid', 'workshop'],
+    tags: ['legal-aid', 'workshop', 'hotline'],
   },
   {
     name: 'SAJE (Strategic Actions for a Just Economy)',
@@ -37,7 +37,7 @@ export const HELP_ORGS: HelpOrg[] = [
     url: 'https://saje.net',
     phone: '(213) 745-9961',
     languages: ['English', 'Spanish'],
-    tags: ['legal-aid', 'workshop'],
+    tags: ['workshop'],
   },
   {
     name: 'Legal Aid Foundation of Los Angeles (LAFLA)',

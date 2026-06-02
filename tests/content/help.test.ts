@@ -17,6 +17,7 @@ describe('HELP_ORGS', () => {
     expect(blob).toContain('stay housed');
     expect(blob).toContain('saje');
     expect(blob).toContain('legal aid'); // LAFLA = Legal Aid Foundation of Los Angeles
+    expect(blob).toContain('lafla');
     expect(HELP_ORGS.some((o) => o.tags.includes('county'))).toBe(true);
   });
 
