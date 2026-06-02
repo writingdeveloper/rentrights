@@ -5,6 +5,7 @@ const QUESTION_TEXT: Record<QuestionId, { q: string; yes: string; no: string; ke
   BUILT_BEFORE_OCT_1978: { q: 'Was this building built (certificate of occupancy) before October 1978?', yes: 'Yes, before Oct 1978', no: 'No / not sure it’s after', key: 'builtBeforeOct1978', yesValue: true },
   IS_SEPARATE_HOUSE: { q: 'Is the other unit on the property a separate house (ADU/guest house) rather than an apartment?', yes: 'Yes, a separate house', no: 'No, it’s an apartment building', key: 'isSeparateHouse', yesValue: true },
   AB1482_EXEMPTION_NOTICE: { q: 'Did your landlord give you a written "AB 1482 exemption" notice?', yes: 'Yes', no: 'No', key: 'hasAb1482ExemptionNotice', yesValue: true },
+  IS_CONDO: { q: 'Is this an individually-owned condominium (not a rental apartment)?', yes: 'Yes, a condo', no: 'No, a rental apartment', key: 'isCondo', yesValue: true },
 };
 
 export function ConfirmingQuestions({ questions, answers, onAnswer }: {
