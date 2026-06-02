@@ -10,11 +10,20 @@ export interface ResolveInput {
 
 export function resolveRegime({ jurisdiction, facts, answers = {}, now = new Date() }: ResolveInput): RegimeResult {
   if (!jurisdiction.inLACity) {
-    const where = jurisdiction.placeName ?? 'This address';
+    if (jurisdiction.placeName === null) {
+      return {
+        regime: 'OUT_OF_JURISDICTION',
+        confidence: 'high',
+        reasons: [
+          'This address may be in unincorporated LA County, which has its own rules (County RSTPO via DCBA) rather than the City of Los Angeles.',
+        ],
+        questions: [],
+      };
+    }
     return {
       regime: 'OUT_OF_JURISDICTION',
       confidence: 'high',
-      reasons: [`${where} is outside the City of Los Angeles`],
+      reasons: [`${jurisdiction.placeName} is outside the City of Los Angeles`],
       questions: [],
     };
   }

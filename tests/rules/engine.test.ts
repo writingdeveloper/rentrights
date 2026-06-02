@@ -77,4 +77,14 @@ describe('resolveRegime', () => {
     expect(r.regime).toBe('JCO_ONLY');
     expect(r.confidence).toBe('medium');
   });
+
+  it('gives an unincorporated-county message when Census returns no incorporated place', () => {
+    const r = resolveRegime({
+      jurisdiction: { inLACity: false, placeName: null, incorporated: false },
+      facts: { yearBuilt: 1950, units: 4, useCode: '0500' },
+    });
+    expect(r.regime).toBe('OUT_OF_JURISDICTION');
+    expect(r.confidence).toBe('high');
+    expect(r.reasons.some((x) => x.toLowerCase().includes('unincorporated'))).toBe(true);
+  });
 });
