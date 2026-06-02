@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { ResultCard } from '@/components/ResultCard';
 import { ConfirmingQuestions } from '@/components/ConfirmingQuestions';
 import { Disclaimer } from '@/components/Disclaimer';
+import { GetHelp } from '@/components/GetHelp';
 import { UserAnswers } from '@/lib/rules/types';
 
 export default function Home() {
@@ -48,6 +49,7 @@ export default function Home() {
           {data.dataWarnings?.map((w: string, i: number) => (
             <p key={i} className="mt-3 text-xs text-gray-500">{w}</p>
           ))}
+          <GetHelp unincorporatedCounty={data.jurisdiction?.placeName === null} />
           <Disclaimer lastVerified={data.lastVerified} />
         </div>
       )}
