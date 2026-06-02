@@ -4,6 +4,7 @@ import { Jurisdiction } from '@/lib/rules/types';
 
 const LA: Jurisdiction = { inLACity: true, placeName: 'Los Angeles city', incorporated: true };
 const WEHO: Jurisdiction = { inLACity: false, placeName: 'West Hollywood city', incorporated: true };
+const NOW = new Date('2026-06-02'); // cutoffYear = 2011
 
 describe('resolveRegime', () => {
   it('flags out-of-jurisdiction addresses', () => {
@@ -20,7 +21,7 @@ describe('resolveRegime', () => {
   });
 
   it('classifies a post-1978 multi-unit building as AB1482', () => {
-    const r = resolveRegime({ jurisdiction: LA, facts: { yearBuilt: 2010, units: 8, useCode: '0500' } });
+    const r = resolveRegime({ jurisdiction: LA, facts: { yearBuilt: 2010, units: 8, useCode: '0500' }, now: NOW });
     expect(r.regime).toBe('AB1482');
     expect(r.confidence).toBe('high');
   });
@@ -58,5 +59,22 @@ describe('resolveRegime', () => {
     expect(r.regime).toBe('UNKNOWN');
     expect(r.questions).toContain('BUILT_BEFORE_OCT_1978');
     expect(r.questions).toContain('IS_SEPARATE_HOUSE');
+  });
+
+  it('treats a multi-unit building built within the last 15 years as AB1482-exempt (JCO_ONLY)', () => {
+    const r = resolveRegime({ jurisdiction: LA, facts: { yearBuilt: 2020, units: 8, useCode: '0500' }, now: NOW });
+    expect(r.regime).toBe('JCO_ONLY');
+    expect(r.reasons.some((x) => x.includes('within the last 15 years'))).toBe(true);
+  });
+
+  it('keeps a building older than 15 years on AB1482', () => {
+    const r = resolveRegime({ jurisdiction: LA, facts: { yearBuilt: 1995, units: 8, useCode: '0500' }, now: NOW });
+    expect(r.regime).toBe('AB1482');
+  });
+
+  it('lowers confidence to medium near the 15-year cutoff', () => {
+    const r = resolveRegime({ jurisdiction: LA, facts: { yearBuilt: 2011, units: 8, useCode: '0500' }, now: NOW });
+    expect(r.regime).toBe('JCO_ONLY');
+    expect(r.confidence).toBe('medium');
   });
 });

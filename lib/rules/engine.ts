@@ -5,9 +5,10 @@ export interface ResolveInput {
   jurisdiction: Jurisdiction;
   facts: ParcelFacts;
   answers?: UserAnswers;
+  now?: Date;
 }
 
-export function resolveRegime({ jurisdiction, facts, answers = {} }: ResolveInput): RegimeResult {
+export function resolveRegime({ jurisdiction, facts, answers = {}, now = new Date() }: ResolveInput): RegimeResult {
   if (!jurisdiction.inLACity) {
     const where = jurisdiction.placeName ?? 'This address';
     return {
@@ -69,6 +70,17 @@ export function resolveRegime({ jurisdiction, facts, answers = {} }: ResolveInpu
       return { regime: 'RSO', confidence: conf(), reasons, questions };
     }
     if (builtBefore === false) {
+      const cutoffYear = now.getFullYear() - 15;
+      if (facts.yearBuilt != null && facts.yearBuilt >= cutoffYear) {
+        const nearCutoff = facts.yearBuilt === cutoffYear || facts.yearBuilt === cutoffYear + 1;
+        reasons.push(
+          `Built in ${facts.yearBuilt} — within the last 15 years, so likely exempt from AB 1482's rent cap (new construction). Citywide Just Cause still applies.`,
+        );
+        if (nearCutoff) {
+          reasons.push('This is near the 15-year cutoff — the exact certificate-of-occupancy date may affect this.');
+        }
+        return { regime: 'JCO_ONLY', confidence: nearCutoff ? 'medium' : conf(), reasons, questions };
+      }
       reasons.push('Built after the RSO cutoff with multiple units → AB 1482 applies');
       return { regime: 'AB1482', confidence: conf(), reasons, questions };
     }
