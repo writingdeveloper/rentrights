@@ -1,0 +1,19 @@
+# Brainstorm visual-companion mockups (local design scratch)
+.superpowers/
+
+# Node / Next.js
+node_modules/
+.next/
+out/
+dist/
+build/
+
+# Env & secrets
+.env
+.env.*
+!.env.example
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.log
