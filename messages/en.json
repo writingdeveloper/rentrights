@@ -98,5 +98,17 @@
   "share.button": "Copy link",
   "share.copied": "Copied!",
   "share.privacyNote": "This link includes the address you entered.",
-  "share.shareTitle": "My LA renter-rights estimate"
+  "share.shareTitle": "My LA renter-rights estimate",
+  "increase.heading": "Check a proposed increase",
+  "increase.currentLabel": "Current monthly rent",
+  "increase.currentPlaceholder": "e.g. 2000",
+  "increase.proposedLabel": "Proposed new rent",
+  "increase.proposedPlaceholder": "e.g. 2200",
+  "increase.verdict.withinCap": "✓ Within the legal cap. The most they can legally charge is about {max} (a {pct}% cap).",
+  "increase.verdict.overCap": "⚠ Over the legal cap. The most they can legally charge is about {max} (a {pct}% cap).",
+  "increase.verdict.withinRange": "✓ Likely within the legal range. The cap is being updated — the legal max is about {floorMax}–{ceilingMax}. Confirm the exact figure with LAHD.",
+  "increase.verdict.overRange": "⚠ Likely over the legal cap. Even at the high end the legal max is about {ceilingMax}. Confirm with LAHD.",
+  "increase.verdict.uncertainRange": "The cap is being updated (LAHD publishes the exact %). The legal max is about {floorMax}–{ceilingMax}, and your proposed rent is in that range — confirm with LAHD.",
+  "increase.noCap": "Your unit isn't under a rent cap, so there's no maximum increase amount — but Just Cause and notice rules still apply.",
+  "increase.caveat": "Estimate only — confirm with LAHD before acting."
 }
