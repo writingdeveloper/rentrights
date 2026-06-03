@@ -1,36 +1,52 @@
 import { describe, it, expect } from 'vitest';
-import { parseSitus, selectAin, parseParcelFacts, fetchParcel } from '@/lib/clients/assessor';
+import { selectAin, parseParcelFacts, parcelAtPoint, fetchParcel } from '@/lib/clients/assessor';
 import pais from '../fixtures/pais.json';
 import rolls from '../fixtures/rolls.json';
 import rollsEmpty from '../fixtures/rolls-empty.json';
 
-describe('parseSitus', () => {
-  it('splits a canonical address into uppercased situs + city', () => {
-    expect(parseSitus('1411 Murray Dr, Los Angeles, CA, 90026')).toEqual({
-      situs: '1411 MURRAY DR',
-      city: 'LOS ANGELES',
-    });
+const POINT = { x: 6478592, y: 1854140, wkid: 102645, score: 100, matchAddr: '1411 MURRAY DR' };
+
+const cams = {
+  spatialReference: { wkid: 102645 },
+  candidates: [{ address: '1411 MURRAY DR', score: 100, location: { x: 6478592, y: 1854140 } }],
+};
+const camsWeak = { spatialReference: { wkid: 102645 }, candidates: [{ address: 'x', score: 60, location: { x: 1, y: 2 } }] };
+
+// Route an injected fetch to the right canned response by URL.
+function router(paisBody: unknown) {
+  return async (url: string) => {
+    let body: unknown = cams;
+    if (url.includes('pais_parcels')) body = paisBody;
+    else if (url.includes('Parcel_Data')) body = rolls;
+    else if (url.includes('CAMS_Locator')) body = cams;
+    return { ok: true, json: async () => body } as unknown as Response;
+  };
+}
+
+describe('selectAin', () => {
+  it('returns the AIN when the point intersects exactly one parcel', () => {
+    expect(selectAin(pais)).toBe('5425003009');
+  });
+  it('returns null when the point intersects several parcels (ambiguous)', () => {
+    const multi = { features: [{ attributes: { AIN: '1' } }, { attributes: { AIN: '2' } }] };
+    expect(selectAin(multi)).toBeNull();
+  });
+  it('returns null when the point is in no parcel (right-of-way)', () => {
+    expect(selectAin({ features: [] })).toBeNull();
   });
 });
 
-describe('selectAin', () => {
-  it('returns the AIN of a unique in-city match', () => {
-    expect(selectAin(pais, 'LOS ANGELES')).toBe('5425003009');
-  });
-  it('returns null when the only match is in a different city (wrong-city guard)', () => {
-    expect(selectAin(pais, 'PASADENA')).toBeNull();
-  });
-  it('returns null when one situs maps to several parcels (ambiguous)', () => {
-    const multi = {
-      features: [
-        { attributes: { AIN: '1', SAADDR: '11750 WILSHIRE BLVD', SAADDR2: 'LOS ANGELES CA 90025' } },
-        { attributes: { AIN: '2', SAADDR: '11750 WILSHIRE BLVD', SAADDR2: 'LOS ANGELES CA 90025' } },
-      ],
+describe('parcelAtPoint', () => {
+  it('queries PAIS with the point and returns the unique AIN', async () => {
+    let captured = '';
+    const fakeFetch = async (url: string) => {
+      captured = url;
+      return { ok: true, json: async () => pais } as unknown as Response;
     };
-    expect(selectAin(multi, 'LOS ANGELES')).toBeNull();
-  });
-  it('returns null when there are no features', () => {
-    expect(selectAin({ features: [] }, 'LOS ANGELES')).toBeNull();
+    expect(await parcelAtPoint(POINT, fakeFetch)).toBe('5425003009');
+    expect(captured).toContain('esriGeometryPoint');
+    expect(captured).toContain('inSR=102645');
+    expect(captured).not.toContain('resultRecordCount'); // 400s on the PAIS endpoint
   });
 });
 
@@ -44,32 +60,22 @@ describe('parseParcelFacts', () => {
 });
 
 describe('fetchParcel', () => {
-  it('chains PAIS then Rolls for a unique in-city match', async () => {
-    const fakeFetch = async (url: string) => {
-      const body = url.includes('PAIS') ? pais : rolls;
-      return { ok: true, json: async () => body } as unknown as Response;
-    };
-    const out = await fetchParcel('1411 MURRAY DR, LOS ANGELES, CA, 90026', fakeFetch);
+  it('chains CAMS → PAIS → Rolls for a confident unique match', async () => {
+    const out = await fetchParcel('1411 Murray Dr, Los Angeles', router(pais));
     expect(out.ain).toBe('5425003009');
     expect(out.facts).toEqual({ yearBuilt: 1931, units: 6, useCode: '0500' });
   });
 
-  it('returns null facts when no parcel matches the situs', async () => {
-    const fakeFetch = async () => ({ ok: true, json: async () => ({ features: [] }) }) as unknown as Response;
-    const out = await fetchParcel('300 S SANTA FE AVE, LOS ANGELES, CA, 90013', fakeFetch);
+  it('returns null facts when CAMS has no confident match', async () => {
+    const fakeFetch = async () => ({ ok: true, json: async () => camsWeak }) as unknown as Response;
+    const out = await fetchParcel('nowhere', fakeFetch);
     expect(out.ain).toBeNull();
     expect(out.facts).toEqual({ yearBuilt: null, units: null, useCode: null });
   });
 
-  it('does not call Rolls (returns null facts) when the match is in the wrong city', async () => {
-    let rollsCalled = false;
-    const fakeFetch = async (url: string) => {
-      if (url.includes('Parcel_Data')) rollsCalled = true;
-      return { ok: true, json: async () => pais } as unknown as Response; // pais is in LOS ANGELES
-    };
-    const out = await fetchParcel('1411 MURRAY DR, PASADENA, CA, 91101', fakeFetch);
+  it('returns null facts when the point matches no single parcel', async () => {
+    const out = await fetchParcel('1411 Murray Dr, Los Angeles', router({ features: [] }));
     expect(out.ain).toBeNull();
     expect(out.facts).toEqual({ yearBuilt: null, units: null, useCode: null });
-    expect(rollsCalled).toBe(false);
   });
 });
