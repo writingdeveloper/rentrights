@@ -25,6 +25,7 @@ export interface UserAnswers {
   isSeparateHouse?: boolean; // true => the 2nd unit is an ADU/guest house (treat as single-family)
   hasAb1482ExemptionNotice?: boolean;
   isCondo?: boolean; // true => individually-owned condo (treat like single-family for rent-cap rules)
+  unsure?: QuestionId[]; // questions the user answered "I'm not sure" (sets no boolean)
 }
 
 export interface RegimeResult {
@@ -44,6 +45,10 @@ export type ReasonCode =
   | 'SAID_CONDO'
   | 'SAID_SEPARATE_HOUSE'
   | 'SAID_NOT_SEPARATE_HOUSE'
+  | 'ASSUMED_BUILD_UNKNOWN'
+  | 'ASSUMED_MULTIUNIT'
+  | 'ASSUMED_NOT_CONDO'
+  | 'ASSUMED_NO_EXEMPTION'
   | 'UNITS_COUNT'
   | 'TWO_UNITS'
   | 'SINGLE_UNIT'
@@ -74,6 +79,7 @@ export const ALL_REASON_CODES: ReasonCode[] = [
   'IN_LA_CITY', 'SAID_BUILT_BEFORE_1978', 'SAID_BUILT_AFTER_1978', 'BUILT_BEFORE_CUTOFF',
   'BUILT_AFTER_CUTOFF', 'BUILT_1978_AMBIGUOUS', 'SAID_CONDO', 'SAID_SEPARATE_HOUSE',
   'SAID_NOT_SEPARATE_HOUSE', 'UNITS_COUNT',
+  'ASSUMED_BUILD_UNKNOWN', 'ASSUMED_MULTIUNIT', 'ASSUMED_NOT_CONDO', 'ASSUMED_NO_EXEMPTION',
   'TWO_UNITS', 'SINGLE_UNIT', 'NEW_CONSTRUCTION_EXEMPT', 'NEAR_15YR_CUTOFF', 'MULTIUNIT_AB1482',
   'MULTIUNIT_BUILDDATE_UNCERTAIN', 'SFR_MAYBE_EXEMPT', 'EXEMPTION_NOTICE_GIVEN', 'NO_EXEMPTION_NOTICE',
   'OUT_OF_LA_CITY', 'OUTSIDE_LA', 'UNINCORPORATED_COUNTY',

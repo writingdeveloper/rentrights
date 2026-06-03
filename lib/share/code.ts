@@ -7,8 +7,10 @@ export interface ShareState {
   locale?: Locale;
 }
 
+type BooleanAnswerField = { [K in keyof UserAnswers]-?: NonNullable<UserAnswers[K]> extends boolean ? K : never }[keyof UserAnswers];
+
 // Short hash keys ↔ UserAnswers boolean fields.
-const ANSWER_KEYS: { param: string; field: keyof UserAnswers }[] = [
+const ANSWER_KEYS: { param: string; field: BooleanAnswerField }[] = [
   { param: 'b', field: 'builtBeforeOct1978' },
   { param: 's', field: 'isSeparateHouse' },
   { param: 'e', field: 'hasAb1482ExemptionNotice' },
