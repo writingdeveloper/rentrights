@@ -42,7 +42,7 @@ export async function lookup(
   const dataWarnings: WarningCode[] = [];
   let facts: ParcelFacts = { yearBuilt: null, units: null, useCode: null };
 
-  if (jurisdiction.inLACity) {
+  if (jurisdiction.inLACity || (jurisdiction.placeName === null && jurisdiction.inLACounty)) {
     try {
       const parcel = await deps.getParcel(address);
       facts = parcel.facts;

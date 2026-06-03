@@ -46,4 +46,13 @@ describe('lookup', () => {
     ), new Date('2026-06-02'));
     expect(res.result.regime).toBe('JCO_ONLY');
   });
+
+  it('fetches parcel facts for an unincorporated County address', async () => {
+    const res = await lookup('x', {}, deps(
+      { inLACity: false, placeName: null, incorporated: false, inLACounty: true },
+      { yearBuilt: 1990, units: 4, useCode: '0500' },
+    ));
+    expect(res.facts.units).toBe(4);
+    expect(res.result.regime).toBe('COUNTY_RSTPO');
+  });
 });

@@ -17,11 +17,15 @@ export function capLabel(regime: Regime, t: T, onDate = new Date()): string {
     const p = LEGAL.ab1482CapPct.find((x) => x.effectiveFrom <= d && (!x.effectiveTo || d <= x.effectiveTo));
     return p ? t('result.capUpTo', { pct: p.value }) : t('result.capSeeState');
   }
+  if (regime === 'COUNTY_RSTPO') {
+    const p = LEGAL.countyCapPct.find((x) => x.effectiveFrom <= d && (!x.effectiveTo || d <= x.effectiveTo));
+    return p ? t('result.capUpTo', { pct: p.value }) : t('result.capSeeDcba');
+  }
   return t('result.capNone');
 }
 
 const RIGHTS_POINTS: Record<Regime, number> = {
-  RSO: 4, AB1482: 4, JCO_ONLY: 3, OUT_OF_JURISDICTION: 1, UNKNOWN: 1,
+  RSO: 4, AB1482: 4, JCO_ONLY: 3, COUNTY_RSTPO: 4, COUNTY_JCO: 4, OUT_OF_JURISDICTION: 1, UNKNOWN: 1,
 };
 
 export function rightsText(regime: Regime, t: T): { title: string; points: string[] } {
@@ -34,12 +38,18 @@ export function rightsText(regime: Regime, t: T): { title: string; points: strin
 export function capStaleness(regime: Regime, onDate = new Date()): Staleness | null {
   if (regime === 'RSO') return stalenessFor(LEGAL.rsoCapPct, onDate);
   if (regime === 'AB1482') return stalenessFor(LEGAL.ab1482CapPct, onDate);
+  if (regime === 'COUNTY_RSTPO') return stalenessFor(LEGAL.countyCapPct, onDate);
   return null;
 }
 
 export function stalenessMessage(s: Staleness, t: T, regime?: Regime): string {
   const when = s.expectedUpdate ? t('staleness.whenSuffix', { date: s.expectedUpdate }) : '';
-  const who = regime === 'AB1482' ? t('staleness.authority.state') : t('staleness.authority.lahd');
+  const who =
+    regime === 'AB1482'
+      ? t('staleness.authority.state')
+      : regime === 'COUNTY_RSTPO'
+        ? t('staleness.authority.dcba')
+        : t('staleness.authority.lahd');
   if (s.reason === 'pending publication') return t('staleness.pending', { when, who });
   if (s.reason === 'past expected update') return t('staleness.pastUpdate', { when, who });
   return t('staleness.generic', { when, who });

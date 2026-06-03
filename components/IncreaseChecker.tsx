@@ -15,7 +15,7 @@ export function IncreaseChecker({ regime }: { regime: Regime }) {
 
   if (regime === 'OUT_OF_JURISDICTION' || regime === 'UNKNOWN') return null;
 
-  if (regime === 'JCO_ONLY') {
+  if (regime === 'JCO_ONLY' || regime === 'COUNTY_JCO') {
     return (
       <section className="mt-6">
         <h2 className="text-sm font-semibold">{t('increase.heading')}</h2>

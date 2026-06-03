@@ -1,0 +1,12 @@
+{
+  "result": {
+    "addressMatches": [
+      {
+        "matchedAddress": "1 MAIN ST, UNINCORPORATED, CA, 92000",
+        "geographies": {
+          "Counties": [{ "NAME": "Orange County", "GEOID": "06059" }]
+        }
+      }
+    ]
+  }
+}

@@ -4,7 +4,8 @@
       {
         "matchedAddress": "8400 SUNSET BLVD, WEST HOLLYWOOD, CA, 90069",
         "geographies": {
-          "Incorporated Places": [{ "NAME": "West Hollywood city", "GEOID": "0684410" }]
+          "Incorporated Places": [{ "NAME": "West Hollywood city", "GEOID": "0684410" }],
+          "Counties": [{ "NAME": "Los Angeles County", "GEOID": "06037" }]
         }
       }
     ]

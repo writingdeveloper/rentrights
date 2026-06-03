@@ -5,7 +5,7 @@ import { QuestionId, Regime } from '@/lib/rules/types';
 
 const LOCALES: Locale[] = ['en', 'es'];
 const QUESTION_IDS: QuestionId[] = ['BUILT_BEFORE_OCT_1978', 'IS_SEPARATE_HOUSE', 'AB1482_EXEMPTION_NOTICE', 'IS_CONDO'];
-const REGIMES: Regime[] = ['RSO', 'AB1482', 'JCO_ONLY', 'OUT_OF_JURISDICTION', 'UNKNOWN'];
+const REGIMES: Regime[] = ['RSO', 'AB1482', 'JCO_ONLY', 'COUNTY_RSTPO', 'COUNTY_JCO', 'OUT_OF_JURISDICTION', 'UNKNOWN'];
 
 function has(locale: Locale, key: string) {
   return typeof CATALOG[locale][key] === 'string' && CATALOG[locale][key].length > 0;
