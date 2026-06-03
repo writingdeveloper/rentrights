@@ -5,7 +5,7 @@ import { checkIncrease } from '@/lib/rules/increase';
 import { useT } from '@/lib/i18n/LocaleProvider';
 
 function money(n: number): string {
-  return '$' + Math.round(n).toLocaleString('en-US');
+  return n.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
 }
 
 export function IncreaseChecker({ regime }: { regime: Regime }) {
