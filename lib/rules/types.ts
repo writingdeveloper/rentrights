@@ -29,7 +29,7 @@ export interface UserAnswers {
 export interface RegimeResult {
   regime: Regime;
   confidence: Confidence;
-  reasons: string[];
+  reasons: ReasonItem[];
   questions: QuestionId[];
 }
 

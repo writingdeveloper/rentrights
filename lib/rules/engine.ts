@@ -1,5 +1,5 @@
 import { LEGAL } from '@/lib/legal/constants';
-import { Confidence, Jurisdiction, ParcelFacts, QuestionId, RegimeResult, UserAnswers } from './types';
+import { Confidence, Jurisdiction, ParcelFacts, QuestionId, ReasonItem, RegimeResult, UserAnswers } from './types';
 
 export interface ResolveInput {
   jurisdiction: Jurisdiction;
@@ -24,40 +24,38 @@ export function resolveRegime({ jurisdiction, facts, answers = {}, now = new Dat
       return {
         regime: 'OUT_OF_JURISDICTION',
         confidence: 'high',
-        reasons: [
-          'This address may be in unincorporated LA County, which has its own rules (County RSTPO via DCBA) rather than the City of Los Angeles.',
-        ],
+        reasons: [{ code: 'UNINCORPORATED_COUNTY' }],
         questions: [],
       };
     }
     return {
       regime: 'OUT_OF_JURISDICTION',
       confidence: 'high',
-      reasons: [`${jurisdiction.placeName} is outside the City of Los Angeles`],
+      reasons: [{ code: 'OUT_OF_LA_CITY', params: { placeName: jurisdiction.placeName } }],
       questions: [],
     };
   }
 
-  const reasons: string[] = ['In the City of Los Angeles'];
+  const reasons: ReasonItem[] = [{ code: 'IN_LA_CITY' }];
   const questions: QuestionId[] = [];
 
   // --- Build era (an explicit answer overrides parcel data) ---
   let builtBefore: boolean | null;
   if (answers.builtBeforeOct1978 !== undefined) {
     builtBefore = answers.builtBeforeOct1978;
-    reasons.push(builtBefore ? 'You said it was built before Oct 1, 1978' : 'You said it was built after Oct 1978');
+    reasons.push({ code: builtBefore ? 'SAID_BUILT_BEFORE_1978' : 'SAID_BUILT_AFTER_1978' });
   } else if (facts.yearBuilt == null) {
     builtBefore = null;
     questions.push('BUILT_BEFORE_OCT_1978');
   } else if (facts.yearBuilt < LEGAL.rsoBuildCutoffYear) {
     builtBefore = true;
-    reasons.push(`Built in ${facts.yearBuilt} (before the Oct 1, 1978 RSO cutoff)`);
+    reasons.push({ code: 'BUILT_BEFORE_CUTOFF', params: { year: facts.yearBuilt } });
   } else if (facts.yearBuilt > LEGAL.rsoBuildCutoffYear) {
     builtBefore = false;
-    reasons.push(`Built in ${facts.yearBuilt} (after the RSO cutoff)`);
+    reasons.push({ code: 'BUILT_AFTER_CUTOFF', params: { year: facts.yearBuilt } });
   } else {
     builtBefore = null; // exactly 1978 — CO date ambiguous
-    reasons.push('Built in 1978 — the exact certificate-of-occupancy date determines RSO coverage');
+    reasons.push({ code: 'BUILT_1978_AMBIGUOUS' });
     questions.push('BUILT_BEFORE_OCT_1978');
   }
 
@@ -65,23 +63,23 @@ export function resolveRegime({ jurisdiction, facts, answers = {}, now = new Dat
   let multiUnit: boolean | null;
   if (answers.isCondo === true) {
     multiUnit = false;
-    reasons.push('You said this is an individually-owned condo (treated like a single-family home for rent-cap rules)');
+    reasons.push({ code: 'SAID_CONDO' });
   } else if (answers.isSeparateHouse === true) {
     multiUnit = false;
-    reasons.push('You said the other unit is a separate house (treated as single-family)');
+    reasons.push({ code: 'SAID_SEPARATE_HOUSE' });
   } else if (facts.units == null) {
     multiUnit = null;
     questions.push('IS_SEPARATE_HOUSE');
   } else if (facts.units >= 3) {
     multiUnit = true;
-    reasons.push(`${facts.units} units on the parcel`);
+    reasons.push({ code: 'UNITS_COUNT', params: { count: facts.units } });
   } else if (facts.units === 2) {
     multiUnit = true;
-    reasons.push('2 units on the parcel');
+    reasons.push({ code: 'TWO_UNITS' });
     if (answers.isSeparateHouse === undefined) questions.push('IS_SEPARATE_HOUSE');
   } else {
     multiUnit = false;
-    reasons.push('Single unit on the parcel (single-family)');
+    reasons.push({ code: 'SINGLE_UNIT' });
   }
 
   // Condo confirming question: multi-unit on paper, but the use code does not clearly
@@ -101,19 +99,17 @@ export function resolveRegime({ jurisdiction, facts, answers = {}, now = new Dat
       const cutoffYear = now.getFullYear() - 15;
       if (facts.yearBuilt != null && facts.yearBuilt >= cutoffYear) {
         const nearCutoff = facts.yearBuilt === cutoffYear || facts.yearBuilt === cutoffYear + 1;
-        reasons.push(
-          `Built in ${facts.yearBuilt} — within the last 15 years, so likely exempt from AB 1482's rent cap (new construction). Citywide Just Cause still applies.`,
-        );
+        reasons.push({ code: 'NEW_CONSTRUCTION_EXEMPT', params: { year: facts.yearBuilt } });
         if (nearCutoff) {
-          reasons.push('This is near the 15-year cutoff — the exact certificate-of-occupancy date may affect this.');
+          reasons.push({ code: 'NEAR_15YR_CUTOFF' });
         }
         return { regime: 'JCO_ONLY', confidence: nearCutoff ? 'medium' : conf(), reasons, questions };
       }
-      reasons.push('Built after the RSO cutoff with multiple units → AB 1482 applies');
+      reasons.push({ code: 'MULTIUNIT_AB1482' });
       return { regime: 'AB1482', confidence: conf(), reasons, questions };
     }
     // builtBefore === null but multi-unit → lean RSO, confirm the build date.
-    reasons.push('Multiple units, but the build date is uncertain → likely RSO pending confirmation');
+    reasons.push({ code: 'MULTIUNIT_BUILDDATE_UNCERTAIN' });
     return { regime: 'RSO', confidence: 'medium', reasons, questions };
   }
 
@@ -121,14 +117,14 @@ export function resolveRegime({ jurisdiction, facts, answers = {}, now = new Dat
     // Single-family / condo: AB1482 unless landlord gave an exemption notice; citywide JCO just-cause always applies.
     if (answers.hasAb1482ExemptionNotice === undefined) {
       questions.push('AB1482_EXEMPTION_NOTICE');
-      reasons.push('Single-family/condo may be exempt from AB 1482 rent caps (depends on a landlord notice)');
+      reasons.push({ code: 'SFR_MAYBE_EXEMPT' });
       return { regime: 'JCO_ONLY', confidence: 'low', reasons, questions };
     }
     if (answers.hasAb1482ExemptionNotice) {
-      reasons.push('Landlord gave an AB 1482 exemption notice → no state rent cap, but citywide Just Cause still applies');
+      reasons.push({ code: 'EXEMPTION_NOTICE_GIVEN' });
       return { regime: 'JCO_ONLY', confidence: 'medium', reasons, questions };
     }
-    reasons.push('No AB 1482 exemption notice → AB 1482 rent cap applies');
+    reasons.push({ code: 'NO_EXEMPTION_NOTICE' });
     return { regime: 'AB1482', confidence: 'medium', reasons, questions };
   }
 

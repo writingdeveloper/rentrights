@@ -1,15 +1,19 @@
+'use client';
+
 import { RegimeResult } from '@/lib/rules/types';
+import { useT } from '@/lib/i18n/LocaleProvider';
 import { RIGHTS_TEXT, capLabel, capStaleness, stalenessMessage } from '@/lib/content/rights';
 
 const CONF_LABEL: Record<string, string> = { high: 'High confidence', medium: 'Medium confidence', low: 'Low confidence' };
 
 export function ResultCard({ result }: { result: RegimeResult }) {
+  const t = useT();
   const rights = RIGHTS_TEXT[result.regime];
   return (
     <div className="rounded-2xl border border-gray-200 p-5 shadow-sm">
       <p className="text-xs uppercase tracking-wide text-gray-500">What public records show</p>
       <ul className="mt-1 mb-3 list-disc pl-5 text-sm text-gray-700">
-        {result.reasons.map((r, i) => <li key={i}>{r}</li>)}
+        {result.reasons.map((r, i) => <li key={i}>{t(`reason.${r.code}`, r.params)}</li>)}
       </ul>
       <p className="text-lg font-bold">→ Likely: {rights.title}</p>
       {result.regime !== 'OUT_OF_JURISDICTION' && result.regime !== 'UNKNOWN' && (
