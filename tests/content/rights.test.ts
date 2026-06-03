@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { capStaleness, stalenessMessage, rightsText, capLabel } from '@/lib/content/rights';
+import { capStaleness, stalenessMessage, rightsText, capLabel, notFinalBanner } from '@/lib/content/rights';
 import { translate } from '@/lib/i18n/t';
 import { CATALOG } from '@/lib/i18n/catalog';
 
@@ -44,5 +44,32 @@ describe('rightsText', () => {
 describe('capLabel', () => {
   it('formats the RSO cap on 2026-06-02', () => {
     expect(capLabel('RSO', t, new Date('2026-06-02'))).toBe('up to 3%');
+  });
+});
+
+describe('notFinalBanner', () => {
+  it('points city regimes (RSO/AB1482/JCO_ONLY) to LAHD with its hotline', () => {
+    for (const regime of ['RSO', 'AB1482', 'JCO_ONLY'] as const) {
+      const msg = notFinalBanner(regime, t);
+      expect(msg).toContain('LAHD');
+      expect(msg).toContain('(866) 557-7368');
+    }
+  });
+  it('points County regimes to LA County DCBA with its hotline, not LAHD', () => {
+    for (const regime of ['COUNTY_RSTPO', 'COUNTY_JCO'] as const) {
+      const msg = notFinalBanner(regime, t);
+      expect(msg).toContain('DCBA');
+      expect(msg).toContain('(800) 593-8222');
+      expect(msg).not.toContain('LAHD');
+      expect(msg).not.toContain('(866) 557-7368');
+    }
+  });
+  it('uses a generic local-authority message for OOJ/UNKNOWN (no specific agency phone)', () => {
+    for (const regime of ['OUT_OF_JURISDICTION', 'UNKNOWN'] as const) {
+      const msg = notFinalBanner(regime, t);
+      expect(msg).not.toContain('(866) 557-7368');
+      expect(msg).not.toContain('(800) 593-8222');
+      expect(msg.toLowerCase()).toContain('local');
+    }
   });
 });
