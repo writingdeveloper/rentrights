@@ -5,10 +5,11 @@ import { ConfirmingQuestions } from '@/components/ConfirmingQuestions';
 import { Disclaimer } from '@/components/Disclaimer';
 import { GetHelp } from '@/components/GetHelp';
 import { UserAnswers } from '@/lib/rules/types';
-import { useT } from '@/lib/i18n/LocaleProvider';
+import { useT, useLocale } from '@/lib/i18n/LocaleProvider';
 
 export default function Home() {
   const t = useT();
+  const { locale, setLocale } = useLocale();
   const [address, setAddress] = useState('');
   const [answers, setAnswers] = useState<UserAnswers>({});
   const [data, setData] = useState<any>(null);
@@ -28,7 +29,27 @@ export default function Home() {
 
   return (
     <main className="mx-auto max-w-xl px-4 py-10">
-      <h1 className="text-2xl font-extrabold text-blue-700">{t('page.title')}</h1>
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-extrabold text-blue-700">{t('page.title')}</h1>
+        <div className="flex gap-1 text-xs">
+          <button
+            type="button"
+            aria-pressed={locale === 'en'}
+            className={`rounded px-2 py-1 ${locale === 'en' ? 'bg-blue-600 text-white' : 'border'}`}
+            onClick={() => setLocale('en')}
+          >
+            {t('page.langEnglish')}
+          </button>
+          <button
+            type="button"
+            aria-pressed={locale === 'es'}
+            className={`rounded px-2 py-1 ${locale === 'es' ? 'bg-blue-600 text-white' : 'border'}`}
+            onClick={() => setLocale('es')}
+          >
+            {t('page.langSpanish')}
+          </button>
+        </div>
+      </div>
       <p className="text-sm text-gray-500">{t('page.tagline')}</p>
 
       <form className="mt-5 flex gap-2" onSubmit={(e) => { e.preventDefault(); setAnswers({}); run(address, {}); }}>
