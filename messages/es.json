@@ -98,5 +98,17 @@
   "share.button": "Copiar enlace",
   "share.copied": "¡Copiado!",
   "share.privacyNote": "Este enlace incluye la dirección que ingresó.",
-  "share.shareTitle": "Mi estimación de derechos de inquilino en LA"
+  "share.shareTitle": "Mi estimación de derechos de inquilino en LA",
+  "increase.heading": "Verifique un aumento propuesto",
+  "increase.currentLabel": "Renta mensual actual",
+  "increase.currentPlaceholder": "p. ej. 2000",
+  "increase.proposedLabel": "Nueva renta propuesta",
+  "increase.proposedPlaceholder": "p. ej. 2200",
+  "increase.verdict.withinCap": "✓ Dentro del tope legal. Lo máximo que pueden cobrar legalmente es aproximadamente {max} (tope del {pct}%).",
+  "increase.verdict.overCap": "⚠ Por encima del tope legal. Lo máximo que pueden cobrar legalmente es aproximadamente {max} (tope del {pct}%).",
+  "increase.verdict.withinRange": "✓ Probablemente dentro del rango legal. El tope se está actualizando — el máximo legal es aproximadamente {floorMax}–{ceilingMax}. Confirme la cifra exacta con LAHD.",
+  "increase.verdict.overRange": "⚠ Probablemente por encima del tope legal. Incluso en el extremo alto, el máximo legal es aproximadamente {ceilingMax}. Confirme con LAHD.",
+  "increase.verdict.uncertainRange": "El tope se está actualizando (LAHD publica el % exacto). El máximo legal es aproximadamente {floorMax}–{ceilingMax}, y su renta propuesta está en ese rango — confirme con LAHD.",
+  "increase.noCap": "Su unidad no tiene tope de renta, así que no hay un monto máximo de aumento — pero las reglas de Causa Justa y de aviso siguen aplicando.",
+  "increase.caveat": "Solo una estimación — confirme con LAHD antes de actuar."
 }

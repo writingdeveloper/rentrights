@@ -7,6 +7,7 @@ import { GetHelp } from '@/components/GetHelp';
 import { UserAnswers } from '@/lib/rules/types';
 import { useT, useLocale } from '@/lib/i18n/LocaleProvider';
 import { ShareButton } from '@/components/ShareButton';
+import { IncreaseChecker } from '@/components/IncreaseChecker';
 import { decodeShare } from '@/lib/share/code';
 
 export default function Home() {
@@ -79,6 +80,7 @@ export default function Home() {
       {data && (
         <div className="mt-6">
           <ResultCard result={data.result} />
+          <IncreaseChecker regime={data.result.regime} />
           {data.result.questions.length > 0 && (
             <ConfirmingQuestions
               questions={data.result.questions}
