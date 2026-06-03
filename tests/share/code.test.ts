@@ -42,4 +42,10 @@ describe('encodeShare / decodeShare round-trip', () => {
   it('ignores an invalid lang value', () => {
     expect(decodeShare('a=x&lang=fr')?.locale).toBeUndefined();
   });
+
+  it('round-trips the unsure list', () => {
+    const encoded = encodeShare({ address: '1 Main St, Los Angeles', answers: { unsure: ['BUILT_BEFORE_OCT_1978', 'IS_CONDO'] } });
+    const decoded = decodeShare('#' + encoded);
+    expect(decoded?.answers.unsure).toEqual(['BUILT_BEFORE_OCT_1978', 'IS_CONDO']);
+  });
 });

@@ -165,4 +165,42 @@ describe('resolveRegime', () => {
     expect(r.questions).toContain('AB1482_EXEMPTION_NOTICE');
     expect(r.questions).not.toContain('IS_CONDO');
   });
+
+  it('all questions unsure (LA city, no facts) → RSO medium, assumed reasons, no re-ask', () => {
+    const r = resolveRegime({
+      jurisdiction: LA,
+      facts: { yearBuilt: null, units: null, useCode: null },
+      answers: { unsure: ['BUILT_BEFORE_OCT_1978', 'IS_SEPARATE_HOUSE', 'IS_CONDO', 'AB1482_EXEMPTION_NOTICE'] },
+    });
+    expect(r.regime).toBe('RSO');
+    expect(r.confidence).toBe('medium');
+    expect(r.questions).toEqual([]);
+    const codes = r.reasons.map((x) => x.code);
+    expect(codes).toContain('ASSUMED_BUILD_UNKNOWN');
+    expect(codes).toContain('ASSUMED_MULTIUNIT');
+    expect(codes).toContain('ASSUMED_NOT_CONDO');
+  });
+
+  it('single-family + exemption unsure → AB1482 medium (assumed no notice)', () => {
+    const r = resolveRegime({
+      jurisdiction: LA,
+      facts: { yearBuilt: 2000, units: 1, useCode: '0100' },
+      answers: { unsure: ['AB1482_EXEMPTION_NOTICE'] },
+    });
+    expect(r.regime).toBe('AB1482');
+    expect(r.questions).toEqual([]);
+    expect(r.reasons.map((x) => x.code)).toContain('ASSUMED_NO_EXEMPTION');
+  });
+
+  it('County: form + condo unsure (no facts) → COUNTY_RSTPO medium', () => {
+    const r = resolveRegime({
+      jurisdiction: { inLACity: false, placeName: null, incorporated: false, inLACounty: true },
+      facts: { yearBuilt: null, units: null, useCode: null },
+      answers: { unsure: ['IS_SEPARATE_HOUSE', 'IS_CONDO'] },
+    });
+    expect(r.regime).toBe('COUNTY_RSTPO');
+    expect(r.confidence).toBe('medium');
+    expect(r.questions).toEqual([]);
+    expect(r.reasons.map((x) => x.code)).toContain('ASSUMED_MULTIUNIT');
+  });
 });

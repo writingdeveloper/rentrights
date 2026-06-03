@@ -41,12 +41,16 @@ export function resolveRegime({ jurisdiction, facts, answers = {}, now = new Dat
 
   const reasons: ReasonItem[] = [{ code: 'IN_LA_CITY' }];
   const questions: QuestionId[] = [];
+  const unsure = answers.unsure ?? [];
 
   // --- Build era (an explicit answer overrides parcel data) ---
   let builtBefore: boolean | null;
   if (answers.builtBeforeOct1978 !== undefined) {
     builtBefore = answers.builtBeforeOct1978;
     reasons.push({ code: builtBefore ? 'SAID_BUILT_BEFORE_1978' : 'SAID_BUILT_AFTER_1978' });
+  } else if (unsure.includes('BUILT_BEFORE_OCT_1978')) {
+    builtBefore = null;
+    reasons.push({ code: 'ASSUMED_BUILD_UNKNOWN' });
   } else if (facts.yearBuilt == null) {
     builtBefore = null;
     questions.push('BUILT_BEFORE_OCT_1978');
@@ -74,6 +78,9 @@ export function resolveRegime({ jurisdiction, facts, answers = {}, now = new Dat
     // "Not a separate house" → a building with other units (2+).
     multiUnit = true;
     reasons.push({ code: 'SAID_NOT_SEPARATE_HOUSE' });
+  } else if (unsure.includes('IS_SEPARATE_HOUSE')) {
+    multiUnit = true;
+    reasons.push({ code: 'ASSUMED_MULTIUNIT' });
   } else if (facts.units == null) {
     multiUnit = null;
     questions.push('IS_SEPARATE_HOUSE');
@@ -92,7 +99,8 @@ export function resolveRegime({ jurisdiction, facts, answers = {}, now = new Dat
   // Condo confirming question: multi-unit on paper, but the use code does not clearly
   // say "apartment" — it could be individually-owned condos (AB 1482 treats those like SFRs).
   if (multiUnit === true && answers.isCondo === undefined && useCodeKind(facts.useCode) !== 'apartment') {
-    questions.push('IS_CONDO');
+    if (unsure.includes('IS_CONDO')) reasons.push({ code: 'ASSUMED_NOT_CONDO' });
+    else questions.push('IS_CONDO');
   }
 
   const conf = (): Confidence => (questions.length === 0 ? 'high' : 'medium');
@@ -122,10 +130,15 @@ export function resolveRegime({ jurisdiction, facts, answers = {}, now = new Dat
 
   if (multiUnit === false) {
     // Single-family / condo: AB1482 unless landlord gave an exemption notice; citywide JCO just-cause always applies.
-    if (answers.hasAb1482ExemptionNotice === undefined) {
+    if (answers.hasAb1482ExemptionNotice === undefined && !unsure.includes('AB1482_EXEMPTION_NOTICE')) {
       questions.push('AB1482_EXEMPTION_NOTICE');
       reasons.push({ code: 'SFR_MAYBE_EXEMPT' });
       return { regime: 'JCO_ONLY', confidence: 'low', reasons, questions };
+    }
+    if (unsure.includes('AB1482_EXEMPTION_NOTICE')) {
+      reasons.push({ code: 'ASSUMED_NO_EXEMPTION' });
+      reasons.push({ code: 'NO_EXEMPTION_NOTICE' });
+      return { regime: 'AB1482', confidence: 'medium', reasons, questions };
     }
     if (answers.hasAb1482ExemptionNotice) {
       reasons.push({ code: 'EXEMPTION_NOTICE_GIVEN' });
@@ -144,6 +157,7 @@ export function resolveRegime({ jurisdiction, facts, answers = {}, now = new Dat
 function resolveCounty(facts: ParcelFacts, answers: UserAnswers): RegimeResult {
   const reasons: ReasonItem[] = [{ code: 'UNINCORPORATED_COUNTY' }];
   const questions: QuestionId[] = [];
+  const unsure = answers.unsure ?? [];
 
   let builtBeforeCounty: boolean | null;
   if (facts.yearBuilt == null) {
@@ -171,6 +185,9 @@ function resolveCounty(facts: ParcelFacts, answers: UserAnswers): RegimeResult {
   } else if (answers.isSeparateHouse === false) {
     multiUnit = true;
     reasons.push({ code: 'SAID_NOT_SEPARATE_HOUSE' });
+  } else if (unsure.includes('IS_SEPARATE_HOUSE')) {
+    multiUnit = true;
+    reasons.push({ code: 'ASSUMED_MULTIUNIT' });
   } else if (facts.units == null) {
     multiUnit = null;
     questions.push('IS_SEPARATE_HOUSE');
@@ -186,7 +203,8 @@ function resolveCounty(facts: ParcelFacts, answers: UserAnswers): RegimeResult {
     reasons.push({ code: 'SINGLE_UNIT' });
   }
   if (multiUnit === true && answers.isCondo === undefined && useCodeKind(facts.useCode) !== 'apartment') {
-    questions.push('IS_CONDO');
+    if (unsure.includes('IS_CONDO')) reasons.push({ code: 'ASSUMED_NOT_CONDO' });
+    else questions.push('IS_CONDO');
   }
 
   const conf: Confidence = questions.length === 0 ? 'high' : 'medium';
@@ -197,6 +215,9 @@ function resolveCounty(facts: ParcelFacts, answers: UserAnswers): RegimeResult {
     return { regime: 'COUNTY_RSTPO', confidence: 'medium', reasons, questions };
   }
   if (multiUnit === false) {
+    // Unlike the City path, the County has no AB1482 exemption question — single-family
+    // County units are COUNTY_JCO regardless, so an AB1482_EXEMPTION_NOTICE entry in
+    // `unsure` (e.g. carried over a shared link) is a harmless no-op here.
     return { regime: 'COUNTY_JCO', confidence: conf, reasons, questions };
   }
   return { regime: 'COUNTY_JCO', confidence: 'low', reasons, questions };
