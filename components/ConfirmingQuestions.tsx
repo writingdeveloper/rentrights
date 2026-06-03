@@ -8,6 +8,9 @@ type Opt = { labelKey: string; key: keyof UserAnswers; value: boolean; common?: 
 // emphasized; the secondary is the other explicit answer. "I'm not sure" is
 // handled separately and sets no boolean.
 const QUESTION_META: Record<QuestionId, { primary: Opt; secondary: Opt }> = {
+  // Intentionally no `common` flag: for build age the safe-if-unsure choice is
+  // "I'm not sure" (→ age left unknown), not either explicit answer — so neither
+  // explicit option is emphasized, to avoid steering the user to a wrong guess.
   BUILT_BEFORE_OCT_1978: {
     primary: { labelKey: 'question.BUILT_BEFORE_OCT_1978.yes', key: 'builtBeforeOct1978', value: true },
     secondary: { labelKey: 'question.BUILT_BEFORE_OCT_1978.no', key: 'builtBeforeOct1978', value: false },

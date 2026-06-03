@@ -215,6 +215,9 @@ function resolveCounty(facts: ParcelFacts, answers: UserAnswers): RegimeResult {
     return { regime: 'COUNTY_RSTPO', confidence: 'medium', reasons, questions };
   }
   if (multiUnit === false) {
+    // Unlike the City path, the County has no AB1482 exemption question — single-family
+    // County units are COUNTY_JCO regardless, so an AB1482_EXEMPTION_NOTICE entry in
+    // `unsure` (e.g. carried over a shared link) is a harmless no-op here.
     return { regime: 'COUNTY_JCO', confidence: conf, reasons, questions };
   }
   return { regime: 'COUNTY_JCO', confidence: 'low', reasons, questions };
