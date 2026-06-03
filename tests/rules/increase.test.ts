@@ -61,4 +61,15 @@ describe('checkIncrease', () => {
     expect(checkIncrease({ regime: 'RSO', currentRent: 1933.33, proposedRent: 1991.33, onDate: NOW }).verdict).toBe('WITHIN_CAP');
     expect(checkIncrease({ regime: 'RSO', currentRent: 1933.33, proposedRent: 1991.34, onDate: NOW }).verdict).toBe('OVER_CAP');
   });
+
+  it('COUNTY_RSTPO 1.93%: within and over', () => {
+    expect(checkIncrease({ regime: 'COUNTY_RSTPO', currentRent: 2000, proposedRent: 2030, onDate: NOW }).verdict).toBe('WITHIN_CAP');
+    const over = checkIncrease({ regime: 'COUNTY_RSTPO', currentRent: 2000, proposedRent: 2100, onDate: NOW });
+    expect(over.verdict).toBe('OVER_CAP');
+    expect(over.capPct).toBe(1.93);
+  });
+
+  it('COUNTY_JCO: no cap', () => {
+    expect(checkIncrease({ regime: 'COUNTY_JCO', currentRent: 2000, proposedRent: 9999, onDate: NOW }).verdict).toBe('NO_CAP');
+  });
 });

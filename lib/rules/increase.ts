@@ -33,10 +33,10 @@ const round2 = (x: number) => Math.round(x * 100) / 100;
 const round1 = (x: number) => Math.round(x * 10) / 10;
 
 export function checkIncrease({ regime, currentRent, proposedRent, onDate = new Date() }: CheckIncreaseInput): IncreaseResult {
-  if (regime !== 'RSO' && regime !== 'AB1482' && regime !== 'JCO_ONLY') {
+  if (regime !== 'RSO' && regime !== 'AB1482' && regime !== 'JCO_ONLY' && regime !== 'COUNTY_RSTPO' && regime !== 'COUNTY_JCO') {
     return { verdict: 'NOT_APPLICABLE' };
   }
-  if (regime === 'JCO_ONLY') return { verdict: 'NO_CAP' };
+  if (regime === 'JCO_ONLY' || regime === 'COUNTY_JCO') return { verdict: 'NO_CAP' };
   if (!Number.isFinite(currentRent) || !Number.isFinite(proposedRent) || currentRent <= 0 || proposedRent < 0) {
     return { verdict: 'NEEDS_INPUT' };
   }
@@ -73,6 +73,19 @@ export function checkIncrease({ regime, currentRent, proposedRent, onDate = new 
     else if (proposedRent > allowedMaxAtCeiling) verdict = 'OVER_RANGE';
     else verdict = 'UNCERTAIN_RANGE';
     return { verdict, capFloorPct: floor, capCeilingPct: ceiling, allowedMaxAtFloor, allowedMaxAtCeiling, proposedPct };
+  }
+
+  if (regime === 'COUNTY_RSTPO') {
+    const period = LEGAL.countyCapPct.find((x) => x.effectiveFrom <= d && (!x.effectiveTo || d <= x.effectiveTo));
+    if (!period) return { verdict: 'NOT_APPLICABLE' };
+    const capPct = period.value;
+    const allowedMaxRent = round2(currentRent * (1 + capPct / 100));
+    return {
+      verdict: proposedRent <= allowedMaxRent ? 'WITHIN_CAP' : 'OVER_CAP',
+      capPct,
+      allowedMaxRent,
+      proposedPct,
+    };
   }
 
   // AB1482
