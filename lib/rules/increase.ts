@@ -42,6 +42,7 @@ export function checkIncrease({ regime, currentRent, proposedRent, onDate = new 
   }
 
   const d = onDate.toISOString().slice(0, 10);
+  // proposedPct is informational only — verdicts compare dollar amounts, not percentages.
   const proposedPct = round1(((proposedRent - currentRent) / currentRent) * 100);
 
   if (regime === 'RSO') {
@@ -59,8 +60,12 @@ export function checkIncrease({ regime, currentRent, proposedRent, onDate = new 
       };
     }
 
-    const floor = period.floorPct != null ? period.floorPct : 1;
-    const ceiling = period.ceilingPct != null ? period.ceilingPct : 4;
+    // Pending RSO period: the range bounds must come from LEGAL — never invent them.
+    if (!('floorPct' in period) || period.floorPct == null || period.ceilingPct == null) {
+      return { verdict: 'NEEDS_INPUT' };
+    }
+    const floor = period.floorPct;
+    const ceiling = period.ceilingPct;
     const allowedMaxAtFloor = round2(currentRent * (1 + floor / 100));
     const allowedMaxAtCeiling = round2(currentRent * (1 + ceiling / 100));
     let verdict: IncreaseVerdict;

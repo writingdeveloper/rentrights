@@ -51,4 +51,14 @@ describe('checkIncrease', () => {
   it('computes the proposed increase percentage', () => {
     expect(checkIncrease({ regime: 'RSO', currentRent: 2000, proposedRent: 2200, onDate: NOW }).proposedPct).toBe(10);
   });
+
+  it('treats a proposal exactly at the cap as within (inclusive boundary)', () => {
+    expect(checkIncrease({ regime: 'RSO', currentRent: 2000, proposedRent: 2060, onDate: NOW }).verdict).toBe('WITHIN_CAP');
+  });
+
+  it('handles non-round rents without a cent misclassification', () => {
+    // 1933.33 * 1.03 = 1991.3299 -> round2 1991.33
+    expect(checkIncrease({ regime: 'RSO', currentRent: 1933.33, proposedRent: 1991.33, onDate: NOW }).verdict).toBe('WITHIN_CAP');
+    expect(checkIncrease({ regime: 'RSO', currentRent: 1933.33, proposedRent: 1991.34, onDate: NOW }).verdict).toBe('OVER_CAP');
+  });
 });
