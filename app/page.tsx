@@ -1,11 +1,13 @@
 'use client';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ResultCard } from '@/components/ResultCard';
 import { ConfirmingQuestions } from '@/components/ConfirmingQuestions';
 import { Disclaimer } from '@/components/Disclaimer';
 import { GetHelp } from '@/components/GetHelp';
 import { UserAnswers } from '@/lib/rules/types';
 import { useT, useLocale } from '@/lib/i18n/LocaleProvider';
+import { ShareButton } from '@/components/ShareButton';
+import { decodeShare } from '@/lib/share/code';
 
 export default function Home() {
   const t = useT();
@@ -15,6 +17,17 @@ export default function Home() {
   const [data, setData] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const s = decodeShare(window.location.hash);
+    if (!s) return;
+    setAddress(s.address);
+    setAnswers(s.answers);
+    if (s.locale) setLocale(s.locale);
+    run(s.address, s.answers);
+    // Mount-only: restore shared state once from the URL hash.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   async function run(addr: string, ans: UserAnswers) {
     setLoading(true); setError(null);
@@ -76,6 +89,7 @@ export default function Home() {
           {data.dataWarnings?.map((w: string, i: number) => (
             <p key={i} className="mt-3 text-xs text-gray-500">{t(`warning.${w}`)}</p>
           ))}
+          <ShareButton address={address} answers={answers} locale={locale} />
           <GetHelp unincorporatedCounty={data.jurisdiction?.placeName === null} />
           <Disclaimer lastVerified={data.lastVerified} />
         </div>
