@@ -7,7 +7,7 @@ vi.mock('@/lib/compute/lookup', async (orig) => {
     lookup: vi.fn(async (address: string) => ({
       address, jurisdiction: { inLACity: true, placeName: 'Los Angeles city', incorporated: true },
       facts: { yearBuilt: 1931, units: 6, useCode: '0500' },
-      result: { regime: 'RSO', confidence: 'high', reasons: ['In the City of Los Angeles'], questions: [] },
+      result: { regime: 'RSO', confidence: 'high', reasons: [{ code: 'IN_LA_CITY' }], questions: [] },
       dataWarnings: [], lastVerified: '2026-06-02',
     })),
   };
@@ -30,5 +30,7 @@ describe('POST /api/lookup', () => {
   it('400s when address is missing', async () => {
     const res = await POST(req({}));
     expect(res.status).toBe(400);
+    const data = await res.json();
+    expect(data.error).toBe('ADDRESS_REQUIRED');
   });
 });

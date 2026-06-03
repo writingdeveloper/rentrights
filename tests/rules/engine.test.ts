@@ -64,7 +64,7 @@ describe('resolveRegime', () => {
   it('treats a multi-unit building built within the last 15 years as AB1482-exempt (JCO_ONLY)', () => {
     const r = resolveRegime({ jurisdiction: LA, facts: { yearBuilt: 2020, units: 8, useCode: '0500' }, now: NOW });
     expect(r.regime).toBe('JCO_ONLY');
-    expect(r.reasons.some((x) => x.includes('within the last 15 years'))).toBe(true);
+    expect(r.reasons.some((x) => x.code === 'NEW_CONSTRUCTION_EXEMPT')).toBe(true);
   });
 
   it('keeps a building older than 15 years on AB1482', () => {
@@ -85,7 +85,7 @@ describe('resolveRegime', () => {
     });
     expect(r.regime).toBe('OUT_OF_JURISDICTION');
     expect(r.confidence).toBe('high');
-    expect(r.reasons.some((x) => x.toLowerCase().includes('unincorporated'))).toBe(true);
+    expect(r.reasons.some((x) => x.code === 'UNINCORPORATED_COUNTY')).toBe(true);
   });
 
   it('asks the condo question for a multi-unit building whose use code is not clearly an apartment', () => {

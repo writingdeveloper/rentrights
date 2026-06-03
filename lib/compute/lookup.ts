@@ -1,7 +1,7 @@
 import { fetchJurisdiction } from '@/lib/clients/census';
 import { fetchParcel } from '@/lib/clients/assessor';
 import { resolveRegime } from '@/lib/rules/engine';
-import { Jurisdiction, ParcelFacts, RegimeResult, UserAnswers } from '@/lib/rules/types';
+import { Jurisdiction, ParcelFacts, RegimeResult, UserAnswers, WarningCode } from '@/lib/rules/types';
 import { LEGAL } from '@/lib/legal/constants';
 
 export class AddressNotFoundError extends Error {
@@ -16,7 +16,7 @@ export interface LookupResult {
   jurisdiction: Jurisdiction;
   facts: ParcelFacts;
   result: RegimeResult;
-  dataWarnings: string[];
+  dataWarnings: WarningCode[];
   lastVerified: string;
 }
 
@@ -39,7 +39,7 @@ export async function lookup(
   const jurisdiction = await deps.getJurisdiction(address);
   if (!jurisdiction) throw new AddressNotFoundError(address);
 
-  const dataWarnings: string[] = [];
+  const dataWarnings: WarningCode[] = [];
   let facts: ParcelFacts = { yearBuilt: null, units: null, useCode: null };
 
   if (jurisdiction.inLACity) {
@@ -47,12 +47,10 @@ export async function lookup(
       const parcel = await deps.getParcel(address);
       facts = parcel.facts;
       if (facts.yearBuilt == null || facts.units == null) {
-        dataWarnings.push(
-          'We could not read full property records for this address, so we will ask you a couple of questions.',
-        );
+        dataWarnings.push('DATA_INCOMPLETE');
       }
     } catch {
-      dataWarnings.push('Property records are temporarily unavailable; answers below are based only on your responses.');
+      dataWarnings.push('RECORDS_UNAVAILABLE');
     }
   }
 
