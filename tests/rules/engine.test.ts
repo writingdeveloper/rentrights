@@ -78,14 +78,39 @@ describe('resolveRegime', () => {
     expect(r.confidence).toBe('medium');
   });
 
-  it('gives an unincorporated-county message when Census returns no incorporated place', () => {
+  it('classifies a pre-1995 multi-unit unincorporated address as COUNTY_RSTPO', () => {
     const r = resolveRegime({
       jurisdiction: { inLACity: false, placeName: null, incorporated: false },
-      facts: { yearBuilt: 1950, units: 4, useCode: '0500' },
+      facts: { yearBuilt: 1990, units: 4, useCode: '0500' },
     });
-    expect(r.regime).toBe('OUT_OF_JURISDICTION');
-    expect(r.confidence).toBe('high');
+    expect(r.regime).toBe('COUNTY_RSTPO');
     expect(r.reasons.some((x) => x.code === 'UNINCORPORATED_COUNTY')).toBe(true);
+    expect(r.reasons.some((x) => x.code === 'COUNTY_BUILT_BEFORE_1995')).toBe(true);
+  });
+
+  it('classifies a post-1995 multi-unit unincorporated address as COUNTY_JCO', () => {
+    const r = resolveRegime({
+      jurisdiction: { inLACity: false, placeName: null, incorporated: false },
+      facts: { yearBuilt: 2010, units: 8, useCode: '0500' },
+    });
+    expect(r.regime).toBe('COUNTY_JCO');
+  });
+
+  it('classifies an unincorporated single-family home as COUNTY_JCO', () => {
+    const r = resolveRegime({
+      jurisdiction: { inLACity: false, placeName: null, incorporated: false },
+      facts: { yearBuilt: 1990, units: 1, useCode: '0100' },
+    });
+    expect(r.regime).toBe('COUNTY_JCO');
+  });
+
+  it('lowers confidence at the 1995 County cutoff', () => {
+    const r = resolveRegime({
+      jurisdiction: { inLACity: false, placeName: null, incorporated: false },
+      facts: { yearBuilt: 1995, units: 4, useCode: '0500' },
+    });
+    expect(r.regime).toBe('COUNTY_RSTPO');
+    expect(r.confidence).toBe('medium');
   });
 
   it('asks the condo question for a multi-unit building whose use code is not clearly an apartment', () => {

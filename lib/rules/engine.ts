@@ -20,20 +20,15 @@ export function useCodeKind(useCode: string | null): 'apartment' | 'sfr' | 'cond
 
 export function resolveRegime({ jurisdiction, facts, answers = {}, now = new Date() }: ResolveInput): RegimeResult {
   if (!jurisdiction.inLACity) {
-    if (jurisdiction.placeName === null) {
+    if (jurisdiction.placeName !== null) {
       return {
         regime: 'OUT_OF_JURISDICTION',
         confidence: 'high',
-        reasons: [{ code: 'UNINCORPORATED_COUNTY' }],
+        reasons: [{ code: 'OUT_OF_LA_CITY', params: { placeName: jurisdiction.placeName } }],
         questions: [],
       };
     }
-    return {
-      regime: 'OUT_OF_JURISDICTION',
-      confidence: 'high',
-      reasons: [{ code: 'OUT_OF_LA_CITY', params: { placeName: jurisdiction.placeName } }],
-      questions: [],
-    };
+    return resolveCounty(facts, answers);
   }
 
   const reasons: ReasonItem[] = [{ code: 'IN_LA_CITY' }];
@@ -130,4 +125,64 @@ export function resolveRegime({ jurisdiction, facts, answers = {}, now = new Dat
 
   // multiUnit === null → not enough information yet.
   return { regime: 'UNKNOWN', confidence: 'low', reasons, questions };
+}
+
+// Unincorporated LA County → County RSTPO. Fully covered (cap + just cause) requires
+// 2+ units AND certificate of occupancy on or before Feb 1, 1995 (approximated by year built).
+function resolveCounty(facts: ParcelFacts, answers: UserAnswers): RegimeResult {
+  const reasons: ReasonItem[] = [{ code: 'UNINCORPORATED_COUNTY' }];
+  const questions: QuestionId[] = [];
+
+  let builtBeforeCounty: boolean | null;
+  if (facts.yearBuilt == null) {
+    builtBeforeCounty = null;
+    reasons.push({ code: 'COUNTY_BUILT_UNKNOWN' });
+  } else if (facts.yearBuilt < LEGAL.countyBuildCutoffYear) {
+    builtBeforeCounty = true;
+    reasons.push({ code: 'COUNTY_BUILT_BEFORE_1995', params: { year: facts.yearBuilt } });
+  } else if (facts.yearBuilt > LEGAL.countyBuildCutoffYear) {
+    builtBeforeCounty = false;
+    reasons.push({ code: 'COUNTY_BUILT_AFTER_1995', params: { year: facts.yearBuilt } });
+  } else {
+    builtBeforeCounty = null;
+    reasons.push({ code: 'COUNTY_BUILT_1995_AMBIGUOUS' });
+  }
+
+  // Unit count / single-family — reuse the same neutral reason codes & questions as the city path.
+  let multiUnit: boolean | null;
+  if (answers.isCondo === true) {
+    multiUnit = false;
+    reasons.push({ code: 'SAID_CONDO' });
+  } else if (answers.isSeparateHouse === true) {
+    multiUnit = false;
+    reasons.push({ code: 'SAID_SEPARATE_HOUSE' });
+  } else if (facts.units == null) {
+    multiUnit = null;
+    questions.push('IS_SEPARATE_HOUSE');
+  } else if (facts.units >= 3) {
+    multiUnit = true;
+    reasons.push({ code: 'UNITS_COUNT', params: { count: facts.units } });
+  } else if (facts.units === 2) {
+    multiUnit = true;
+    reasons.push({ code: 'TWO_UNITS' });
+    if (answers.isSeparateHouse === undefined) questions.push('IS_SEPARATE_HOUSE');
+  } else {
+    multiUnit = false;
+    reasons.push({ code: 'SINGLE_UNIT' });
+  }
+  if (multiUnit === true && answers.isCondo === undefined && useCodeKind(facts.useCode) !== 'apartment') {
+    questions.push('IS_CONDO');
+  }
+
+  const conf: Confidence = questions.length === 0 ? 'high' : 'medium';
+
+  if (multiUnit === true) {
+    if (builtBeforeCounty === true) return { regime: 'COUNTY_RSTPO', confidence: conf, reasons, questions };
+    if (builtBeforeCounty === false) return { regime: 'COUNTY_JCO', confidence: conf, reasons, questions };
+    return { regime: 'COUNTY_RSTPO', confidence: 'medium', reasons, questions };
+  }
+  if (multiUnit === false) {
+    return { regime: 'COUNTY_JCO', confidence: conf, reasons, questions };
+  }
+  return { regime: 'COUNTY_JCO', confidence: 'low', reasons, questions };
 }
