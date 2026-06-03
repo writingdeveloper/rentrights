@@ -62,4 +62,15 @@ describe('fetchJurisdiction', () => {
     expect(j?.inLACity).toBe(true);
     expect(j?.inLACounty).toBe(true);
   });
+
+  it('strips a unit/apartment designator from the geocode query', async () => {
+    let captured = '';
+    const fakeFetch = async (url: string) => {
+      captured = url;
+      return { ok: true, json: async () => la } as unknown as Response;
+    };
+    await fetchJurisdiction('300 S Santa Fe Ave Apt 450, Los Angeles, CA', fakeFetch);
+    expect(decodeURIComponent(captured)).toContain('300 S Santa Fe Ave, Los Angeles, CA');
+    expect(captured.toLowerCase()).not.toContain('apt');
+  });
 });

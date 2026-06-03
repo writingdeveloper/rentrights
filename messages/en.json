@@ -61,7 +61,7 @@
   "warning.RECORDS_UNAVAILABLE": "Property records are temporarily unavailable; answers below are based only on your responses.",
   "error.INVALID_BODY": "We couldn't read that request. Please try again.",
   "error.ADDRESS_REQUIRED": "An address is required.",
-  "error.ADDRESS_NOT_FOUND": "We could not find that address. Try including the city, e.g. \"123 Main St, Los Angeles\".",
+  "error.ADDRESS_NOT_FOUND": "We couldn't find that address. Make sure it includes the city — e.g. \"300 S Santa Fe Ave, Los Angeles\". A unit or apartment number is optional.",
   "error.UPSTREAM_ERROR": "Something went wrong looking up that address. Please try again.",
   "reason.IN_LA_CITY": "In the City of Los Angeles",
   "reason.SAID_BUILT_BEFORE_1978": "You said it was built before Oct 1, 1978",
