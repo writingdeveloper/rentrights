@@ -1,4 +1,5 @@
 import { Jurisdiction } from '@/lib/rules/types';
+import { stripUnit } from './address';
 
 type FetchLike = (url: string) => Promise<Response>;
 
@@ -26,7 +27,7 @@ export function parseJurisdiction(json: unknown): Jurisdiction | null {
 
 export async function fetchJurisdiction(address: string, fetchImpl: FetchLike = fetch): Promise<Jurisdiction | null> {
   const url =
-    `${BASE}?address=${encodeURIComponent(address)}` +
+    `${BASE}?address=${encodeURIComponent(stripUnit(address))}` +
     `&benchmark=Public_AR_Current&vintage=Current_Current&layers=27&format=json`;
   const res = await fetchImpl(url);
   if (!res.ok) throw new Error(`Census geocoder error: ${res.status}`);

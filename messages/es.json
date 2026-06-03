@@ -61,7 +61,7 @@
   "warning.RECORDS_UNAVAILABLE": "Los registros de la propiedad no están disponibles por el momento; las respuestas de abajo se basan solo en lo que usted indicó.",
   "error.INVALID_BODY": "No pudimos leer esa solicitud. Inténtelo de nuevo.",
   "error.ADDRESS_REQUIRED": "Se requiere una dirección.",
-  "error.ADDRESS_NOT_FOUND": "No pudimos encontrar esa dirección. Intente incluir la ciudad, p. ej. \"123 Main St, Los Angeles\".",
+  "error.ADDRESS_NOT_FOUND": "No pudimos encontrar esa dirección. Asegúrese de incluir la ciudad — p. ej. \"300 S Santa Fe Ave, Los Angeles\". El número de unidad o apartamento es opcional.",
   "error.UPSTREAM_ERROR": "Algo salió mal al consultar esa dirección. Inténtelo de nuevo.",
   "reason.IN_LA_CITY": "En la Ciudad de Los Ángeles",
   "reason.SAID_BUILT_BEFORE_1978": "Usted indicó que se construyó antes del 1 de oct. de 1978",
