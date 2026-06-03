@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { parseJurisdiction, fetchJurisdiction } from '@/lib/clients/census';
+import { parseJurisdiction, parseGeocode, fetchJurisdiction, fetchGeocode } from '@/lib/clients/census';
 import la from '../fixtures/census-la.json';
 import weho from '../fixtures/census-weho.json';
 import nomatch from '../fixtures/census-nomatch.json';
@@ -52,6 +52,31 @@ describe('parseJurisdiction', () => {
     const j = parseJurisdiction(unincorpNonLa);
     expect(j?.inLACounty).toBe(false);
     expect(j?.placeName).toBeNull();
+  });
+});
+
+describe('parseGeocode', () => {
+  it('returns the jurisdiction and the Census-normalized address', () => {
+    expect(parseGeocode(la)).toEqual({
+      jurisdiction: { inLACity: true, placeName: 'Los Angeles city', incorporated: true, inLACounty: true },
+      matchedAddress: '1411 MURRAY DR, LOS ANGELES, CA, 90026',
+    });
+  });
+  it('returns null when there is no match', () => {
+    expect(parseGeocode(nomatch)).toBeNull();
+  });
+});
+
+describe('fetchGeocode', () => {
+  it('strips a unit designator and returns the canonical match', async () => {
+    let captured = '';
+    const fakeFetch = async (url: string) => {
+      captured = url;
+      return { ok: true, json: async () => la } as unknown as Response;
+    };
+    const g = await fetchGeocode('1411 Murray Dr #5, Los Angeles, CA', fakeFetch);
+    expect(g?.matchedAddress).toBe('1411 MURRAY DR, LOS ANGELES, CA, 90026');
+    expect(captured.toLowerCase()).not.toContain('%235'); // "#5" stripped before encoding
   });
 });
 

@@ -70,6 +70,10 @@ export function resolveRegime({ jurisdiction, facts, answers = {}, now = new Dat
   } else if (answers.isSeparateHouse === true) {
     multiUnit = false;
     reasons.push({ code: 'SAID_SEPARATE_HOUSE' });
+  } else if (answers.isSeparateHouse === false) {
+    // "Not a separate house" → a building with other units (2+).
+    multiUnit = true;
+    reasons.push({ code: 'SAID_NOT_SEPARATE_HOUSE' });
   } else if (facts.units == null) {
     multiUnit = null;
     questions.push('IS_SEPARATE_HOUSE');
@@ -164,6 +168,9 @@ function resolveCounty(facts: ParcelFacts, answers: UserAnswers): RegimeResult {
   } else if (answers.isSeparateHouse === true) {
     multiUnit = false;
     reasons.push({ code: 'SAID_SEPARATE_HOUSE' });
+  } else if (answers.isSeparateHouse === false) {
+    multiUnit = true;
+    reasons.push({ code: 'SAID_NOT_SEPARATE_HOUSE' });
   } else if (facts.units == null) {
     multiUnit = null;
     questions.push('IS_SEPARATE_HOUSE');

@@ -3,7 +3,7 @@ import { lookup, AddressNotFoundError } from '@/lib/compute/lookup';
 import { Jurisdiction, ParcelFacts } from '@/lib/rules/types';
 
 const deps = (j: Jurisdiction | null, facts: ParcelFacts) => ({
-  getJurisdiction: async () => j,
+  getGeocode: async () => (j ? { jurisdiction: j, matchedAddress: 'CANONICAL ADDR, LOS ANGELES, CA, 90000' } : null),
   getParcel: async () => ({ ain: '1', facts }),
 });
 

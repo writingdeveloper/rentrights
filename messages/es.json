@@ -71,6 +71,7 @@
   "reason.BUILT_1978_AMBIGUOUS": "Construido en 1978 — la fecha exacta del certificado de ocupación determina la cobertura del RSO",
   "reason.SAID_CONDO": "Usted indicó que es un condominio de propiedad individual (tratado como vivienda unifamiliar para las reglas de tope de renta)",
   "reason.SAID_SEPARATE_HOUSE": "Usted indicó que la otra unidad es una casa aparte (tratada como unifamiliar)",
+  "reason.SAID_NOT_SEPARATE_HOUSE": "Usted indicó que es un edificio con otras unidades (multifamiliar)",
   "reason.UNITS_COUNT": "{count} unidades en la parcela",
   "reason.TWO_UNITS": "2 unidades en la parcela",
   "reason.SINGLE_UNIT": "Una sola unidad en la parcela (unifamiliar)",
