@@ -34,6 +34,15 @@ export const LEGAL = {
     { value: 8.7, effectiveFrom: '2026-08-01', effectiveTo: '2027-07-31', source: 'CA Civ §1947.12 / CPI', expectedUpdate: '2027-08-01' },
   ] as DatedValue<number>[],
 
+  // LA County RSTPO (unincorporated areas), administered by DCBA.
+  // Fully covered = 2+ units AND certificate of occupancy on or before Feb 1, 1995.
+  countyBuildCutoffYear: 1995,
+  countyBuildCutoffNote: 'CO on or before February 1, 1995',
+  // County standard allowable annual increase (%): 60% of CPI, max 3% (small-landlord 4%, luxury 5%).
+  countyCapPct: [
+    { value: 1.93, effectiveFrom: '2025-07-01', effectiveTo: '2026-06-30', source: 'LA County DCBA RSTPO (60% of CPI, max 3%)', expectedUpdate: '2026-07-01' },
+  ] as DatedValue<number>[],
+
   // Rent-increase notice periods (CA Civ §827, amended SB1103 eff. 2025-01-01).
   notice: { smallIncreaseDays: 30, largeIncreaseDays: 90, largeThresholdPct: 10, mailExtraDays: 5 },
 
