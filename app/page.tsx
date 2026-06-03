@@ -28,12 +28,12 @@ export default function Home() {
 
   return (
     <main className="mx-auto max-w-xl px-4 py-10">
-      <h1 className="text-2xl font-extrabold text-blue-700">RentRights</h1>
-      <p className="text-sm text-gray-500">Know your renter rights in the City of LA — free, no sign-up, nothing stored.</p>
+      <h1 className="text-2xl font-extrabold text-blue-700">{t('page.title')}</h1>
+      <p className="text-sm text-gray-500">{t('page.tagline')}</p>
 
       <form className="mt-5 flex gap-2" onSubmit={(e) => { e.preventDefault(); setAnswers({}); run(address, {}); }}>
-        <input className="flex-1 rounded-lg border px-3 py-2" placeholder="1234 S Main St, Los Angeles" value={address} onChange={(e) => setAddress(e.target.value)} />
-        <button className="rounded-lg bg-blue-600 px-4 py-2 font-semibold text-white" disabled={loading}>{loading ? '…' : 'Check'}</button>
+        <input className="flex-1 rounded-lg border px-3 py-2" placeholder={t('page.placeholder')} value={address} onChange={(e) => setAddress(e.target.value)} />
+        <button className="rounded-lg bg-blue-600 px-4 py-2 font-semibold text-white" disabled={loading}>{loading ? t('page.loading') : t('page.check')}</button>
       </form>
 
       {error && (

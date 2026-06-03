@@ -1,8 +1,7 @@
+'use client';
+import { useT } from '@/lib/i18n/LocaleProvider';
+
 export function Disclaimer({ lastVerified }: { lastVerified: string }) {
-  return (
-    <p className="mt-6 text-xs text-gray-500">
-      ⚠️ This is an estimate based on public records, not a lookup from LAHD&apos;s registry, and is not legal advice.
-      Always confirm with LAHD before acting. Legal figures last verified {lastVerified}.
-    </p>
-  );
+  const t = useT();
+  return <p className="mt-6 text-xs text-gray-500">{t('disclaimer.text', { lastVerified })}</p>;
 }

@@ -2,50 +2,34 @@ import { LEGAL } from '@/lib/legal/constants';
 import { Regime } from '@/lib/rules/types';
 import { stalenessFor, Staleness } from '@/lib/legal/staleness';
 
-export function capLabel(regime: Regime, onDate = new Date()): string {
+type T = (key: string, params?: Record<string, string | number>) => string;
+
+export function capLabel(regime: Regime, t: T, onDate = new Date()): string {
   const d = onDate.toISOString().slice(0, 10);
   if (regime === 'RSO') {
     const p = LEGAL.rsoCapPct.find((x) => x.effectiveFrom <= d && (!x.effectiveTo || d <= x.effectiveTo));
-    if (!p) return 'See LAHD';
-    return p.value != null ? `up to ${p.value}%` : `${p.floorPct}–${p.ceilingPct}% (LAHD publishes the exact figure)`;
+    if (!p) return t('result.capSeeLahd');
+    return p.value != null
+      ? t('result.capUpTo', { pct: p.value })
+      : t('result.capRsoPending', { floor: p.floorPct ?? 1, ceiling: p.ceilingPct ?? 4 });
   }
   if (regime === 'AB1482') {
     const p = LEGAL.ab1482CapPct.find((x) => x.effectiveFrom <= d && (!x.effectiveTo || d <= x.effectiveTo));
-    return p ? `up to ${p.value}%` : 'See state guidance';
+    return p ? t('result.capUpTo', { pct: p.value }) : t('result.capSeeState');
   }
-  return 'No state/local rent cap — but Just Cause protections apply';
+  return t('result.capNone');
 }
 
-export const RIGHTS_TEXT: Record<Regime, { title: string; points: string[] }> = {
-  RSO: {
-    title: 'Rent Stabilization Ordinance (likely)',
-    points: [
-      'Your landlord generally needs a "just cause" to evict you.',
-      'Rent may be increased only once every 12 months.',
-      'You may be owed relocation assistance for certain no-fault evictions.',
-      'Rent-increase notice: 30 days (≤10%) or 90 days (>10%).',
-    ],
-  },
-  AB1482: {
-    title: 'California Tenant Protection Act (AB 1482) (likely)',
-    points: [
-      'Statewide cap on annual rent increases.',
-      'Just-cause eviction protections after 12 months of tenancy.',
-      'One month of relocation assistance for no-fault evictions.',
-      'Rent-increase notice: 30 days (≤10%) or 90 days (>10%).',
-    ],
-  },
-  JCO_ONLY: {
-    title: 'LA Just Cause Ordinance (citywide)',
-    points: [
-      'Even without a rent cap, your landlord generally needs a "just cause" to evict you (after 6 months).',
-      'Rent-increase notice: 30 days (≤10%) or 90 days (>10%).',
-      'Confirm whether AB 1482 also caps your rent — see below.',
-    ],
-  },
-  OUT_OF_JURISDICTION: { title: 'Outside the City of Los Angeles', points: ['This tool currently covers the City of LA only. Your city or unincorporated LA County may have its own rules.'] },
-  UNKNOWN: { title: 'We need a little more info', points: ['Answer the questions below so we can estimate your rights.'] },
+const RIGHTS_POINTS: Record<Regime, number> = {
+  RSO: 4, AB1482: 4, JCO_ONLY: 3, OUT_OF_JURISDICTION: 1, UNKNOWN: 1,
 };
+
+export function rightsText(regime: Regime, t: T): { title: string; points: string[] } {
+  const n = RIGHTS_POINTS[regime];
+  const points: string[] = [];
+  for (let i = 1; i <= n; i++) points.push(t(`rights.${regime}.point${i}`));
+  return { title: t(`rights.${regime}.title`), points };
+}
 
 export function capStaleness(regime: Regime, onDate = new Date()): Staleness | null {
   if (regime === 'RSO') return stalenessFor(LEGAL.rsoCapPct, onDate);
@@ -53,14 +37,10 @@ export function capStaleness(regime: Regime, onDate = new Date()): Staleness | n
   return null;
 }
 
-export function stalenessMessage(s: Staleness, regime?: Regime): string {
-  const when = s.expectedUpdate ? ` around ${s.expectedUpdate}` : '';
-  const who = regime === 'AB1482' ? 'the state (CA Civil Code §1947.12 / CPI)' : 'LAHD';
-  if (s.reason === 'pending publication') {
-    return `This figure is pending publication${when}. Confirm the latest with ${who}.`;
-  }
-  if (s.reason === 'past expected update') {
-    return `This figure was due to update${when}. Confirm the latest with ${who}.`;
-  }
-  return `This figure may be out of date. Confirm the latest with ${who}.`;
+export function stalenessMessage(s: Staleness, t: T, regime?: Regime): string {
+  const when = s.expectedUpdate ? t('staleness.whenSuffix', { date: s.expectedUpdate }) : '';
+  const who = regime === 'AB1482' ? t('staleness.authority.state') : t('staleness.authority.lahd');
+  if (s.reason === 'pending publication') return t('staleness.pending', { when, who });
+  if (s.reason === 'past expected update') return t('staleness.pastUpdate', { when, who });
+  return t('staleness.generic', { when, who });
 }
