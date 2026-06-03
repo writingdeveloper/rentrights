@@ -94,5 +94,9 @@
   "help.NLSLA.description": "Ayuda legal gratuita para defensa contra desalojos, control de rentas y discriminación de vivienda para residentes de bajos ingresos en todo el Condado de LA.",
   "disclaimer.text": "⚠️ Esto es una estimación basada en registros públicos, no una consulta del registro de LAHD, y no es asesoría legal. Confirme siempre con LAHD antes de actuar. Cifras legales verificadas por última vez el {lastVerified}.",
   "meta.title": "RentRights — derechos del inquilino en LA, por dirección",
-  "meta.description": "Herramienta gratuita y de código abierto que estima sus protecciones de renta en la Ciudad de Los Ángeles a partir de su dirección. No es asesoría legal."
+  "meta.description": "Herramienta gratuita y de código abierto que estima sus protecciones de renta en la Ciudad de Los Ángeles a partir de su dirección. No es asesoría legal.",
+  "share.button": "Copiar enlace",
+  "share.copied": "¡Copiado!",
+  "share.privacyNote": "Este enlace incluye la dirección que ingresó.",
+  "share.shareTitle": "Mi estimación de derechos de inquilino en LA"
 }

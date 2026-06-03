@@ -94,5 +94,9 @@
   "help.NLSLA.description": "Free legal aid for eviction defense, rent control, and housing discrimination for low-income residents throughout LA County.",
   "disclaimer.text": "⚠️ This is an estimate based on public records, not a lookup from LAHD's registry, and is not legal advice. Always confirm with LAHD before acting. Legal figures last verified {lastVerified}.",
   "meta.title": "RentRights — LA renter rights, by address",
-  "meta.description": "Free, open-source tool that estimates your City of Los Angeles rent-law protections from your address. Not legal advice."
+  "meta.description": "Free, open-source tool that estimates your City of Los Angeles rent-law protections from your address. Not legal advice.",
+  "share.button": "Copy link",
+  "share.copied": "Copied!",
+  "share.privacyNote": "This link includes the address you entered.",
+  "share.shareTitle": "My LA renter-rights estimate"
 }
