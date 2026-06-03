@@ -1,4 +1,5 @@
 import { ParcelFacts } from '@/lib/rules/types';
+import { CamsPoint, fetchCamsPoint } from './cams';
 
 type FetchLike = (url: string) => Promise<Response>;
 
@@ -29,55 +30,53 @@ export function parseParcelFacts(json: unknown): ParcelFacts {
   };
 }
 
-// A one-line address ("1411 MURRAY DR, LOS ANGELES, CA, 90026") splits into the
-// situs line (matched against the Assessor's SAADDR) and the city (verified
-// against SAADDR2 so we never accept a same-named street in another city).
-export function parseSitus(canonicalAddress: string): { situs: string; city: string } {
-  const parts = canonicalAddress.split(',').map((s) => s.trim());
-  return { situs: (parts[0] ?? '').toUpperCase(), city: (parts[1] ?? '').toUpperCase() };
-}
-
 /**
- * Picks the parcel AIN ONLY when there is exactly one confident match: a parcel
- * in the expected city. Returns null when the situs is absent (postal address
- * with no Assessor record, e.g. a large new building) or ambiguous (one situs
- * mapped to several parcels). Failing loud here is deliberate — the caller then
- * asks the renter to confirm, rather than showing facts for the wrong parcel.
+ * The AIN of the single parcel the point falls in. A confident rooftop point
+ * normally intersects exactly one parcel; 0 (point in a right-of-way) or several
+ * (stacked/overlapping condo parcels) returns null so the caller fails loud and
+ * asks the renter to confirm rather than guessing.
  */
-export function selectAin(json: unknown, city: string): string | null {
+export function selectAin(json: unknown): string | null {
   const feats = (json as FeatureCollection)?.features ?? [];
-  const cityUp = city.trim().toUpperCase();
-  const matched = feats.filter((f) => {
-    const a = f.attributes ?? {};
-    if (a.AIN == null) return false;
-    if (!cityUp) return true;
-    return String(a.SAADDR2 ?? '')
-      .toUpperCase()
-      .startsWith(cityUp);
-  });
-  const ains = [...new Set(matched.map((f) => String(f.attributes!.AIN)))];
+  const ains = [...new Set(feats.filter((f) => f.attributes?.AIN != null).map((f) => String(f.attributes!.AIN)))];
   return ains.length === 1 ? ains[0] : null;
 }
 
+/** Point-in-polygon: which Assessor parcel (AIN) contains this point. */
+export async function parcelAtPoint(point: CamsPoint, fetchImpl: FetchLike = fetch): Promise<string | null> {
+  const geometry = encodeURIComponent(
+    JSON.stringify({ x: point.x, y: point.y, spatialReference: { wkid: point.wkid } }),
+  );
+  // NOTE: do not add resultRecordCount — the PAIS ArcGIS endpoint 400s on it.
+  const url =
+    `${PAIS}?geometry=${geometry}&geometryType=esriGeometryPoint&inSR=${point.wkid}` +
+    `&spatialRel=esriSpatialRelIntersects&outFields=AIN&returnGeometry=false&f=json`;
+  const res = await fetchImpl(url);
+  if (!res.ok) throw new Error(`Assessor PAIS error: ${res.status}`);
+  return selectAin(await res.json());
+}
+
+export async function fetchRolls(ain: string, fetchImpl: FetchLike = fetch): Promise<ParcelFacts> {
+  const where = encodeURIComponent(`AIN='${ain}' AND RollYear='${LATEST_ROLL_YEAR}'`);
+  const res = await fetchImpl(`${ROLLS}?where=${where}&outFields=AIN,YearBuilt,Units,UseCode&returnGeometry=false&f=json`);
+  if (!res.ok) throw new Error(`Assessor Rolls error: ${res.status}`);
+  return parseParcelFacts(await res.json());
+}
+
+/**
+ * Address → parcel facts via LA County's own stack: CAMS locator (rooftop point)
+ * → PAIS parcels (point-in-polygon → AIN) → assessment roll (year built / units).
+ * Returns null facts at any confident-match failure instead of a wrong parcel.
+ */
 export async function fetchParcel(
-  canonicalAddress: string,
+  address: string,
   fetchImpl: FetchLike = fetch,
 ): Promise<{ ain: string | null; facts: ParcelFacts }> {
-  const { situs, city } = parseSitus(canonicalAddress);
-  if (!situs) return { ain: null, facts: { ...EMPTY } };
+  const point = await fetchCamsPoint(address, fetchImpl);
+  if (!point) return { ain: null, facts: { ...EMPTY } };
 
-  const paisWhere = encodeURIComponent(`SAADDR='${situs.replace(/'/g, "''")}'`);
-  const paisRes = await fetchImpl(
-    `${PAIS}?where=${paisWhere}&outFields=AIN,SAADDR,SAADDR2&returnGeometry=false&f=json`,
-  );
-  if (!paisRes.ok) throw new Error(`Assessor PAIS error: ${paisRes.status}`);
-  const ain = selectAin(await paisRes.json(), city);
+  const ain = await parcelAtPoint(point, fetchImpl);
   if (!ain) return { ain: null, facts: { ...EMPTY } };
 
-  const rollWhere = encodeURIComponent(`AIN='${ain}' AND RollYear='${LATEST_ROLL_YEAR}'`);
-  const rollRes = await fetchImpl(
-    `${ROLLS}?where=${rollWhere}&outFields=AIN,YearBuilt,Units,UseCode&returnGeometry=false&f=json`,
-  );
-  if (!rollRes.ok) throw new Error(`Assessor Rolls error: ${rollRes.status}`);
-  return { ain, facts: parseParcelFacts(await rollRes.json()) };
+  return { ain, facts: await fetchRolls(ain, fetchImpl) };
 }
