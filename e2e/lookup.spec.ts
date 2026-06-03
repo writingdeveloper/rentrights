@@ -22,6 +22,6 @@ test('unincorporated LA County guidance + DCBA in get-help', async ({ page }) =>
   await page.goto('/');
   await page.getByPlaceholder('1234 S Main St, Los Angeles').fill('1000 N Eastern Ave, East Los Angeles, CA');
   await page.getByRole('button', { name: 'Check' }).click();
-  await expect(page.getByText(/unincorporated LA County/i)).toBeVisible();
-  await expect(page.getByText(/DCBA/)).toBeVisible();
+  await expect(page.getByText(/unincorporated LA County/i).first()).toBeVisible();
+  await expect(page.getByText(/DCBA/).first()).toBeVisible();
 });
