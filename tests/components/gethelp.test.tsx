@@ -1,0 +1,29 @@
+// @vitest-environment jsdom
+import { afterEach, describe, it, expect } from 'vitest';
+import { cleanup, render, screen } from '@testing-library/react';
+import { GetHelp } from '@/components/GetHelp';
+import { LocaleProvider } from '@/lib/i18n/LocaleProvider';
+
+afterEach(cleanup);
+
+describe('GetHelp', () => {
+  it('renders the directory heading and the LAHD entry', () => {
+    render(
+      <LocaleProvider initialLocale="en">
+        <GetHelp />
+      </LocaleProvider>,
+    );
+    expect(screen.getByText('Get free help')).toBeTruthy();
+    expect(screen.getByText(/LAHD/)).toBeTruthy();
+  });
+
+  it('surfaces a County (DCBA) resource first for unincorporated county', () => {
+    render(
+      <LocaleProvider initialLocale="en">
+        <GetHelp unincorporatedCounty />
+      </LocaleProvider>,
+    );
+    const items = screen.getAllByRole('listitem');
+    expect(items[0].textContent).toContain('DCBA');
+  });
+});
