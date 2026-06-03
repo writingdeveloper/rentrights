@@ -30,5 +30,7 @@ describe('POST /api/lookup', () => {
   it('400s when address is missing', async () => {
     const res = await POST(req({}));
     expect(res.status).toBe(400);
+    const data = await res.json();
+    expect(data.error).toBe('ADDRESS_REQUIRED');
   });
 });

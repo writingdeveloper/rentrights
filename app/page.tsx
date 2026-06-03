@@ -20,9 +20,9 @@ export default function Home() {
     try {
       const res = await fetch('/api/lookup', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ address: addr, answers: ans }) });
       const json = await res.json();
-      if (!res.ok) { setError(json.error ?? 'Error'); setData(null); }
+      if (!res.ok) { setError(json.error ?? 'UPSTREAM_ERROR'); setData(null); }
       else setData(json);
-    } catch { setError('Network error. Please try again.'); }
+    } catch { setError('__NETWORK__'); }
     finally { setLoading(false); }
   }
 
@@ -36,7 +36,11 @@ export default function Home() {
         <button className="rounded-lg bg-blue-600 px-4 py-2 font-semibold text-white" disabled={loading}>{loading ? '…' : 'Check'}</button>
       </form>
 
-      {error && <p className="mt-4 rounded-lg bg-red-50 p-3 text-sm text-red-700">{error}</p>}
+      {error && (
+        <p className="mt-4 rounded-lg bg-red-50 p-3 text-sm text-red-700">
+          {error === '__NETWORK__' ? t('page.networkError') : t(`error.${error}`)}
+        </p>
+      )}
 
       {data && (
         <div className="mt-6">
