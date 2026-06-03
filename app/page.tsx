@@ -5,8 +5,10 @@ import { ConfirmingQuestions } from '@/components/ConfirmingQuestions';
 import { Disclaimer } from '@/components/Disclaimer';
 import { GetHelp } from '@/components/GetHelp';
 import { UserAnswers } from '@/lib/rules/types';
+import { useT } from '@/lib/i18n/LocaleProvider';
 
 export default function Home() {
+  const t = useT();
   const [address, setAddress] = useState('');
   const [answers, setAnswers] = useState<UserAnswers>({});
   const [data, setData] = useState<any>(null);
@@ -47,7 +49,7 @@ export default function Home() {
             />
           )}
           {data.dataWarnings?.map((w: string, i: number) => (
-            <p key={i} className="mt-3 text-xs text-gray-500">{w}</p>
+            <p key={i} className="mt-3 text-xs text-gray-500">{t(`warning.${w}`)}</p>
           ))}
           <GetHelp unincorporatedCounty={data.jurisdiction?.placeName === null} />
           <Disclaimer lastVerified={data.lastVerified} />

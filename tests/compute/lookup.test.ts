@@ -36,7 +36,7 @@ describe('lookup', () => {
         { yearBuilt: null, units: null, useCode: null },
       ),
     );
-    expect(res.dataWarnings.length).toBeGreaterThan(0);
+    expect(res.dataWarnings).toContain('DATA_INCOMPLETE');
   });
 
   it('applies the AB1482 15-year new-construction exemption through lookup', async () => {
