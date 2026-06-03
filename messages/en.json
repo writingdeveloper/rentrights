@@ -71,6 +71,7 @@
   "reason.BUILT_1978_AMBIGUOUS": "Built in 1978 — the exact certificate-of-occupancy date determines RSO coverage",
   "reason.SAID_CONDO": "You said this is an individually-owned condo (treated like a single-family home for rent-cap rules)",
   "reason.SAID_SEPARATE_HOUSE": "You said the other unit is a separate house (treated as single-family)",
+  "reason.SAID_NOT_SEPARATE_HOUSE": "You said it's a building with other units (multi-unit)",
   "reason.UNITS_COUNT": "{count} units on the parcel",
   "reason.TWO_UNITS": "2 units on the parcel",
   "reason.SINGLE_UNIT": "Single unit on the parcel (single-family)",

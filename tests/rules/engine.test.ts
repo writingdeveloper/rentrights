@@ -61,6 +61,27 @@ describe('resolveRegime', () => {
     expect(r.questions).toContain('IS_SEPARATE_HOUSE');
   });
 
+  it('resolves unknown facts via answers: "not a separate house" → multi-unit (post-1978 → AB1482)', () => {
+    const r = resolveRegime({
+      jurisdiction: LA,
+      facts: { yearBuilt: null, units: null, useCode: null },
+      answers: { builtBeforeOct1978: false, isSeparateHouse: false, isCondo: false },
+      now: NOW,
+    });
+    expect(r.regime).toBe('AB1482');
+    expect(r.questions).toEqual([]);
+    expect(r.reasons.some((x) => x.code === 'SAID_NOT_SEPARATE_HOUSE')).toBe(true);
+  });
+
+  it('resolves unknown facts via answers: pre-1978 multi-unit → RSO', () => {
+    const r = resolveRegime({
+      jurisdiction: LA,
+      facts: { yearBuilt: null, units: null, useCode: null },
+      answers: { builtBeforeOct1978: true, isSeparateHouse: false, isCondo: false },
+    });
+    expect(r.regime).toBe('RSO');
+  });
+
   it('treats a multi-unit building built within the last 15 years as AB1482-exempt (JCO_ONLY)', () => {
     const r = resolveRegime({ jurisdiction: LA, facts: { yearBuilt: 2020, units: 8, useCode: '0500' }, now: NOW });
     expect(r.regime).toBe('JCO_ONLY');

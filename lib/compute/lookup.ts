@@ -1,4 +1,4 @@
-import { fetchJurisdiction } from '@/lib/clients/census';
+import { fetchGeocode, GeocodeMatch } from '@/lib/clients/census';
 import { fetchParcel } from '@/lib/clients/assessor';
 import { resolveRegime } from '@/lib/rules/engine';
 import { Jurisdiction, ParcelFacts, RegimeResult, UserAnswers, WarningCode } from '@/lib/rules/types';
@@ -21,12 +21,12 @@ export interface LookupResult {
 }
 
 export interface LookupDeps {
-  getJurisdiction: (address: string) => Promise<Jurisdiction | null>;
-  getParcel: (address: string) => Promise<{ ain: string | null; facts: ParcelFacts }>;
+  getGeocode: (address: string) => Promise<GeocodeMatch | null>;
+  getParcel: (canonicalAddress: string) => Promise<{ ain: string | null; facts: ParcelFacts }>;
 }
 
 const defaultDeps: LookupDeps = {
-  getJurisdiction: (a) => fetchJurisdiction(a),
+  getGeocode: (a) => fetchGeocode(a),
   getParcel: (a) => fetchParcel(a),
 };
 
@@ -36,15 +36,17 @@ export async function lookup(
   deps: LookupDeps = defaultDeps,
   now: Date = new Date(),
 ): Promise<LookupResult> {
-  const jurisdiction = await deps.getJurisdiction(address);
-  if (!jurisdiction) throw new AddressNotFoundError(address);
+  const geo = await deps.getGeocode(address);
+  if (!geo) throw new AddressNotFoundError(address);
+  const { jurisdiction } = geo;
 
   const dataWarnings: WarningCode[] = [];
   let facts: ParcelFacts = { yearBuilt: null, units: null, useCode: null };
 
   if (jurisdiction.inLACity || (jurisdiction.placeName === null && jurisdiction.inLACounty)) {
     try {
-      const parcel = await deps.getParcel(address);
+      // Match the parcel by the geocoder's canonical address, not the raw input.
+      const parcel = await deps.getParcel(geo.matchedAddress || address);
       facts = parcel.facts;
       if (facts.yearBuilt == null || facts.units == null) {
         dataWarnings.push('DATA_INCOMPLETE');
