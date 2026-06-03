@@ -80,7 +80,7 @@ describe('resolveRegime', () => {
 
   it('classifies a pre-1995 multi-unit unincorporated address as COUNTY_RSTPO', () => {
     const r = resolveRegime({
-      jurisdiction: { inLACity: false, placeName: null, incorporated: false },
+      jurisdiction: { inLACity: false, placeName: null, incorporated: false, inLACounty: true },
       facts: { yearBuilt: 1990, units: 4, useCode: '0500' },
     });
     expect(r.regime).toBe('COUNTY_RSTPO');
@@ -90,7 +90,7 @@ describe('resolveRegime', () => {
 
   it('classifies a post-1995 multi-unit unincorporated address as COUNTY_JCO', () => {
     const r = resolveRegime({
-      jurisdiction: { inLACity: false, placeName: null, incorporated: false },
+      jurisdiction: { inLACity: false, placeName: null, incorporated: false, inLACounty: true },
       facts: { yearBuilt: 2010, units: 8, useCode: '0500' },
     });
     expect(r.regime).toBe('COUNTY_JCO');
@@ -98,7 +98,7 @@ describe('resolveRegime', () => {
 
   it('classifies an unincorporated single-family home as COUNTY_JCO', () => {
     const r = resolveRegime({
-      jurisdiction: { inLACity: false, placeName: null, incorporated: false },
+      jurisdiction: { inLACity: false, placeName: null, incorporated: false, inLACounty: true },
       facts: { yearBuilt: 1990, units: 1, useCode: '0100' },
     });
     expect(r.regime).toBe('COUNTY_JCO');
@@ -106,11 +106,21 @@ describe('resolveRegime', () => {
 
   it('lowers confidence at the 1995 County cutoff', () => {
     const r = resolveRegime({
-      jurisdiction: { inLACity: false, placeName: null, incorporated: false },
+      jurisdiction: { inLACity: false, placeName: null, incorporated: false, inLACounty: true },
       facts: { yearBuilt: 1995, units: 4, useCode: '0500' },
     });
     expect(r.regime).toBe('COUNTY_RSTPO');
     expect(r.confidence).toBe('medium');
+  });
+
+  it('returns OUT_OF_JURISDICTION with OUTSIDE_LA for an unincorporated non-LA-County address', () => {
+    const r = resolveRegime({
+      jurisdiction: { inLACity: false, placeName: null, incorporated: false, inLACounty: false },
+      facts: { yearBuilt: 1990, units: 4, useCode: '0500' },
+    });
+    expect(r.regime).toBe('OUT_OF_JURISDICTION');
+    expect(r.confidence).toBe('high');
+    expect(r.reasons.some((x) => x.code === 'OUTSIDE_LA')).toBe(true);
   });
 
   it('asks the condo question for a multi-unit building whose use code is not clearly an apartment', () => {

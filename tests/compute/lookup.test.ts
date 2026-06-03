@@ -49,7 +49,7 @@ describe('lookup', () => {
 
   it('fetches parcel facts for an unincorporated County address', async () => {
     const res = await lookup('x', {}, deps(
-      { inLACity: false, placeName: null, incorporated: false },
+      { inLACity: false, placeName: null, incorporated: false, inLACounty: true },
       { yearBuilt: 1990, units: 4, useCode: '0500' },
     ));
     expect(res.facts.units).toBe(4);

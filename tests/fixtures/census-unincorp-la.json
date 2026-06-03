@@ -2,9 +2,8 @@
   "result": {
     "addressMatches": [
       {
-        "matchedAddress": "1411 MURRAY DR, LOS ANGELES, CA, 90026",
+        "matchedAddress": "1000 N EASTERN AVE, EAST LOS ANGELES, CA, 90063",
         "geographies": {
-          "Incorporated Places": [{ "NAME": "Los Angeles city", "GEOID": "0644000" }],
           "Counties": [{ "NAME": "Los Angeles County", "GEOID": "06037" }]
         }
       }

@@ -81,6 +81,7 @@
   "reason.EXEMPTION_NOTICE_GIVEN": "El arrendador entregó un aviso de exención de la AB 1482 → sin tope estatal de renta, pero la Causa Justa de la ciudad sigue aplicando",
   "reason.NO_EXEMPTION_NOTICE": "Sin aviso de exención de la AB 1482 → aplica el tope de renta de la AB 1482",
   "reason.OUT_OF_LA_CITY": "{placeName} está fuera de la Ciudad de Los Ángeles",
+  "reason.OUTSIDE_LA": "Esta dirección parece estar fuera del Condado de Los Ángeles, que esta herramienta aún no cubre.",
   "reason.UNINCORPORATED_COUNTY": "Esta dirección podría estar en el área no incorporada del Condado de LA, que tiene sus propias reglas (RSTPO del Condado vía DCBA) en lugar de las de la Ciudad de Los Ángeles.",
   "help.title": "Obtenga ayuda gratuita",
   "help.website": "Sitio web",

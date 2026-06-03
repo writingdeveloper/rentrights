@@ -28,7 +28,15 @@ export function resolveRegime({ jurisdiction, facts, answers = {}, now = new Dat
         questions: [],
       };
     }
-    return resolveCounty(facts, answers);
+    if (jurisdiction.inLACounty) {
+      return resolveCounty(facts, answers);
+    }
+    return {
+      regime: 'OUT_OF_JURISDICTION',
+      confidence: 'high',
+      reasons: [{ code: 'OUTSIDE_LA' }],
+      questions: [],
+    };
   }
 
   const reasons: ReasonItem[] = [{ code: 'IN_LA_CITY' }];

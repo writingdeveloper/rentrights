@@ -6,16 +6,21 @@ const BASE = 'https://geocoding.geo.census.gov/geocoder/geographies/onelineaddre
 
 export function parseJurisdiction(json: unknown): Jurisdiction | null {
   const j = json as {
-    result?: { addressMatches?: Array<{ geographies?: Record<string, Array<{ NAME?: string }>> }> };
+    result?: { addressMatches?: Array<{ geographies?: Record<string, Array<{ NAME?: string; GEOID?: string }>> }> };
   };
   const match = j?.result?.addressMatches?.[0];
   if (!match) return null;
   const place = match.geographies?.['Incorporated Places']?.[0];
   const placeName = place?.NAME ?? null;
+  const county = match.geographies?.['Counties']?.[0];
+  const inLACounty = county
+    ? county.GEOID === '06037' || county.NAME === 'Los Angeles County'
+    : undefined;
   return {
     inLACity: placeName === 'Los Angeles city',
     placeName,
     incorporated: Boolean(placeName),
+    inLACounty,
   };
 }
 
