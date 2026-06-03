@@ -1,6 +1,6 @@
 'use client';
 import { RegimeResult } from '@/lib/rules/types';
-import { rightsText, capLabel, capStaleness, stalenessMessage } from '@/lib/content/rights';
+import { rightsText, capLabel, capStaleness, stalenessMessage, notFinalBanner } from '@/lib/content/rights';
 import { useT } from '@/lib/i18n/LocaleProvider';
 
 export function ResultCard({ result }: { result: RegimeResult }) {
@@ -30,7 +30,7 @@ export function ResultCard({ result }: { result: RegimeResult }) {
         {rights.points.map((p, i) => <li key={i}>{p}</li>)}
       </ul>
       <div className="mt-3 rounded-lg border border-amber-300 bg-amber-50 p-2 text-xs font-semibold text-amber-800">
-        {t('result.notFinal')}
+        {notFinalBanner(result.regime, t)}
       </div>
     </div>
   );

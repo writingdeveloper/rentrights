@@ -79,6 +79,15 @@ export const HELP_ORGS: HelpOrg[] = [
 ];
 
 /**
+ * The enforcement authority a renter should confirm their result with.
+ * Single source of truth (web-verified phone) for the City vs. County hotline,
+ * derived from HELP_ORGS by tag: LAHD is the only `city` org, DCBA the only
+ * `county` org. Consumed by the ResultCard "Not final — confirm with …" banner.
+ */
+export const cityAuthority: HelpOrg = HELP_ORGS.find((o) => o.tags.includes('city'))!;
+export const countyAuthority: HelpOrg = HELP_ORGS.find((o) => o.tags.includes('county'))!;
+
+/**
  * Returns HELP_ORGS ordered by relevance for the given address context.
  * When the address is in unincorporated LA County, the County DCBA resource
  * is surfaced first because County rules (not City RSO) apply there.
