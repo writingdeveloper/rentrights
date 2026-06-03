@@ -110,5 +110,21 @@
   "increase.verdict.overRange": "⚠ Likely over the legal cap. Even at the high end the legal max is about {ceilingMax}. Confirm with LAHD.",
   "increase.verdict.uncertainRange": "The cap is being updated (LAHD publishes the exact %). The legal max is about {floorMax}–{ceilingMax}, and your proposed rent is in that range — confirm with LAHD.",
   "increase.noCap": "Your unit isn't under a rent cap, so there's no maximum increase amount — but Just Cause and notice rules still apply.",
-  "increase.caveat": "Estimate only — confirm with LAHD before acting."
+  "increase.caveat": "Estimate only — confirm with LAHD before acting.",
+  "rights.COUNTY_RSTPO.title": "LA County Rent Stabilization (RSTPO) (likely)",
+  "rights.COUNTY_RSTPO.point1": "Your landlord generally needs a \"just cause\" to evict you.",
+  "rights.COUNTY_RSTPO.point2": "Rent increases are capped (once every 12 months).",
+  "rights.COUNTY_RSTPO.point3": "Small-property landlords and luxury units may have a higher cap — confirm with DCBA.",
+  "rights.COUNTY_RSTPO.point4": "You may be owed relocation assistance for no-fault evictions. Confirm details with LA County DCBA.",
+  "rights.COUNTY_JCO.title": "LA County Just Cause (unincorporated)",
+  "rights.COUNTY_JCO.point1": "Your landlord generally needs a \"just cause\" to evict you, even without a rent cap.",
+  "rights.COUNTY_JCO.point2": "This unit is likely not under the County rent cap.",
+  "rights.COUNTY_JCO.point3": "California AB 1482 may still cap your rent — confirm below and with DCBA.",
+  "rights.COUNTY_JCO.point4": "Confirm your exact protections with LA County DCBA.",
+  "reason.COUNTY_BUILT_BEFORE_1995": "Built in {year} (before the County's Feb 1, 1995 cutoff)",
+  "reason.COUNTY_BUILT_AFTER_1995": "Built in {year} (after the County's Feb 1, 1995 cutoff)",
+  "reason.COUNTY_BUILT_1995_AMBIGUOUS": "Built in 1995 — the exact certificate-of-occupancy date (Feb 1 cutoff) determines County rent-cap coverage",
+  "reason.COUNTY_BUILT_UNKNOWN": "Build date unknown — County rent-cap coverage depends on a certificate of occupancy on or before Feb 1, 1995",
+  "result.capSeeDcba": "See LA County DCBA",
+  "staleness.authority.dcba": "LA County DCBA"
 }

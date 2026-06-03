@@ -110,5 +110,21 @@
   "increase.verdict.overRange": "⚠ Probablemente por encima del tope legal. Incluso en el extremo alto, el máximo legal es aproximadamente {ceilingMax}. Confirme con LAHD.",
   "increase.verdict.uncertainRange": "El tope se está actualizando (LAHD publica el % exacto). El máximo legal es aproximadamente {floorMax}–{ceilingMax}, y su renta propuesta está en ese rango — confirme con LAHD.",
   "increase.noCap": "Su unidad no tiene tope de renta, así que no hay un monto máximo de aumento — pero las reglas de Causa Justa y de aviso siguen aplicando.",
-  "increase.caveat": "Solo una estimación — confirme con LAHD antes de actuar."
+  "increase.caveat": "Solo una estimación — confirme con LAHD antes de actuar.",
+  "rights.COUNTY_RSTPO.title": "Estabilización de Rentas del Condado de LA (RSTPO) (probable)",
+  "rights.COUNTY_RSTPO.point1": "Por lo general, su arrendador necesita una \"causa justa\" para desalojarlo.",
+  "rights.COUNTY_RSTPO.point2": "Los aumentos de renta tienen un tope (una vez cada 12 meses).",
+  "rights.COUNTY_RSTPO.point3": "Los arrendadores de pocas propiedades y las unidades de lujo pueden tener un tope más alto — confirme con DCBA.",
+  "rights.COUNTY_RSTPO.point4": "Podría corresponderle asistencia de reubicación en desalojos sin culpa. Confirme los detalles con el DCBA del Condado de LA.",
+  "rights.COUNTY_JCO.title": "Causa Justa del Condado de LA (área no incorporada)",
+  "rights.COUNTY_JCO.point1": "Por lo general, su arrendador necesita una \"causa justa\" para desalojarlo, incluso sin tope de renta.",
+  "rights.COUNTY_JCO.point2": "Es probable que esta unidad no esté bajo el tope de renta del Condado.",
+  "rights.COUNTY_JCO.point3": "La AB 1482 de California aún podría limitar su renta — verifique abajo y con el DCBA.",
+  "rights.COUNTY_JCO.point4": "Confirme sus protecciones exactas con el DCBA del Condado de LA.",
+  "reason.COUNTY_BUILT_BEFORE_1995": "Construido en {year} (antes del límite del Condado del 1 de feb. de 1995)",
+  "reason.COUNTY_BUILT_AFTER_1995": "Construido en {year} (después del límite del Condado del 1 de feb. de 1995)",
+  "reason.COUNTY_BUILT_1995_AMBIGUOUS": "Construido en 1995 — la fecha exacta del certificado de ocupación (límite del 1 de feb.) determina la cobertura del tope de renta del Condado",
+  "reason.COUNTY_BUILT_UNKNOWN": "Fecha de construcción desconocida — la cobertura del tope del Condado depende de un certificado de ocupación del 1 de feb. de 1995 o anterior",
+  "result.capSeeDcba": "Consulte el DCBA del Condado de LA",
+  "staleness.authority.dcba": "el DCBA del Condado de LA"
 }
