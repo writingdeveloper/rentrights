@@ -1,4 +1,4 @@
-import { UserAnswers } from '@/lib/rules/types';
+import { UserAnswers, QuestionId } from '@/lib/rules/types';
 import { Locale } from '@/lib/i18n/catalog';
 
 export interface ShareState {
@@ -8,6 +8,14 @@ export interface ShareState {
 }
 
 type BooleanAnswerField = { [K in keyof UserAnswers]-?: NonNullable<UserAnswers[K]> extends boolean ? K : never }[keyof UserAnswers];
+
+// Compact mapping of "unsure" QuestionIds to single letters (param "u", e.g. u=bc).
+const UNSURE_CODES: { code: string; id: QuestionId }[] = [
+  { code: 'b', id: 'BUILT_BEFORE_OCT_1978' },
+  { code: 's', id: 'IS_SEPARATE_HOUSE' },
+  { code: 'e', id: 'AB1482_EXEMPTION_NOTICE' },
+  { code: 'c', id: 'IS_CONDO' },
+];
 
 // Short hash keys ↔ UserAnswers boolean fields.
 const ANSWER_KEYS: { param: string; field: BooleanAnswerField }[] = [
@@ -25,6 +33,10 @@ export function encodeShare(s: ShareState): string {
     const v = s.answers[field];
     if (v !== undefined) params.set(param, v ? '1' : '0');
   }
+  if (s.answers.unsure && s.answers.unsure.length > 0) {
+    const letters = UNSURE_CODES.filter(({ id }) => s.answers.unsure!.includes(id)).map(({ code }) => code);
+    if (letters.length > 0) params.set('u', letters.join(''));
+  }
   return params.toString();
 }
 
@@ -39,6 +51,12 @@ export function decodeShare(hash: string): ShareState | null {
     const v = params.get(param);
     if (v === '1') answers[field] = true;
     else if (v === '0') answers[field] = false;
+  }
+
+  const u = params.get('u');
+  if (u) {
+    const ids = UNSURE_CODES.filter(({ code }) => u.includes(code)).map(({ id }) => id);
+    if (ids.length > 0) answers.unsure = ids;
   }
 
   const lang = params.get('lang');
