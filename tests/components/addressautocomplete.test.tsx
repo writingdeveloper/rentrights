@@ -95,4 +95,18 @@ describe('AddressAutocomplete', () => {
     await new Promise((r) => setTimeout(r, 350)); // past the debounce window
     expect(screen.queryByRole('listbox')).toBeNull();
   });
+
+  it('does not open the dropdown when the value is set programmatically (shared-link restore)', async () => {
+    // A non-empty value arrives without any user typing (no onChange) — e.g. a
+    // share link restoring the address on mount. The dropdown must stay closed.
+    const fetchSpy = vi.fn().mockResolvedValue({ ok: true, json: async () => ({ suggestions: ['846 South Broadway, Los Angeles, CA'] }) });
+    vi.stubGlobal('fetch', fetchSpy);
+    render(
+      <LocaleProvider initialLocale="en">
+        <AddressAutocomplete value="846 S Broadway, Los Angeles" onChange={vi.fn()} onSelect={vi.fn()} />
+      </LocaleProvider>,
+    );
+    await new Promise((r) => setTimeout(r, 350)); // past the debounce window
+    expect(screen.queryByRole('listbox')).toBeNull();
+  });
 });

@@ -16,6 +16,9 @@ export function AddressAutocomplete({ value, onChange, onSelect }: {
   const blurTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const reqId = useRef(0);
   const lastChosen = useRef<string | null>(null);
+  // Only show suggestions in response to actual typing — not a programmatic
+  // value change (e.g. a shared link restoring the address on mount).
+  const userTyped = useRef(false);
 
   useEffect(() => {
     const q = value.trim();
@@ -28,6 +31,11 @@ export function AddressAutocomplete({ value, onChange, onSelect }: {
     }
     if (q === lastChosen.current) {
       setOpen(false);
+      setLoading(false);
+      return;
+    }
+    if (!userTyped.current) {
+      // Value arrived programmatically (restore) — don't fetch or open.
       setLoading(false);
       return;
     }
@@ -97,7 +105,7 @@ export function AddressAutocomplete({ value, onChange, onSelect }: {
         aria-controls="address-suggestions"
         aria-autocomplete="list"
         aria-activedescendant={active >= 0 ? `addr-opt-${active}` : undefined}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={(e) => { userTyped.current = true; onChange(e.target.value); }}
         onKeyDown={onKeyDown}
         onFocus={() => {
           if (suggestions.length > 0) setOpen(true);
