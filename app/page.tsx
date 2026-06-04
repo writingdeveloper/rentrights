@@ -14,6 +14,7 @@ import { isCovered } from '@/lib/content/rights';
 import { decodeShare } from '@/lib/share/code';
 import { AddressAutocomplete } from '@/components/AddressAutocomplete';
 import { LookupResult } from '@/lib/compute/lookup';
+import { SeoFaq } from '@/components/SeoFaq';
 
 export default function Home() {
   const t = useT();
@@ -116,6 +117,7 @@ export default function Home() {
           <Disclaimer lastVerified={data.lastVerified} />
         </div>
       )}
+      <SeoFaq />
     </main>
   );
 }

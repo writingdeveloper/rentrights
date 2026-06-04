@@ -1,0 +1,27 @@
+# RentRights
+
+> RentRights is a free, open-source web tool that estimates a renter's rent-law
+> protections in the City of Los Angeles and unincorporated Los Angeles County
+> from a street address. It is an estimate based on public records, not legal advice.
+
+## What it does
+- Takes an LA address and estimates which rent law applies: the City of LA Rent
+  Stabilization Ordinance (RSO), California's AB 1482 statewide cap, LA County's
+  rent ordinance (RSTPO), or just-cause-only protections.
+- Shows the current annual rent-increase cap and the renter's key protections
+  (rent caps, "just cause" eviction, relocation assistance, notice periods).
+- Free, no sign-up, nothing stored.
+
+## Key facts
+- RSO generally covers buildings with a certificate of occupancy on or before
+  October 1, 1978.
+- AB 1482 caps annual increases at 5% plus local inflation (maximum 10%/year) and
+  requires just cause after 12 months; single-family homes/condos may be exempt
+  with the required written notice.
+- Data sources: LA County Assessor (CAMS geocoder + parcel records) and the U.S.
+  Census geocoder; legal figures are dated and verified constants.
+
+## Important
+- This is an estimate, not legal advice or an official registry lookup.
+- Confirm any result with the LA Housing Department (LAHD), LA County DCBA, or a
+  tenant legal-aid organization before acting.
