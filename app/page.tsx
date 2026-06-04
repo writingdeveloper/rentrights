@@ -53,7 +53,7 @@ export default function Home() {
           <button
             type="button"
             aria-pressed={locale === 'en'}
-            className={`rounded px-2 py-1 ${locale === 'en' ? 'bg-blue-600 text-white' : 'border'}`}
+            className={`rounded px-3 min-h-11 inline-flex items-center ${locale === 'en' ? 'bg-blue-600 text-white' : 'border'}`}
             onClick={() => setLocale('en')}
           >
             {t('page.langEnglish')}
@@ -61,7 +61,7 @@ export default function Home() {
           <button
             type="button"
             aria-pressed={locale === 'es'}
-            className={`rounded px-2 py-1 ${locale === 'es' ? 'bg-blue-600 text-white' : 'border'}`}
+            className={`rounded px-3 min-h-11 inline-flex items-center ${locale === 'es' ? 'bg-blue-600 text-white' : 'border'}`}
             onClick={() => setLocale('es')}
           >
             {t('page.langSpanish')}

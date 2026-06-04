@@ -32,7 +32,7 @@ export function ShareButton({ address, answers, locale }: { address: string; ans
 
   return (
     <div className="mt-4">
-      <button type="button" onClick={onShare} className="rounded-lg border px-3 py-1 text-sm font-semibold">
+      <button type="button" onClick={onShare} className="rounded-lg border px-3 min-h-11 inline-flex items-center text-sm font-semibold">
         {copied ? t('share.copied') : t('share.button')}
       </button>
       <p className="mt-1 text-xs text-gray-500">{t('share.privacyNote')}</p>
@@ -41,7 +41,7 @@ export function ShareButton({ address, answers, locale }: { address: string; ans
           readOnly
           value={fallbackUrl}
           onFocus={(e) => e.currentTarget.select()}
-          className="mt-2 w-full rounded border px-2 py-1 text-xs text-gray-600"
+          className="mt-2 w-full rounded border px-3 min-h-11 text-sm text-gray-600"
         />
       )}
     </div>
