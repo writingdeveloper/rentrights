@@ -51,16 +51,22 @@ describe('selectAin', () => {
 });
 
 describe('parcelAtPoint', () => {
-  it('queries PAIS with the point and returns the unique AIN', async () => {
+  it('queries PAIS with the point and returns the AIN + situs (house no, zip)', async () => {
     let captured = '';
     const fakeFetch = async (url: string) => {
       captured = url;
       return { ok: true, json: async () => pais } as unknown as Response;
     };
-    expect(await parcelAtPoint(POINT, fakeFetch)).toBe('5425003009');
+    expect(await parcelAtPoint(POINT, fakeFetch)).toEqual({ ain: '5425003009', houseNo: 1411, zip: '90026' });
     expect(captured).toContain('esriGeometryPoint');
     expect(captured).toContain('inSR=102645');
+    expect(captured).toContain('SANUM'); // situs fields requested
     expect(captured).not.toContain('resultRecordCount'); // 400s on the PAIS endpoint
+  });
+
+  it('returns null when the point matches no single parcel', async () => {
+    const fakeFetch = async () => ({ ok: true, json: async () => ({ features: [] }) }) as unknown as Response;
+    expect(await parcelAtPoint(POINT, fakeFetch)).toBeNull();
   });
 });
 
@@ -150,5 +156,50 @@ describe('fetchRollsBySitus', () => {
   it('returns null when our AIN is not among the candidates (so fetchParcel can fall back)', async () => {
     const fakeFetch = async () => ({ ok: true, json: async () => rollsSitus }) as unknown as Response;
     expect(await fetchRollsBySitus('9999999999', '90026', 1411, fakeFetch)).toBeNull();
+  });
+});
+
+describe('fetchParcel (situs path)', () => {
+  // Route by URL: CAMS -> point, PAIS -> pais (with SANUM/SAADDR2), the situs
+  // Parcel_Data query -> rolls-situs, and the AIN fallback query -> rolls.
+  function pathRouter(onSitus: () => void, onAinScan: () => void) {
+    return async (url: string) => {
+      let body: unknown = cams;
+      if (url.includes('pais_parcels')) body = pais;
+      else if (url.includes('CAMS_Locator')) body = cams;
+      else if (url.includes('Parcel_Data')) {
+        const d = decodeURIComponent(url);
+        if (d.includes('SitusZIP5')) { onSitus(); body = rollsSitus; }
+        else { onAinScan(); body = rolls; }
+      }
+      return { ok: true, json: async () => body } as unknown as Response;
+    };
+  }
+
+  it('resolves facts via the indexed situs query (no AIN scan) on the happy path', async () => {
+    let situs = false, ainScan = false;
+    const out = await fetchParcel('1411 Murray Dr, Los Angeles', pathRouter(() => (situs = true), () => (ainScan = true)));
+    expect(situs).toBe(true);
+    expect(ainScan).toBe(false);
+    expect(out.ain).toBe('5425003009');
+    expect(out.facts).toEqual({ yearBuilt: 1931, units: 6, useCode: '0500' });
+  });
+
+  it('falls back to the AIN query when our parcel is absent from the situs result', async () => {
+    let ainScan = false;
+    const fakeFetch = async (url: string) => {
+      let body: unknown = cams;
+      if (url.includes('pais_parcels')) body = pais;
+      else if (url.includes('CAMS_Locator')) body = cams;
+      else if (url.includes('Parcel_Data')) {
+        const d = decodeURIComponent(url);
+        if (d.includes('SitusZIP5')) body = { features: [] }; // situs: our parcel absent
+        else { ainScan = true; body = rolls; }                // AIN fallback finds it
+      }
+      return { ok: true, json: async () => body } as unknown as Response;
+    };
+    const out = await fetchParcel('1411 Murray Dr, Los Angeles', fakeFetch);
+    expect(ainScan).toBe(true);
+    expect(out.facts).toEqual({ yearBuilt: 1931, units: 6, useCode: '0500' });
   });
 });
