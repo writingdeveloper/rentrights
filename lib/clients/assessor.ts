@@ -39,7 +39,11 @@ export function parseParcelFacts(json: unknown): ParcelFacts {
 export function selectAin(json: unknown): string | null {
   const feats = (json as FeatureCollection)?.features ?? [];
   const ains = [...new Set(feats.filter((f) => f.attributes?.AIN != null).map((f) => String(f.attributes!.AIN)))];
-  return ains.length === 1 ? ains[0] : null;
+  if (ains.length !== 1) return null;
+  // Whitelist before the AIN is interpolated into the Rolls `where=` clause:
+  // LA County AINs are exactly 10 digits. Reject anything else (defense-in-depth
+  // against a malformed or hostile upstream PAIS response — no SQL/SOQL injection).
+  return /^\d{10}$/.test(ains[0]) ? ains[0] : null;
 }
 
 /** Point-in-polygon: which Assessor parcel (AIN) contains this point. */

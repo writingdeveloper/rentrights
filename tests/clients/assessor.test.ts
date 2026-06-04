@@ -34,6 +34,10 @@ describe('selectAin', () => {
   it('returns null when the point is in no parcel (right-of-way)', () => {
     expect(selectAin({ features: [] })).toBeNull();
   });
+  it('rejects an AIN that is not exactly 10 digits (injection / malformed guard)', () => {
+    expect(selectAin({ features: [{ attributes: { AIN: "5425003009' OR 1=1 --" } }] })).toBeNull();
+    expect(selectAin({ features: [{ attributes: { AIN: '12345' } }] })).toBeNull();
+  });
 });
 
 describe('parcelAtPoint', () => {
