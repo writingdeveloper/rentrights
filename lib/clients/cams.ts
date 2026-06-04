@@ -1,4 +1,5 @@
 import { stripUnit } from './address';
+import { timeoutFetch } from './http';
 
 type FetchLike = (url: string) => Promise<Response>;
 
@@ -35,7 +36,7 @@ export function parseCamsPoint(json: unknown, minScore: number = CAMS_MIN_SCORE)
   return { x: c.location.x, y: c.location.y, wkid, score: c.score ?? 0, matchAddr: c.address ?? '' };
 }
 
-export async function fetchCamsPoint(address: string, fetchImpl: FetchLike = fetch): Promise<CamsPoint | null> {
+export async function fetchCamsPoint(address: string, fetchImpl: FetchLike = timeoutFetch()): Promise<CamsPoint | null> {
   const url = `${BASE}/findAddressCandidates?SingleLine=${encodeURIComponent(stripUnit(address))}&maxLocations=1&f=json`;
   const res = await fetchImpl(url);
   if (!res.ok) throw new Error(`CAMS locator error: ${res.status}`);
@@ -60,7 +61,7 @@ export function parseSuggestions(json: unknown): string[] {
 }
 
 /** Autocomplete labels (full addresses incl. city) for a partial address. */
-export async function fetchSuggestions(text: string, fetchImpl: FetchLike = fetch): Promise<string[]> {
+export async function fetchSuggestions(text: string, fetchImpl: FetchLike = timeoutFetch()): Promise<string[]> {
   if (!shouldSuggest(text)) return [];
   const url = `${BASE}/suggest?text=${encodeURIComponent(text.trim())}&maxSuggestions=${MAX_SUGGESTIONS}&f=json`;
   const res = await fetchImpl(url);
