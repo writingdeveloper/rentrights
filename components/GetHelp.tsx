@@ -14,11 +14,11 @@ export function GetHelp({ unincorporatedCounty = false }: { unincorporatedCounty
             <p className="text-sm font-semibold">{o.name}</p>
             <p className="text-sm text-gray-600">{t(o.descriptionKey)}</p>
             <div className="mt-1 flex gap-3 text-sm">
-              <a className="text-blue-600 underline" href={o.url} target="_blank" rel="noopener noreferrer">
+              <a className="inline-flex min-h-11 items-center text-blue-600 underline" href={o.url} target="_blank" rel="noopener noreferrer">
                 {t('help.website')}
               </a>
               {o.phone && (
-                <a className="text-blue-600 underline" href={`tel:${o.phone.replace(/[^0-9+]/g, '')}`}>
+                <a className="inline-flex min-h-11 items-center text-blue-600 underline" href={`tel:${o.phone.replace(/[^0-9+]/g, '')}`}>
                   {o.phone}
                 </a>
               )}

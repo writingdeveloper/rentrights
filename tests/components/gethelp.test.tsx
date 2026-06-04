@@ -26,4 +26,15 @@ describe('GetHelp', () => {
     const items = screen.getAllByRole('listitem');
     expect(items[0].textContent).toContain('DCBA');
   });
+
+  it('renders each phone as a tel: link', () => {
+    render(
+      <LocaleProvider initialLocale="en">
+        <GetHelp />
+      </LocaleProvider>,
+    );
+    const telLinks = screen.getAllByRole('link').filter((a) => a.getAttribute('href')?.startsWith('tel:'));
+    expect(telLinks.length).toBeGreaterThan(0);
+    telLinks.forEach((a) => expect(a.getAttribute('href')).toMatch(/^tel:\+?[0-9]+$/));
+  });
 });

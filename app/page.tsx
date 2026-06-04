@@ -53,7 +53,7 @@ export default function Home() {
           <button
             type="button"
             aria-pressed={locale === 'en'}
-            className={`rounded px-2 py-1 ${locale === 'en' ? 'bg-blue-600 text-white' : 'border'}`}
+            className={`rounded px-3 min-h-11 inline-flex items-center ${locale === 'en' ? 'bg-blue-600 text-white' : 'border'}`}
             onClick={() => setLocale('en')}
           >
             {t('page.langEnglish')}
@@ -61,7 +61,7 @@ export default function Home() {
           <button
             type="button"
             aria-pressed={locale === 'es'}
-            className={`rounded px-2 py-1 ${locale === 'es' ? 'bg-blue-600 text-white' : 'border'}`}
+            className={`rounded px-3 min-h-11 inline-flex items-center ${locale === 'es' ? 'bg-blue-600 text-white' : 'border'}`}
             onClick={() => setLocale('es')}
           >
             {t('page.langSpanish')}
@@ -76,17 +76,19 @@ export default function Home() {
           onChange={setAddress}
           onSelect={(full) => { setAddress(full); setAnswers({}); run(full, {}); }}
         />
-        <button className="rounded-lg bg-blue-600 px-4 py-2 font-semibold text-white" disabled={loading}>{loading ? t('page.loading') : t('page.check')}</button>
+        <button className="rounded-lg bg-blue-600 px-4 min-h-11 font-semibold text-white" disabled={loading}>{loading ? t('page.loading') : t('page.check')}</button>
       </form>
 
+      {loading && <p role="status" className="sr-only">{t('page.loading')}</p>}
+
       {error && (
-        <p className="mt-4 rounded-lg bg-red-50 p-3 text-sm text-red-700">
+        <p role="alert" className="mt-4 rounded-lg bg-red-50 p-3 text-sm text-red-700">
           {error === '__NETWORK__' ? t('page.networkError') : t(`error.${error}`)}
         </p>
       )}
 
       {data && (
-        <div className="mt-6">
+        <div className="mt-6" aria-live="polite">
           <ResultCard result={data.result} />
           <IncreaseChecker regime={data.result.regime} />
           {isCovered(data.result.regime) && <WhatToDoNow regime={data.result.regime} />}
