@@ -149,5 +149,22 @@
   "reason.ASSUMED_NOT_CONDO": "You weren't sure, so we assumed a regular rental apartment (keeps the rent cap in play).",
   "reason.ASSUMED_NO_EXEMPTION": "You weren't sure about an exemption notice, so we assumed none — confirm with LAHD.",
   "result.capSeeDcba": "See LA County DCBA",
-  "staleness.authority.dcba": "LA County DCBA"
+  "staleness.authority.dcba": "LA County DCBA",
+  "meta.keywords": "LA renter rights, Los Angeles rent control, RSO, AB 1482, rent increase cap, just cause eviction, tenant rights, rent stabilization",
+  "faq.heading": "Frequently asked questions",
+  "faq.intro": "RentRights is a free, open-source tool that estimates your rent-law protections in the City of Los Angeles (and unincorporated LA County) from your address — no sign-up, nothing stored. It is an estimate, not legal advice.",
+  "faq.q1": "What is LA's Rent Stabilization Ordinance (RSO)?",
+  "faq.a1": "The RSO is the City of Los Angeles's rent-control law. It generally covers rental units in buildings with a certificate of occupancy on or before October 1, 1978. RSO units get capped annual rent increases, \"just cause\" eviction protection, and possible relocation assistance.",
+  "faq.q2": "What is California's AB 1482 (the Tenant Protection Act)?",
+  "faq.a2": "AB 1482 is a statewide law that caps annual rent increases and requires \"just cause\" to evict after 12 months of tenancy. It applies to many units not covered by a stronger local law like the RSO; single-family homes and condos can be exempt if the owner gave the required written notice.",
+  "faq.q3": "How do I find out which protections apply to me?",
+  "faq.a3": "Enter your address in the tool above. RentRights checks public records (the LA County Assessor and the U.S. Census geocoder) to estimate whether the RSO, AB 1482, LA County's rent ordinance, or just-cause-only rules apply — then shows your annual rent-increase cap and key protections.",
+  "faq.q4": "How much can my landlord raise my rent?",
+  "faq.a4": "It depends on which law covers your unit. The RSO and local ordinances cap the annual increase at a percentage the housing authority publishes each year; AB 1482 caps it at 5% plus local inflation, up to a maximum of 10% per year. Use the rent-increase checker above for your unit's current cap, and confirm the exact figure with the housing authority.",
+  "faq.q5": "What does \"just cause\" eviction mean?",
+  "faq.a5": "\"Just cause\" means your landlord must have a legally valid reason to end your tenancy — such as nonpayment of rent or a lease violation — rather than evicting you for no reason. For certain no-fault reasons (like an owner move-in), you may be owed relocation assistance.",
+  "faq.q6": "Is RentRights legal advice?",
+  "faq.a6": "No. RentRights is a free estimate based on public records, not a lookup from the official rent registry, and it is not legal advice. Always confirm your status with the LA Housing Department (LAHD), LA County DCBA, or a tenant legal-aid organization before acting.",
+  "faq.q7": "How current is this information?",
+  "faq.a7": "Legal figures are dated and were last verified on {lastVerified}. Rent-cap percentages change (typically each summer), so always confirm the current numbers with the housing authority. Rent-increase notice periods are {small} days for increases of {threshold}% or less and {large} days for larger increases, plus {mail} extra days if the notice came by mail."
 }
