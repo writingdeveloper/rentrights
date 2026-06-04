@@ -16,10 +16,11 @@ const countyRsto: RegimeResult = {
 };
 
 describe('County regimes in the UI', () => {
-  it('ResultCard renders the County RSTPO title and a county reason', () => {
+  it('ResultCard renders the County RSTPO title, reassurance, and DCBA banner', () => {
     render(<LocaleProvider initialLocale="en"><ResultCard result={countyRsto} /></LocaleProvider>);
     expect(screen.getByText(/LA County Rent Stabilization/)).toBeTruthy();
-    expect(screen.getByText(/Built in 1990/)).toBeTruthy();
+    expect(screen.getByText(/You have rights/)).toBeTruthy();
+    expect(screen.getByText(/free estimate/i).textContent).toContain('DCBA');
   });
 
   it('IncreaseChecker flags an over-cap increase for COUNTY_RSTPO', () => {
