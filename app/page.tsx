@@ -94,27 +94,34 @@ export default function Home() {
       )}
 
       {data && (
-        <div className="mt-6">
-          {/* Narrow live region: announce only the one-line verdict when it changes,
-              not the whole result block (which would re-read on every answer). */}
-          <p role="status" className="sr-only">{t(`rights.${data.result.regime}.title`)}</p>
-          <ResultCard result={data.result} />
-          <IncreaseChecker regime={data.result.regime} />
-          {isCovered(data.result.regime) && <WhatToDoNow regime={data.result.regime} />}
-          {data.result.questions.length > 0 && (
-            <ConfirmingQuestions
-              questions={data.result.questions}
-              answers={answers}
-              onAnswer={(next) => { setAnswers(next); run(address, next); }}
-            />
-          )}
-          {data.dataWarnings?.map((w: string, i: number) => (
-            <p key={i} className="mt-3 text-xs text-gray-600">{t(`warning.${w}`)}</p>
-          ))}
-          <GetHelp unincorporatedCounty={data.jurisdiction?.placeName === null && data.jurisdiction?.inLACounty === true} />
-          <RecordsDetails reasons={data.result.reasons} />
-          <ShareButton address={address} answers={answers} locale={locale} />
-          <Disclaimer lastVerified={data.lastVerified} />
+        <div className="mt-8 space-y-8 result-reveal">
+          {/* Band 1 — Your answer. Narrow live region announces only the verdict. */}
+          <section>
+            <p role="status" className="sr-only">{t(`rights.${data.result.regime}.title`)}</p>
+            <ResultCard result={data.result} />
+          </section>
+          {/* Band 2 — What to do. */}
+          <section className="space-y-4">
+            <IncreaseChecker regime={data.result.regime} />
+            {isCovered(data.result.regime) && <WhatToDoNow regime={data.result.regime} />}
+            {data.result.questions.length > 0 && (
+              <ConfirmingQuestions
+                questions={data.result.questions}
+                answers={answers}
+                onAnswer={(next) => { setAnswers(next); run(address, next); }}
+              />
+            )}
+            {data.dataWarnings?.map((w: string, i: number) => (
+              <p key={i} className="text-xs text-muted-foreground">{t(`warning.${w}`)}</p>
+            ))}
+          </section>
+          {/* Band 3 — Get help + details. */}
+          <section className="space-y-4">
+            <GetHelp unincorporatedCounty={data.jurisdiction?.placeName === null && data.jurisdiction?.inLACounty === true} />
+            <RecordsDetails reasons={data.result.reasons} />
+            <ShareButton address={address} answers={answers} locale={locale} />
+            <Disclaimer lastVerified={data.lastVerified} />
+          </section>
         </div>
       )}
       <SeoFaq />
