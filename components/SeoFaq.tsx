@@ -29,8 +29,10 @@ export function SeoFaq() {
       <dl className="mt-3 space-y-4">
         {faqs.map(({ q, a }, i) => (
           <div key={i}>
-            <dt className="font-semibold text-gray-900">{q}</dt>
-            <dd className="mt-1 text-sm text-gray-700">{a}</dd>
+            {/* Inherit --foreground (adapts to light/dark) so questions and
+                answers stay readable in both color schemes. */}
+            <dt className="font-semibold">{q}</dt>
+            <dd className="mt-1 text-sm">{a}</dd>
           </div>
         ))}
       </dl>
