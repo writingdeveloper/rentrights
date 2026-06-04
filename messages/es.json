@@ -2,6 +2,8 @@
   "page.title": "RentRights",
   "page.tagline": "Conozca sus derechos como inquilino en la Ciudad de LA — gratis, sin registro, no se guarda nada.",
   "page.placeholder": "1234 S Main St, Los Angeles",
+  "suggest.loading": "Buscando direcciones…",
+  "suggest.none": "No hay direcciones coincidentes — intente incluir la ciudad",
   "page.check": "Consultar",
   "page.loading": "…",
   "page.networkError": "Error de red. Inténtelo de nuevo.",
