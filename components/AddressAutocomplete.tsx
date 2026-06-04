@@ -23,6 +23,9 @@ export function AddressAutocomplete({ value, onChange, onSelect }: {
   useEffect(() => {
     const q = value.trim();
     if (q.length < 4) {
+      // This effect synchronizes suggestion UI state to the debounced input value;
+      // resetting on a too-short query is intentional sync, so relax the rule here.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setSuggestions([]);
       setOpen(false);
       setQueried(false);
