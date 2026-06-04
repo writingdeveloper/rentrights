@@ -97,3 +97,11 @@ describe('notice bullet', () => {
     expect(notice.toLowerCase()).toContain('mail');
   });
 });
+
+describe('reason copy', () => {
+  it('pairs the SFR exemption with Just Cause and drops "parcel"', () => {
+    expect(t('reason.SFR_MAYBE_EXEMPT').toLowerCase()).toContain('still apply');
+    expect(t('reason.UNITS_COUNT', { count: 6 })).toBe('6 homes on the property');
+    expect(t('reason.SINGLE_UNIT').toLowerCase()).not.toContain('parcel');
+  });
+});
