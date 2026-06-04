@@ -1,5 +1,6 @@
 import { ParcelFacts } from '@/lib/rules/types';
 import { CamsPoint, fetchCamsPoint } from './cams';
+import { timeoutFetch } from './http';
 
 type FetchLike = (url: string) => Promise<Response>;
 
@@ -47,7 +48,7 @@ export function selectAin(json: unknown): string | null {
 }
 
 /** Point-in-polygon: which Assessor parcel (AIN) contains this point. */
-export async function parcelAtPoint(point: CamsPoint, fetchImpl: FetchLike = fetch): Promise<string | null> {
+export async function parcelAtPoint(point: CamsPoint, fetchImpl: FetchLike = timeoutFetch()): Promise<string | null> {
   const geometry = encodeURIComponent(
     JSON.stringify({ x: point.x, y: point.y, spatialReference: { wkid: point.wkid } }),
   );
@@ -60,7 +61,7 @@ export async function parcelAtPoint(point: CamsPoint, fetchImpl: FetchLike = fet
   return selectAin(await res.json());
 }
 
-export async function fetchRolls(ain: string, fetchImpl: FetchLike = fetch): Promise<ParcelFacts> {
+export async function fetchRolls(ain: string, fetchImpl: FetchLike = timeoutFetch()): Promise<ParcelFacts> {
   const where = encodeURIComponent(`AIN='${ain}' AND RollYear='${LATEST_ROLL_YEAR}'`);
   const res = await fetchImpl(`${ROLLS}?where=${where}&outFields=AIN,YearBuilt,Units,UseCode&returnGeometry=false&f=json`);
   if (!res.ok) throw new Error(`Assessor Rolls error: ${res.status}`);
@@ -74,7 +75,9 @@ export async function fetchRolls(ain: string, fetchImpl: FetchLike = fetch): Pro
  */
 export async function fetchParcel(
   address: string,
-  fetchImpl: FetchLike = fetch,
+  // Optional so each sub-call (CAMS / PAIS / Rolls) falls back to its own
+  // timeoutFetch default; tests inject one fetch to route all three.
+  fetchImpl?: FetchLike,
 ): Promise<{ ain: string | null; facts: ParcelFacts }> {
   const point = await fetchCamsPoint(address, fetchImpl);
   if (!point) return { ain: null, facts: { ...EMPTY } };

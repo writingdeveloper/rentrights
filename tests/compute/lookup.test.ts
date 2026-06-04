@@ -39,6 +39,22 @@ describe('lookup', () => {
     expect(res.dataWarnings).toContain('DATA_INCOMPLETE');
   });
 
+  it('degrades to a confirming-questions result (not a throw) when the parcel lookup fails — e.g. an upstream timeout', async () => {
+    const res = await lookup('x', {}, {
+      getGeocode: async () => ({
+        jurisdiction: { inLACity: true, placeName: 'Los Angeles city', incorporated: true, inLACounty: true },
+        matchedAddress: 'CANONICAL ADDR, LOS ANGELES, CA, 90000',
+      }),
+      getParcel: async () => {
+        throw new Error('upstream timeout');
+      },
+    });
+    expect(res.dataWarnings).toContain('RECORDS_UNAVAILABLE');
+    expect(res.facts).toEqual({ yearBuilt: null, units: null, useCode: null });
+    // No facts → the engine asks the renter to confirm rather than guessing.
+    expect(res.result.questions.length).toBeGreaterThan(0);
+  });
+
   it('applies the AB1482 15-year new-construction exemption through lookup', async () => {
     const res = await lookup('x', {}, deps(
       { inLACity: true, placeName: 'Los Angeles city', incorporated: true },
