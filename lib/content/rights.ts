@@ -37,8 +37,14 @@ const RIGHTS_POINTS: Record<Regime, number> = {
 
 export function rightsText(regime: Regime, t: T): { title: string; points: string[] } {
   const n = RIGHTS_POINTS[regime];
+  const noticeParams = {
+    small: LEGAL.notice.smallIncreaseDays,
+    large: LEGAL.notice.largeIncreaseDays,
+    threshold: LEGAL.notice.largeThresholdPct,
+    mail: LEGAL.notice.mailExtraDays,
+  };
   const points: string[] = [];
-  for (let i = 1; i <= n; i++) points.push(t(`rights.${regime}.point${i}`));
+  for (let i = 1; i <= n; i++) points.push(t(`rights.${regime}.point${i}`, noticeParams));
   return { title: t(`rights.${regime}.title`), points };
 }
 
