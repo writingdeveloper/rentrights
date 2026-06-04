@@ -63,4 +63,26 @@ describe('AddressAutocomplete', () => {
     expect(fetchSpy).not.toHaveBeenCalled();
     expect(screen.queryByRole('listbox')).toBeNull();
   });
+
+  it('ignores a stale (out-of-order) response', async () => {
+    let resolveFirst!: (v: unknown) => void;
+    const firstPromise = new Promise((r) => { resolveFirst = r; });
+    const fetchMock = vi
+      .fn()
+      .mockImplementationOnce(() => firstPromise) // request A — resolves later
+      .mockImplementationOnce(() =>
+        Promise.resolve({ ok: true, json: async () => ({ suggestions: ['FRESH, Los Angeles, CA'] }) }),
+      ); // request B — resolves first
+    vi.stubGlobal('fetch', fetchMock);
+    render(<Harness onSelect={vi.fn()} />);
+    const input = screen.getByRole('combobox');
+    fireEvent.change(input, { target: { value: '300 s santa' } });
+    await new Promise((r) => setTimeout(r, 300)); // let A's debounce fire (A now in flight)
+    fireEvent.change(input, { target: { value: '300 s santa fe' } });
+    await screen.findByText('FRESH, Los Angeles, CA'); // B resolved
+    resolveFirst({ ok: true, json: async () => ({ suggestions: ['STALE, Pasadena, CA'] }) }); // A resolves late
+    await new Promise((r) => setTimeout(r, 50));
+    expect(screen.queryByText('STALE, Pasadena, CA')).toBeNull();
+    expect(screen.getByText('FRESH, Los Angeles, CA')).toBeTruthy();
+  });
 });

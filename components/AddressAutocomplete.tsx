@@ -14,6 +14,7 @@ export function AddressAutocomplete({ value, onChange, onSelect }: {
   const [queried, setQueried] = useState(false);
   const [active, setActive] = useState(-1);
   const blurTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const reqId = useRef(0);
 
   useEffect(() => {
     const q = value.trim();
@@ -26,16 +27,17 @@ export function AddressAutocomplete({ value, onChange, onSelect }: {
     }
     setLoading(true);
     const handle = setTimeout(async () => {
+      const id = ++reqId.current;
       try {
         const res = await fetch(`/api/suggest?q=${encodeURIComponent(q)}`);
         const json = await res.json();
-        if (value.trim() !== q) return; // stale response — input moved on
+        if (id !== reqId.current) return; // a newer request superseded this one
         setSuggestions(Array.isArray(json.suggestions) ? json.suggestions : []);
       } catch {
-        if (value.trim() !== q) return;
+        if (id !== reqId.current) return;
         setSuggestions([]);
       } finally {
-        if (value.trim() === q) {
+        if (id === reqId.current) {
           setLoading(false);
           setQueried(true);
           setOpen(true);
@@ -45,6 +47,10 @@ export function AddressAutocomplete({ value, onChange, onSelect }: {
     }, 250);
     return () => clearTimeout(handle);
   }, [value]);
+
+  useEffect(() => () => {
+    if (blurTimer.current) clearTimeout(blurTimer.current);
+  }, []);
 
   function choose(addr: string) {
     if (blurTimer.current) clearTimeout(blurTimer.current);
