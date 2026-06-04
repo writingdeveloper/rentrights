@@ -13,13 +13,14 @@ import { RecordsDetails } from '@/components/RecordsDetails';
 import { isCovered } from '@/lib/content/rights';
 import { decodeShare } from '@/lib/share/code';
 import { AddressAutocomplete } from '@/components/AddressAutocomplete';
+import { LookupResult } from '@/lib/compute/lookup';
 
 export default function Home() {
   const t = useT();
   const { locale, setLocale } = useLocale();
   const [address, setAddress] = useState('');
   const [answers, setAnswers] = useState<UserAnswers>({});
-  const [data, setData] = useState<any>(null);
+  const [data, setData] = useState<LookupResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -49,7 +50,7 @@ export default function Home() {
     <main className="mx-auto max-w-xl px-4 py-10">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-extrabold text-blue-700">{t('page.title')}</h1>
-        <div className="flex gap-1 text-xs">
+        <div role="group" aria-label={t('page.langLabel')} className="flex gap-1 text-xs">
           <button
             type="button"
             aria-pressed={locale === 'en'}
@@ -68,7 +69,7 @@ export default function Home() {
           </button>
         </div>
       </div>
-      <p className="text-sm text-gray-500">{t('page.tagline')}</p>
+      <p className="text-sm text-gray-600">{t('page.tagline')}</p>
 
       <form className="mt-5 flex gap-2" onSubmit={(e) => { e.preventDefault(); setAnswers({}); run(address, {}); }}>
         <AddressAutocomplete
@@ -88,7 +89,10 @@ export default function Home() {
       )}
 
       {data && (
-        <div className="mt-6" aria-live="polite">
+        <div className="mt-6">
+          {/* Narrow live region: announce only the one-line verdict when it changes,
+              not the whole result block (which would re-read on every answer). */}
+          <p role="status" className="sr-only">{t(`rights.${data.result.regime}.title`)}</p>
           <ResultCard result={data.result} />
           <IncreaseChecker regime={data.result.regime} />
           {isCovered(data.result.regime) && <WhatToDoNow regime={data.result.regime} />}
@@ -100,9 +104,9 @@ export default function Home() {
             />
           )}
           {data.dataWarnings?.map((w: string, i: number) => (
-            <p key={i} className="mt-3 text-xs text-gray-500">{t(`warning.${w}`)}</p>
+            <p key={i} className="mt-3 text-xs text-gray-600">{t(`warning.${w}`)}</p>
           ))}
-          <GetHelp unincorporatedCounty={data.jurisdiction?.placeName === null} />
+          <GetHelp unincorporatedCounty={data.jurisdiction?.placeName === null && data.jurisdiction?.inLACounty === true} />
           <RecordsDetails reasons={data.result.reasons} />
           <ShareButton address={address} answers={answers} locale={locale} />
           <Disclaimer lastVerified={data.lastVerified} />
