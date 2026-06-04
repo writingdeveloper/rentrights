@@ -7,10 +7,12 @@ import {
   parseHouseNo,
   parseZip,
   selectFactsByAin,
+  fetchRollsBySitus,
 } from '@/lib/clients/assessor';
 import pais from '../fixtures/pais.json';
 import rolls from '../fixtures/rolls.json';
 import rollsEmpty from '../fixtures/rolls-empty.json';
+import rollsSitus from '../fixtures/rolls-situs.json';
 
 const POINT = { x: 6478592, y: 1854140, wkid: 102645, score: 100, matchAddr: '1411 MURRAY DR' };
 
@@ -126,5 +128,27 @@ describe('selectFactsByAin', () => {
   });
   it('returns null when the AIN is not among the candidates', () => {
     expect(selectFactsByAin(multi, '9999999999')).toBeNull();
+  });
+});
+
+describe('fetchRollsBySitus', () => {
+  it('queries the indexed situs fields (no AIN scan) and selects our parcel by AIN', async () => {
+    let url = '';
+    const fakeFetch = async (u: string) => {
+      url = u;
+      return { ok: true, json: async () => rollsSitus } as unknown as Response;
+    };
+    const facts = await fetchRollsBySitus('5425003009', '90026', 1411, fakeFetch);
+    expect(facts).toEqual({ yearBuilt: 1931, units: 6, useCode: '0500' });
+    const decoded = decodeURIComponent(url);
+    expect(decoded).toContain("SitusZIP5='90026'");
+    expect(decoded).toContain('SitusHouseNo=1411');
+    expect(decoded).toContain("RollYear='2025'");
+    expect(decoded).not.toContain('AIN='); // must not fall back to the unindexed scan
+  });
+
+  it('returns null when our AIN is not among the candidates (so fetchParcel can fall back)', async () => {
+    const fakeFetch = async () => ({ ok: true, json: async () => rollsSitus }) as unknown as Response;
+    expect(await fetchRollsBySitus('9999999999', '90026', 1411, fakeFetch)).toBeNull();
   });
 });

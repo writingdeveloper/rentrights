@@ -88,6 +88,30 @@ export async function fetchRolls(ain: string, fetchImpl: FetchLike = timeoutFetc
 }
 
 /**
+ * Fast path for parcel facts: query the roll table through its INDEXED situs
+ * fields (`SitusZIP5` + `SitusHouseNo`) — which return in ~0.3–1.5s — then pick
+ * the row whose AIN matches. (`where=AIN='…'` is unindexed upstream and scans
+ * ~2.4M rows in 13–55s; see the design doc.) `zip` is a validated 5-digit string
+ * and `houseNo` a number, so neither can break out of the where clause. Returns
+ * null when our parcel is not in the candidate set, so the caller can fall back.
+ */
+export async function fetchRollsBySitus(
+  ain: string,
+  zip: string,
+  houseNo: number,
+  fetchImpl: FetchLike = timeoutFetch(),
+): Promise<ParcelFacts | null> {
+  const where = encodeURIComponent(
+    `SitusZIP5='${zip}' AND SitusHouseNo=${houseNo} AND RollYear='${LATEST_ROLL_YEAR}'`,
+  );
+  const res = await fetchImpl(
+    `${ROLLS}?where=${where}&outFields=AIN,YearBuilt,Units,UseCode&returnGeometry=false&resultRecordCount=50&f=json`,
+  );
+  if (!res.ok) throw new Error(`Assessor Rolls (situs) error: ${res.status}`);
+  return selectFactsByAin(await res.json(), ain);
+}
+
+/**
  * Address → parcel facts via LA County's own stack: CAMS locator (rooftop point)
  * → PAIS parcels (point-in-polygon → AIN) → assessment roll (year built / units).
  * Returns null facts at any confident-match failure instead of a wrong parcel.
