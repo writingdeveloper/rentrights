@@ -91,3 +91,13 @@ summary:focus-visible,
     --border: var(--border-strong);
   }
 }
+
+@keyframes result-reveal {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+.result-reveal { animation: result-reveal 220ms ease-out both; }
+
+@media (prefers-reduced-motion: reduce) {
+  .result-reveal { animation: none; }
+}
