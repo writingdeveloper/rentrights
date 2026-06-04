@@ -7,30 +7,43 @@ export function ResultCard({ result }: { result: RegimeResult }) {
   const t = useT();
   const rights = rightsText(result.regime, t);
   const detailed = result.regime !== 'OUT_OF_JURISDICTION' && result.regime !== 'UNKNOWN';
+  const covered = isCovered(result.regime);
+  // Non-color status cue (WCAG 1.4.1): icon + tinted token surface keyed by coverage.
+  const icon = covered ? '✓' : 'ⓘ';
+  const heroSurface = covered ? 'bg-success-soft' : 'bg-warning-soft';
+  const heroAccent = covered ? 'text-success' : 'text-warning';
+
   return (
-    <div className="rounded-2xl border border-gray-200 p-5 shadow-sm">
-      {isCovered(result.regime) && (
-        <p className="mb-2 text-sm font-medium text-green-700">{t('result.reassure')}</p>
-      )}
-      <h2 className="text-lg font-bold">{t('result.likelyPrefix')} {rights.title}</h2>
-      {detailed && (
-        <>
-          <span className="mt-1 inline-block rounded-full border border-green-700 bg-green-50 px-3 py-0.5 text-xs font-semibold text-green-700">
-            {t(`result.confidence.${result.confidence}`)}
-          </span>
-          <p className="mt-3 text-sm text-gray-600">{t('result.legalIncrease')}</p>
-          <p className="text-2xl font-extrabold text-green-700">{capLabel(result.regime, t)}</p>
-          {(() => {
-            const s = capStaleness(result.regime);
-            return s?.stale ? <p className="mt-1 text-xs text-gray-600">⚠ {stalenessMessage(s, t, result.regime)}</p> : null;
-          })()}
-        </>
-      )}
-      <ul className="mt-3 list-disc pl-5 text-sm text-gray-700">
-        {rights.points.map((p, i) => <li key={i}>{p}</li>)}
-      </ul>
-      <div className="mt-3 rounded-lg border border-amber-300 bg-amber-50 p-2 text-xs font-semibold text-amber-900">
-        {notFinalBanner(result.regime, t)}
+    <div className="overflow-hidden rounded-2xl border border-border shadow-sm">
+      <div className={`${heroSurface} p-5`}>
+        {covered && <p className="mb-1 text-sm font-medium text-muted-foreground">{t('result.reassure')}</p>}
+        <div className="flex items-start gap-3">
+          <span aria-hidden="true" className={`mt-0.5 text-2xl ${heroAccent}`}>{icon}</span>
+          <div>
+            <h2 className="font-serif text-2xl font-bold leading-tight">{t('result.likelyPrefix')} {rights.title}</h2>
+            {detailed && (
+              <>
+                <span className={`mt-2 inline-block rounded-full bg-surface px-3 py-0.5 text-xs font-semibold ${heroAccent}`}>
+                  {t(`result.confidence.${result.confidence}`)}
+                </span>
+                <p className="mt-2 text-xs font-medium uppercase tracking-wide text-muted-foreground">{t('result.legalIncrease')}</p>
+                <p className={`text-3xl font-extrabold tabular-nums ${heroAccent}`}>{capLabel(result.regime, t)}</p>
+                {(() => {
+                  const s = capStaleness(result.regime);
+                  return s?.stale ? <p className="mt-1 text-xs text-muted-foreground">⚠ {stalenessMessage(s, t, result.regime)}</p> : null;
+                })()}
+              </>
+            )}
+          </div>
+        </div>
+      </div>
+      <div className="p-5">
+        <ul className="list-disc space-y-1 pl-5 text-sm text-foreground">
+          {rights.points.map((p, i) => <li key={i}>{p}</li>)}
+        </ul>
+        <div className="mt-4 rounded-lg border border-warning bg-warning-soft p-2 text-xs font-semibold text-warning">
+          {notFinalBanner(result.regime, t)}
+        </div>
       </div>
     </div>
   );

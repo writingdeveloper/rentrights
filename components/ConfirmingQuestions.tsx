@@ -65,24 +65,24 @@ export function ConfirmingQuestions({ questions, answers, onAnswer }: {
             type="button"
             onClick={() => onAnswer(withAnswer(answers, id, opt))}
             className={`w-full rounded-lg border px-3 py-3 text-left text-sm ${
-              opt.common ? 'border-green-700 bg-green-50 font-semibold text-green-800' : 'border-gray-300'
+              opt.common ? 'border-success bg-success-soft font-semibold text-success' : 'border-border'
             }`}
           >
             {t(opt.labelKey)}
-            {opt.common && <span className="ml-1 text-xs font-normal text-green-700">· {t('question.common')}</span>}
+            {opt.common && <span className="ml-1 text-xs font-normal text-success">· {t('question.common')}</span>}
           </button>
         );
         return (
-          <div key={id} className="rounded-xl border border-gray-200 p-3">
+          <div key={id} className="rounded-xl border border-border p-3">
             <p className="text-sm font-medium">{t(`question.${id}.q`)}</p>
-            <p className="mt-1 text-xs text-gray-500">{t(`question.${id}.help`)}</p>
+            <p className="mt-1 text-xs text-muted-foreground">{t(`question.${id}.help`)}</p>
             <div className="mt-2 flex flex-col gap-2">
               {renderBtn(m.primary)}
               {renderBtn(m.secondary)}
               <button
                 type="button"
                 onClick={() => onAnswer(withUnsure(answers, id, m.primary.key))}
-                className="w-full rounded-lg border border-dashed border-gray-400 px-3 py-3 text-left text-sm text-gray-500"
+                className="w-full rounded-lg border border-dashed border-border-strong px-3 py-3 text-left text-sm text-muted-foreground"
               >
                 {t('question.unsure')}
               </button>

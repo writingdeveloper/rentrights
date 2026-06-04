@@ -23,8 +23,8 @@ export function SeoFaq() {
   }));
 
   return (
-    <section aria-labelledby="faq-heading" className="mt-12 border-t pt-8">
-      <p className="text-sm text-gray-600">{t('faq.intro')}</p>
+    <section aria-labelledby="faq-heading" className="mt-12 border-t border-border pt-8">
+      <p className="text-sm text-muted-foreground">{t('faq.intro')}</p>
       <h2 id="faq-heading" className="mt-6 text-lg font-bold">{t('faq.heading')}</h2>
       <dl className="mt-3 space-y-4">
         {faqs.map(({ q, a }, i) => (
@@ -32,7 +32,7 @@ export function SeoFaq() {
             {/* Inherit --foreground (adapts to light/dark) so questions and
                 answers stay readable in both color schemes. */}
             <dt className="font-semibold">{q}</dt>
-            <dd className="mt-1 text-sm">{a}</dd>
+            <dd className="mt-1 text-sm text-muted-foreground">{a}</dd>
           </div>
         ))}
       </dl>
