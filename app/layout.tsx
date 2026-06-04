@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
+import { Fraunces, Inter } from 'next/font/google';
 import { cookies, headers } from 'next/headers';
 import './globals.css';
 import { LocaleProvider } from '@/lib/i18n/LocaleProvider';
@@ -10,8 +10,8 @@ import { siteUrl } from '@/lib/seo/site-url';
 import { JsonLd } from '@/components/JsonLd';
 import { organizationJsonLd, webSiteJsonLd, webApplicationJsonLd } from '@/lib/seo/jsonld';
 
-const geistSans = Geist({ variable: '--font-geist-sans', subsets: ['latin'] });
-const geistMono = Geist_Mono({ variable: '--font-geist-mono', subsets: ['latin'] });
+const inter = Inter({ variable: '--font-inter', subsets: ['latin'], display: 'swap' });
+const fraunces = Fraunces({ variable: '--font-fraunces', subsets: ['latin'], display: 'swap' });
 
 async function getLocale() {
   const cookieValue = (await cookies()).get('rr_locale')?.value;
@@ -59,7 +59,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
   const locale = await getLocale();
   const base = siteUrl();
   return (
-    <html lang={locale} className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
+    <html lang={locale} className={`${inter.variable} ${fraunces.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col">
         <JsonLd data={organizationJsonLd(base)} />
         <JsonLd data={webSiteJsonLd(base, locale)} />
