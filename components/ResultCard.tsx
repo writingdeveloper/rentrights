@@ -1,19 +1,19 @@
 'use client';
 import { RegimeResult } from '@/lib/rules/types';
-import { rightsText, capLabel, capStaleness, stalenessMessage, notFinalBanner } from '@/lib/content/rights';
+import { rightsText, capLabel, capStaleness, stalenessMessage, notFinalBanner, isCovered } from '@/lib/content/rights';
 import { useT } from '@/lib/i18n/LocaleProvider';
 
 export function ResultCard({ result }: { result: RegimeResult }) {
   const t = useT();
   const rights = rightsText(result.regime, t);
+  const detailed = result.regime !== 'OUT_OF_JURISDICTION' && result.regime !== 'UNKNOWN';
   return (
     <div className="rounded-2xl border border-gray-200 p-5 shadow-sm">
-      <p className="text-xs uppercase tracking-wide text-gray-500">{t('result.whatRecordsShow')}</p>
-      <ul className="mt-1 mb-3 list-disc pl-5 text-sm text-gray-700">
-        {result.reasons.map((r, i) => <li key={i}>{t(`reason.${r.code}`, r.params)}</li>)}
-      </ul>
+      {isCovered(result.regime) && (
+        <p className="mb-2 text-sm font-medium text-green-700">{t('result.reassure')}</p>
+      )}
       <p className="text-lg font-bold">{t('result.likelyPrefix')} {rights.title}</p>
-      {result.regime !== 'OUT_OF_JURISDICTION' && result.regime !== 'UNKNOWN' && (
+      {detailed && (
         <>
           <span className="mt-1 inline-block rounded-full border border-green-700 bg-green-50 px-3 py-0.5 text-xs font-semibold text-green-700">
             {t(`result.confidence.${result.confidence}`)}

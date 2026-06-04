@@ -8,6 +8,9 @@ import { UserAnswers } from '@/lib/rules/types';
 import { useT, useLocale } from '@/lib/i18n/LocaleProvider';
 import { ShareButton } from '@/components/ShareButton';
 import { IncreaseChecker } from '@/components/IncreaseChecker';
+import { WhatToDoNow } from '@/components/WhatToDoNow';
+import { RecordsDetails } from '@/components/RecordsDetails';
+import { isCovered } from '@/lib/content/rights';
 import { decodeShare } from '@/lib/share/code';
 import { AddressAutocomplete } from '@/components/AddressAutocomplete';
 
@@ -86,6 +89,7 @@ export default function Home() {
         <div className="mt-6">
           <ResultCard result={data.result} />
           <IncreaseChecker regime={data.result.regime} />
+          {isCovered(data.result.regime) && <WhatToDoNow regime={data.result.regime} />}
           {data.result.questions.length > 0 && (
             <ConfirmingQuestions
               questions={data.result.questions}
@@ -96,8 +100,9 @@ export default function Home() {
           {data.dataWarnings?.map((w: string, i: number) => (
             <p key={i} className="mt-3 text-xs text-gray-500">{t(`warning.${w}`)}</p>
           ))}
-          <ShareButton address={address} answers={answers} locale={locale} />
           <GetHelp unincorporatedCounty={data.jurisdiction?.placeName === null} />
+          <RecordsDetails reasons={data.result.reasons} />
+          <ShareButton address={address} answers={answers} locale={locale} />
           <Disclaimer lastVerified={data.lastVerified} />
         </div>
       )}

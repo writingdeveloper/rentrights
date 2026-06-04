@@ -5,6 +5,12 @@ import { cityAuthority, countyAuthority } from '@/lib/content/help';
 
 type T = (key: string, params?: Record<string, string | number>) => string;
 
+// Regimes where we have an actual protection to report (vs OOJ / not-enough-info).
+const COVERED_REGIMES: Regime[] = ['RSO', 'AB1482', 'JCO_ONLY', 'COUNTY_RSTPO', 'COUNTY_JCO'];
+export function isCovered(regime: Regime): boolean {
+  return COVERED_REGIMES.includes(regime);
+}
+
 export function capLabel(regime: Regime, t: T, onDate = new Date()): string {
   const d = onDate.toISOString().slice(0, 10);
   if (regime === 'RSO') {

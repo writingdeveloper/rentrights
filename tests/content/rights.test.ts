@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { capStaleness, stalenessMessage, rightsText, capLabel, notFinalBanner } from '@/lib/content/rights';
+import { capStaleness, stalenessMessage, rightsText, capLabel, notFinalBanner, isCovered } from '@/lib/content/rights';
 import { translate } from '@/lib/i18n/t';
 import { CATALOG } from '@/lib/i18n/catalog';
 
@@ -71,5 +71,17 @@ describe('notFinalBanner', () => {
       expect(msg).not.toContain('(800) 593-8222');
       expect(msg.toLowerCase()).toContain('local');
     }
+  });
+});
+
+describe('isCovered', () => {
+  it('is true for in-jurisdiction regimes', () => {
+    for (const r of ['RSO', 'AB1482', 'JCO_ONLY', 'COUNTY_RSTPO', 'COUNTY_JCO'] as const) {
+      expect(isCovered(r)).toBe(true);
+    }
+  });
+  it('is false for OOJ and UNKNOWN', () => {
+    expect(isCovered('OUT_OF_JURISDICTION')).toBe(false);
+    expect(isCovered('UNKNOWN')).toBe(false);
   });
 });
