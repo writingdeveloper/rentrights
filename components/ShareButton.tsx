@@ -38,17 +38,17 @@ export function ShareButton({ address, answers, locale }: { address: string; ans
 
   return (
     <div className="mt-4">
-      <button type="button" onClick={onShare} aria-live="polite" className="rounded-lg border px-3 min-h-11 inline-flex items-center text-sm font-semibold">
+      <button type="button" onClick={onShare} aria-live="polite" className="rounded-lg border border-border px-3 min-h-11 inline-flex items-center text-sm font-semibold">
         {copied ? t('share.copied') : t('share.button')}
       </button>
-      <p className="mt-1 text-xs text-gray-600">{t('share.privacyNote')}</p>
+      <p className="mt-1 text-xs text-muted-foreground">{t('share.privacyNote')}</p>
       {fallbackUrl && (
         <input
           readOnly
           value={fallbackUrl}
           aria-label={t('share.fallbackLabel')}
           onFocus={(e) => e.currentTarget.select()}
-          className="mt-2 w-full rounded border px-3 min-h-11 text-sm text-gray-600"
+          className="mt-2 w-full rounded border border-border bg-surface px-3 min-h-11 text-sm text-muted-foreground"
         />
       )}
     </div>

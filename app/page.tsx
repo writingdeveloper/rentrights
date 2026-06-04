@@ -52,14 +52,14 @@ export default function Home() {
   }
 
   return (
-    <main className="mx-auto max-w-xl px-4 py-10">
+    <main className="mx-auto max-w-2xl px-4 py-10">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-extrabold text-blue-700">{t('page.title')}</h1>
+        <h1 className="font-serif text-2xl font-extrabold text-primary">{t('page.title')}</h1>
         <div role="group" aria-label={t('page.langLabel')} className="flex gap-1 text-xs">
           <button
             type="button"
             aria-pressed={locale === 'en'}
-            className={`rounded px-3 min-h-11 inline-flex items-center ${locale === 'en' ? 'bg-blue-600 text-white' : 'border'}`}
+            className={`rounded px-3 min-h-11 inline-flex items-center ${locale === 'en' ? 'bg-primary text-background' : 'border border-border'}`}
             onClick={() => setLocale('en')}
           >
             {t('page.langEnglish')}
@@ -67,14 +67,14 @@ export default function Home() {
           <button
             type="button"
             aria-pressed={locale === 'es'}
-            className={`rounded px-3 min-h-11 inline-flex items-center ${locale === 'es' ? 'bg-blue-600 text-white' : 'border'}`}
+            className={`rounded px-3 min-h-11 inline-flex items-center ${locale === 'es' ? 'bg-primary text-background' : 'border border-border'}`}
             onClick={() => setLocale('es')}
           >
             {t('page.langSpanish')}
           </button>
         </div>
       </div>
-      <p className="text-sm text-gray-600">{t('page.tagline')}</p>
+      <p className="text-sm text-muted-foreground">{t('page.tagline')}</p>
 
       <form className="mt-5 flex gap-2" onSubmit={(e) => { e.preventDefault(); setAnswers({}); run(address, {}); }}>
         <AddressAutocomplete
@@ -82,13 +82,13 @@ export default function Home() {
           onChange={setAddress}
           onSelect={(full) => { setAddress(full); setAnswers({}); run(full, {}); }}
         />
-        <button className="rounded-lg bg-blue-600 px-4 min-h-11 font-semibold text-white" disabled={loading}>{loading ? t('page.loading') : t('page.check')}</button>
+        <button className="rounded-lg bg-primary px-4 min-h-11 font-semibold text-background" disabled={loading}>{loading ? t('page.loading') : t('page.check')}</button>
       </form>
 
       {loading && <p role="status" className="sr-only">{t('page.loading')}</p>}
 
       {error && (
-        <p role="alert" className="mt-4 rounded-lg bg-red-50 p-3 text-sm text-red-700">
+        <p role="alert" className="mt-4 rounded-lg border border-border bg-surface-muted p-3 text-sm text-danger">
           {error === '__NETWORK__' ? t('page.networkError') : t(`error.${error}`)}
         </p>
       )}
