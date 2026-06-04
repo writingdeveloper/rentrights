@@ -1,0 +1,5 @@
+{ "features": [
+  { "attributes": { "AIN": "5424024020", "YearBuilt": "1910", "Units": 5, "UseCode": "0500" } },
+  { "attributes": { "AIN": "5427014021", "YearBuilt": "1911", "Units": 1, "UseCode": "0100" } },
+  { "attributes": { "AIN": "5425003009", "YearBuilt": "1931", "Units": 6, "UseCode": "0500" } }
+] }
