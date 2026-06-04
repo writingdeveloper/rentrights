@@ -1,0 +1,14 @@
+node_modules
+.next
+.git
+.github
+docs
+tests
+e2e
+.env*
+*.log
+Dockerfile
+docker-compose.yml
+.dockerignore
+README.md
+playwright.config.ts

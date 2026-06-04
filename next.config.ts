@@ -1,6 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Self-host: emit a minimal standalone server (.next/standalone/server.js).
+  // Ignored by Vercel; harmless there.
+  output: 'standalone',
   async headers() {
     return [
       {
