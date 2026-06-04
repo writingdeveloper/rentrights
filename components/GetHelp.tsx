@@ -10,15 +10,15 @@ export function GetHelp({ unincorporatedCounty = false }: { unincorporatedCounty
       <h2 className="text-sm font-semibold">{t('help.title')}</h2>
       <ul className="mt-2 space-y-3">
         {orgs.map((o) => (
-          <li key={o.name} className="rounded-xl border border-gray-200 p-3">
+          <li key={o.name} className="rounded-xl border border-border p-3">
             <p className="text-sm font-semibold">{o.name}</p>
-            <p className="text-sm text-gray-600">{t(o.descriptionKey)}</p>
+            <p className="text-sm text-muted-foreground">{t(o.descriptionKey)}</p>
             <div className="mt-1 flex gap-3 text-sm">
-              <a className="inline-flex min-h-11 items-center text-blue-600 underline" href={o.url} target="_blank" rel="noopener noreferrer">
+              <a className="inline-flex min-h-11 items-center text-primary underline" href={o.url} target="_blank" rel="noopener noreferrer">
                 {t('help.website')}
               </a>
               {o.phone && (
-                <a className="inline-flex min-h-11 items-center text-blue-600 underline" href={`tel:${o.phone.replace(/[^0-9+]/g, '')}`}>
+                <a className="inline-flex min-h-11 items-center text-primary underline" href={`tel:${o.phone.replace(/[^0-9+]/g, '')}`}>
                   {o.phone}
                 </a>
               )}
