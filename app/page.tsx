@@ -9,6 +9,7 @@ import { useT, useLocale } from '@/lib/i18n/LocaleProvider';
 import { ShareButton } from '@/components/ShareButton';
 import { IncreaseChecker } from '@/components/IncreaseChecker';
 import { decodeShare } from '@/lib/share/code';
+import { AddressAutocomplete } from '@/components/AddressAutocomplete';
 
 export default function Home() {
   const t = useT();
@@ -67,7 +68,11 @@ export default function Home() {
       <p className="text-sm text-gray-500">{t('page.tagline')}</p>
 
       <form className="mt-5 flex gap-2" onSubmit={(e) => { e.preventDefault(); setAnswers({}); run(address, {}); }}>
-        <input className="flex-1 rounded-lg border px-3 py-2" placeholder={t('page.placeholder')} value={address} onChange={(e) => setAddress(e.target.value)} />
+        <AddressAutocomplete
+          value={address}
+          onChange={setAddress}
+          onSelect={(full) => { setAddress(full); setAnswers({}); run(full, {}); }}
+        />
         <button className="rounded-lg bg-blue-600 px-4 py-2 font-semibold text-white" disabled={loading}>{loading ? t('page.loading') : t('page.check')}</button>
       </form>
 

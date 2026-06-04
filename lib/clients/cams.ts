@@ -41,3 +41,29 @@ export async function fetchCamsPoint(address: string, fetchImpl: FetchLike = fet
   if (!res.ok) throw new Error(`CAMS locator error: ${res.status}`);
   return parseCamsPoint(await res.json());
 }
+
+const SUGGEST_MIN = 4;
+const MAX_SUGGESTIONS = 5;
+
+/** True when a query is long enough to ask CAMS for suggestions. */
+export function shouldSuggest(text: string): boolean {
+  return text.trim().length >= SUGGEST_MIN;
+}
+
+export function parseSuggestions(json: unknown): string[] {
+  const j = json as { suggestions?: Array<{ text?: string }>; error?: unknown } | null;
+  if (!j || j.error || !Array.isArray(j.suggestions)) return [];
+  return j.suggestions
+    .map((s) => s.text)
+    .filter((t): t is string => typeof t === 'string')
+    .slice(0, MAX_SUGGESTIONS);
+}
+
+/** Autocomplete labels (full addresses incl. city) for a partial address. */
+export async function fetchSuggestions(text: string, fetchImpl: FetchLike = fetch): Promise<string[]> {
+  if (!shouldSuggest(text)) return [];
+  const url = `${BASE}/suggest?text=${encodeURIComponent(text.trim())}&maxSuggestions=${MAX_SUGGESTIONS}&f=json`;
+  const res = await fetchImpl(url);
+  if (!res.ok) throw new Error(`CAMS suggest error: ${res.status}`);
+  return parseSuggestions(await res.json());
+}
