@@ -1,0 +1,27 @@
+services:
+  rentrights:
+    build:
+      context: .
+      args:
+        # Build-time: inlined into the bundle (canonical/OG/sitemap origin).
+        NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:-}
+    image: rentrights:latest
+    restart: unless-stopped
+    environment:
+      # Runtime envs (read per-request, server-side).
+      - UPSTREAM_TIMEOUT_MS=${UPSTREAM_TIMEOUT_MS:-12000}
+      - GOOGLE_SITE_VERIFICATION=${GOOGLE_SITE_VERIFICATION:-}
+      - BING_SITE_VERIFICATION=${BING_SITE_VERIFICATION:-}
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:3000/api/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    # Attach to the shared reverse-proxy network (e.g. Nginx Proxy Manager).
+    # Point an NPM Proxy Host at http://rentrights:3000 and add a limit_req rule.
+    networks:
+      - proxy
+
+networks:
+  proxy:
+    external: true
