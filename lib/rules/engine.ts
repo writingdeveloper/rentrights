@@ -11,7 +11,7 @@ export interface ResolveInput {
 // Classify an LA County Assessor use code. Verify/extend the code sets against the
 // official LA County use-code reference when adding condo-specific codes.
 //   01xx = single-family residence, 05xx = 5+ unit apartment building.
-export function useCodeKind(useCode: string | null): 'apartment' | 'sfr' | 'condo' | 'ambiguous' {
+export function classifyUseCode(useCode: string | null): 'apartment' | 'sfr' | 'condo' | 'ambiguous' {
   if (!useCode) return 'ambiguous';
   if (useCode.startsWith('05')) return 'apartment';
   if (useCode.startsWith('01')) return 'sfr';
@@ -98,7 +98,7 @@ export function resolveRegime({ jurisdiction, facts, answers = {}, now = new Dat
 
   // Condo confirming question: multi-unit on paper, but the use code does not clearly
   // say "apartment" — it could be individually-owned condos (AB 1482 treats those like SFRs).
-  if (multiUnit === true && answers.isCondo === undefined && useCodeKind(facts.useCode) !== 'apartment') {
+  if (multiUnit === true && answers.isCondo === undefined && classifyUseCode(facts.useCode) !== 'apartment') {
     if (unsure.includes('IS_CONDO')) reasons.push({ code: 'ASSUMED_NOT_CONDO' });
     else questions.push('IS_CONDO');
   }
@@ -216,7 +216,7 @@ function resolveCounty(facts: ParcelFacts, answers: UserAnswers): RegimeResult {
     multiUnit = false;
     reasons.push({ code: 'SINGLE_UNIT' });
   }
-  if (multiUnit === true && answers.isCondo === undefined && useCodeKind(facts.useCode) !== 'apartment') {
+  if (multiUnit === true && answers.isCondo === undefined && classifyUseCode(facts.useCode) !== 'apartment') {
     if (unsure.includes('IS_CONDO')) reasons.push({ code: 'ASSUMED_NOT_CONDO' });
     else questions.push('IS_CONDO');
   }

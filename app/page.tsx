@@ -27,6 +27,10 @@ export default function Home() {
   useEffect(() => {
     const s = decodeShare(window.location.hash);
     if (!s) return;
+    // Restoring shared state once on mount from the URL hash is a legitimate
+    // sync-from-external-system; it runs in an effect (not during render) to stay
+    // hydration-safe, so set-state-in-effect is intentionally relaxed here.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setAddress(s.address);
     setAnswers(s.answers);
     if (s.locale) setLocale(s.locale);
