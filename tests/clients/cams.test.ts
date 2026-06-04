@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest';
-import { parseCamsPoint, fetchCamsPoint } from '@/lib/clients/cams';
+import { describe, it, expect, vi } from 'vitest';
+import { parseCamsPoint, fetchCamsPoint, parseSuggestions, fetchSuggestions, shouldSuggest } from '@/lib/clients/cams';
 
 const strongMatch = {
   spatialReference: { wkid: 102645 },
@@ -41,5 +41,43 @@ describe('fetchCamsPoint', () => {
     const p = await fetchCamsPoint('1411 Murray Dr #5, Los Angeles', fakeFetch);
     expect(p?.wkid).toBe(102645);
     expect(captured.toLowerCase()).not.toContain('%235'); // "#5" stripped before encoding
+  });
+});
+
+describe('parseSuggestions', () => {
+  it('extracts the suggestion text labels (capped at 5)', () => {
+    const json = { suggestions: [{ text: 'A, Los Angeles, CA' }, { text: 'B, Long Beach, CA' }] };
+    expect(parseSuggestions(json)).toEqual(['A, Los Angeles, CA', 'B, Long Beach, CA']);
+  });
+  it('returns [] on error or malformed payloads', () => {
+    expect(parseSuggestions({ error: { code: 400 } })).toEqual([]);
+    expect(parseSuggestions({})).toEqual([]);
+    expect(parseSuggestions(null)).toEqual([]);
+  });
+});
+
+describe('shouldSuggest', () => {
+  it('requires at least 4 non-space characters', () => {
+    expect(shouldSuggest('300')).toBe(false);
+    expect(shouldSuggest('   abc ')).toBe(false);
+    expect(shouldSuggest('3000')).toBe(true);
+  });
+});
+
+describe('fetchSuggestions', () => {
+  it('returns [] for a short query without calling fetch', async () => {
+    const f = vi.fn();
+    expect(await fetchSuggestions('300', f as unknown as typeof fetch)).toEqual([]);
+    expect(f).not.toHaveBeenCalled();
+  });
+  it('queries CAMS /suggest and returns the labels', async () => {
+    let url = '';
+    const f = async (u: string) => {
+      url = u;
+      return { ok: true, json: async () => ({ suggestions: [{ text: 'X, Los Angeles, CA' }] }) } as unknown as Response;
+    };
+    expect(await fetchSuggestions('300 s santa fe', f)).toEqual(['X, Los Angeles, CA']);
+    expect(url).toContain('/suggest?text=');
+    expect(url).toContain('maxSuggestions=5');
   });
 });
