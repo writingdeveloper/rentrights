@@ -10,7 +10,7 @@ export function WhatToDoNow({ regime }: { regime: Regime }) {
   const agency = isCounty ? t('staleness.authority.dcba') : t('staleness.authority.lahd');
   return (
     <section className="mt-4 rounded-xl border border-amber-200 bg-amber-50 p-3">
-      <p className="text-sm font-semibold text-amber-900">{t('whatToDo.heading')}</p>
+      <h2 className="text-sm font-semibold text-amber-900">{t('whatToDo.heading')}</h2>
       <ol className="mt-1 list-decimal pl-5 text-sm text-amber-900">
         <li>{t('whatToDo.step1')}</li>
         <li>{t('whatToDo.step2', { agency, phone: auth.phone ?? '' })}</li>

@@ -12,13 +12,13 @@ export function ResultCard({ result }: { result: RegimeResult }) {
       {isCovered(result.regime) && (
         <p className="mb-2 text-sm font-medium text-green-700">{t('result.reassure')}</p>
       )}
-      <p className="text-lg font-bold">{t('result.likelyPrefix')} {rights.title}</p>
+      <h2 className="text-lg font-bold">{t('result.likelyPrefix')} {rights.title}</h2>
       {detailed && (
         <>
           <span className="mt-1 inline-block rounded-full border border-green-700 bg-green-50 px-3 py-0.5 text-xs font-semibold text-green-700">
             {t(`result.confidence.${result.confidence}`)}
           </span>
-          <p className="mt-3 text-sm text-gray-500">{t('result.legalIncrease')}</p>
+          <p className="mt-3 text-sm text-gray-600">{t('result.legalIncrease')}</p>
           <p className="text-2xl font-extrabold text-green-700">{capLabel(result.regime, t)}</p>
           {(() => {
             const s = capStaleness(result.regime);
@@ -29,7 +29,7 @@ export function ResultCard({ result }: { result: RegimeResult }) {
       <ul className="mt-3 list-disc pl-5 text-sm text-gray-700">
         {rights.points.map((p, i) => <li key={i}>{p}</li>)}
       </ul>
-      <div className="mt-3 rounded-lg border border-amber-300 bg-amber-50 p-2 text-xs font-semibold text-amber-800">
+      <div className="mt-3 rounded-lg border border-amber-300 bg-amber-50 p-2 text-xs font-semibold text-amber-900">
         {notFinalBanner(result.regime, t)}
       </div>
     </div>

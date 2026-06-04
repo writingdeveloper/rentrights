@@ -10,6 +10,8 @@ function money(n: number): string {
 
 export function IncreaseChecker({ regime }: { regime: Regime }) {
   const t = useT();
+  const isCounty = regime === 'COUNTY_RSTPO' || regime === 'COUNTY_JCO';
+  const agency = t(isCounty ? 'staleness.authority.dcba' : 'staleness.authority.lahd');
   const [current, setCurrent] = useState('');
   const [proposed, setProposed] = useState('');
 
@@ -85,7 +87,7 @@ export function IncreaseChecker({ regime }: { regime: Regime }) {
         </label>
       </div>
       {text && <p className={`mt-2 text-sm font-semibold ${toneClass}`}>{text}</p>}
-      {text && <p className="mt-1 text-xs text-gray-500">{t('increase.caveat')}</p>}
+      {text && <p className="mt-1 text-xs text-gray-600">{t('increase.caveat', { agency })}</p>}
     </section>
   );
 }

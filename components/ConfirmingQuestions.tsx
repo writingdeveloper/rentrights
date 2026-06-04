@@ -56,7 +56,7 @@ export function ConfirmingQuestions({ questions, answers, onAnswer }: {
   const t = useT();
   return (
     <div className="mt-4 space-y-4">
-      <p className="text-sm font-semibold">{t('question.heading')}</p>
+      <h2 className="text-sm font-semibold">{t('question.heading')}</h2>
       {questions.map((id) => {
         const m = QUESTION_META[id];
         const renderBtn = (opt: Opt) => (

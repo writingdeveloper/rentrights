@@ -17,7 +17,9 @@ export async function POST(request: Request) {
   }
 
   const address = body.address?.trim();
-  if (!address) return err('ADDRESS_REQUIRED', 400);
+  // Real addresses are well under 500 chars; cap to bound outbound requests and
+  // avoid adversarial regex work in stripUnit.
+  if (!address || address.length > 500) return err('ADDRESS_REQUIRED', 400);
 
   try {
     const result = await lookup(address, body.answers ?? {});

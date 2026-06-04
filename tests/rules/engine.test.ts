@@ -38,9 +38,11 @@ describe('resolveRegime', () => {
     expect(r.questions).toContain('IS_SEPARATE_HOUSE');
   });
 
-  it('treats a single-family with no exemption answer as JCO-only, low confidence, asks exemption', () => {
+  it('treats a single-family with no exemption answer as AB1482 (protective default), low confidence, asks exemption', () => {
+    // Pending the exemption question we lean protective (cap applies) rather than
+    // leading with JCO-only/"no cap".
     const r = resolveRegime({ jurisdiction: LA, facts: { yearBuilt: 1995, units: 1, useCode: '0100' } });
-    expect(r.regime).toBe('JCO_ONLY');
+    expect(r.regime).toBe('AB1482');
     expect(r.confidence).toBe('low');
     expect(r.questions).toContain('AB1482_EXEMPTION_NOTICE');
   });
@@ -93,8 +95,16 @@ describe('resolveRegime', () => {
     expect(r.regime).toBe('AB1482');
   });
 
-  it('lowers confidence to medium near the 15-year cutoff', () => {
+  it('at the exact 15-year boundary year leans AB1482 (still capped), medium confidence', () => {
+    // NOW=2026 → cutoff 2011. A 2011 building is ~15 years old with an unknown CO
+    // month, so we must NOT assert exemption; lean protective (cap applies).
     const r = resolveRegime({ jurisdiction: LA, facts: { yearBuilt: 2011, units: 8, useCode: '0500' }, now: NOW });
+    expect(r.regime).toBe('AB1482');
+    expect(r.confidence).toBe('medium');
+  });
+
+  it('one year inside the 15-year window is exempt (JCO_ONLY), medium confidence', () => {
+    const r = resolveRegime({ jurisdiction: LA, facts: { yearBuilt: 2012, units: 8, useCode: '0500' }, now: NOW });
     expect(r.regime).toBe('JCO_ONLY');
     expect(r.confidence).toBe('medium');
   });
@@ -154,14 +164,14 @@ describe('resolveRegime', () => {
     expect(r.questions).not.toContain('IS_CONDO');
   });
 
-  it('routes a confirmed condo to the single-family/condo path', () => {
+  it('routes a confirmed condo to the single-family/condo path (protective AB1482 pending exemption)', () => {
     const r = resolveRegime({
       jurisdiction: LA,
       facts: { yearBuilt: 1990, units: 4, useCode: '0200' },
       answers: { isCondo: true },
       now: NOW,
     });
-    expect(r.regime).toBe('JCO_ONLY');
+    expect(r.regime).toBe('AB1482');
     expect(r.questions).toContain('AB1482_EXEMPTION_NOTICE');
     expect(r.questions).not.toContain('IS_CONDO');
   });

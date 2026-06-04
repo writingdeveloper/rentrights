@@ -112,13 +112,24 @@ export function resolveRegime({ jurisdiction, facts, answers = {}, now = new Dat
     }
     if (builtBefore === false) {
       const cutoffYear = now.getFullYear() - 15;
-      if (facts.yearBuilt != null && facts.yearBuilt >= cutoffYear) {
-        const nearCutoff = facts.yearBuilt === cutoffYear || facts.yearBuilt === cutoffYear + 1;
+      // Assert the new-construction exemption only when clearly newer than 15
+      // years (yearBuilt > cutoff). At the exact boundary year the unknown CO
+      // month means it may still be under 15 years old → lean PROTECTIVE (the
+      // AB1482 cap applies) rather than wrongly telling a covered tenant they're
+      // exempt; the cap-applies error is the safe direction.
+      if (facts.yearBuilt != null && facts.yearBuilt > cutoffYear) {
+        const nearCutoff = facts.yearBuilt === cutoffYear + 1;
         reasons.push({ code: 'NEW_CONSTRUCTION_EXEMPT', params: { year: facts.yearBuilt } });
         if (nearCutoff) {
           reasons.push({ code: 'NEAR_15YR_CUTOFF' });
         }
         return { regime: 'JCO_ONLY', confidence: nearCutoff ? 'medium' : conf(), reasons, questions };
+      }
+      if (facts.yearBuilt === cutoffYear) {
+        // ~15 years old, exact CO date unknown → treat as still capped, hedged.
+        reasons.push({ code: 'NEAR_15YR_CUTOFF' });
+        reasons.push({ code: 'MULTIUNIT_AB1482' });
+        return { regime: 'AB1482', confidence: 'medium', reasons, questions };
       }
       reasons.push({ code: 'MULTIUNIT_AB1482' });
       return { regime: 'AB1482', confidence: conf(), reasons, questions };
@@ -131,9 +142,12 @@ export function resolveRegime({ jurisdiction, facts, answers = {}, now = new Dat
   if (multiUnit === false) {
     // Single-family / condo: AB1482 unless landlord gave an exemption notice; citywide JCO just-cause always applies.
     if (answers.hasAb1482ExemptionNotice === undefined && !unsure.includes('AB1482_EXEMPTION_NOTICE')) {
+      // Pending the exemption question, lean PROTECTIVE: the AB1482 cap applies
+      // unless the landlord actually gave the required exemption notice — so
+      // don't lead with "no cap" before that's confirmed.
       questions.push('AB1482_EXEMPTION_NOTICE');
       reasons.push({ code: 'SFR_MAYBE_EXEMPT' });
-      return { regime: 'JCO_ONLY', confidence: 'low', reasons, questions };
+      return { regime: 'AB1482', confidence: 'low', reasons, questions };
     }
     if (unsure.includes('AB1482_EXEMPTION_NOTICE')) {
       reasons.push({ code: 'ASSUMED_NO_EXEMPTION' });

@@ -101,7 +101,7 @@ export function AddressAutocomplete({ value, onChange, onSelect }: {
         placeholder={t('page.placeholder')}
         value={value}
         role="combobox"
-        aria-expanded={open}
+        aria-expanded={showList}
         aria-controls="address-suggestions"
         aria-autocomplete="list"
         aria-activedescendant={active >= 0 ? `addr-opt-${active}` : undefined}
@@ -118,6 +118,7 @@ export function AddressAutocomplete({ value, onChange, onSelect }: {
         <ul
           id="address-suggestions"
           role="listbox"
+          aria-label={t('suggest.listLabel')}
           className="absolute z-10 mt-1 w-full overflow-hidden rounded-lg border border-gray-200 bg-white shadow-lg"
         >
           {loading && suggestions.length === 0 && (

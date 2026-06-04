@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { encodeShare } from '@/lib/share/code';
 import { UserAnswers } from '@/lib/rules/types';
 import { Locale } from '@/lib/i18n/catalog';
@@ -9,6 +9,11 @@ export function ShareButton({ address, answers, locale }: { address: string; ans
   const t = useT();
   const [copied, setCopied] = useState(false);
   const [fallbackUrl, setFallbackUrl] = useState<string | null>(null);
+  const copiedTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => () => {
+    if (copiedTimer.current) clearTimeout(copiedTimer.current);
+  }, []);
 
   async function onShare() {
     const url = `${window.location.origin}${window.location.pathname}#${encodeShare({ address, answers, locale })}`;
@@ -24,7 +29,8 @@ export function ShareButton({ address, answers, locale }: { address: string; ans
     try {
       await navigator.clipboard.writeText(url);
       setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      if (copiedTimer.current) clearTimeout(copiedTimer.current);
+      copiedTimer.current = setTimeout(() => setCopied(false), 2000);
     } catch {
       setFallbackUrl(url);
     }
@@ -32,14 +38,15 @@ export function ShareButton({ address, answers, locale }: { address: string; ans
 
   return (
     <div className="mt-4">
-      <button type="button" onClick={onShare} className="rounded-lg border px-3 min-h-11 inline-flex items-center text-sm font-semibold">
+      <button type="button" onClick={onShare} aria-live="polite" className="rounded-lg border px-3 min-h-11 inline-flex items-center text-sm font-semibold">
         {copied ? t('share.copied') : t('share.button')}
       </button>
-      <p className="mt-1 text-xs text-gray-500">{t('share.privacyNote')}</p>
+      <p className="mt-1 text-xs text-gray-600">{t('share.privacyNote')}</p>
       {fallbackUrl && (
         <input
           readOnly
           value={fallbackUrl}
+          aria-label={t('share.fallbackLabel')}
           onFocus={(e) => e.currentTarget.select()}
           className="mt-2 w-full rounded border px-3 min-h-11 text-sm text-gray-600"
         />
