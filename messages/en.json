@@ -166,5 +166,6 @@
   "faq.q6": "Is RentRights legal advice?",
   "faq.a6": "No. RentRights is a free estimate based on public records, not a lookup from the official rent registry, and it is not legal advice. Always confirm your status with the LA Housing Department (LAHD), LA County DCBA, or a tenant legal-aid organization before acting.",
   "faq.q7": "How current is this information?",
-  "faq.a7": "Legal figures are dated and were last verified on {lastVerified}. Rent-cap percentages change (typically each summer), so always confirm the current numbers with the housing authority. Rent-increase notice periods are {small} days for increases of {threshold}% or less and {large} days for larger increases, plus {mail} extra days if the notice came by mail."
+  "faq.a7": "Legal figures are dated and were last verified on {lastVerified}. Rent-cap percentages change (typically each summer), so always confirm the current numbers with the housing authority. Rent-increase notice periods are {small} days for increases of {threshold}% or less and {large} days for larger increases, plus {mail} extra days if the notice came by mail.",
+  "error.RATE_LIMITED": "Too many requests. Please wait a minute and try again."
 }

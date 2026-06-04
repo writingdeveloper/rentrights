@@ -166,5 +166,6 @@
   "faq.q6": "¿RentRights es asesoría legal?",
   "faq.a6": "No. RentRights es una estimación gratuita basada en registros públicos, no una consulta al registro oficial de rentas, y no es asesoría legal. Confirma siempre tu situación con el Departamento de Vivienda de LA (LAHD), el DCBA del Condado de LA, o una organización de ayuda legal para inquilinos antes de actuar.",
   "faq.q7": "¿Qué tan actualizada está esta información?",
-  "faq.a7": "Las cifras legales tienen fecha y se verificaron por última vez el {lastVerified}. Los porcentajes del límite de renta cambian (normalmente cada verano), así que confirma siempre las cifras actuales con la autoridad de vivienda. Los plazos de aviso de aumento son {small} días para aumentos del {threshold}% o menos y {large} días para aumentos mayores, más {mail} días adicionales si el aviso llegó por correo."
+  "faq.a7": "Las cifras legales tienen fecha y se verificaron por última vez el {lastVerified}. Los porcentajes del límite de renta cambian (normalmente cada verano), así que confirma siempre las cifras actuales con la autoridad de vivienda. Los plazos de aviso de aumento son {small} días para aumentos del {threshold}% o menos y {large} días para aumentos mayores, más {mail} días adicionales si el aviso llegó por correo.",
+  "error.RATE_LIMITED": "Demasiadas solicitudes. Espera un minuto e inténtalo de nuevo."
 }

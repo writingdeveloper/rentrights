@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { Fraunces, Inter } from 'next/font/google';
 import { cookies, headers } from 'next/headers';
 import './globals.css';
@@ -18,6 +18,14 @@ async function getLocale() {
   const acceptLanguage = (await headers()).get('accept-language');
   return pickInitialLocale(cookieValue, acceptLanguage);
 }
+
+export const viewport: Viewport = {
+  colorScheme: 'light dark',
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#FBFCFD' },
+    { media: '(prefers-color-scheme: dark)', color: '#0C111A' },
+  ],
+};
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getLocale();
@@ -51,6 +59,10 @@ export async function generateMetadata(): Promise<Metadata> {
       index: true,
       follow: true,
       googleBot: { index: true, follow: true, 'max-image-preview': 'large', 'max-snippet': -1, 'max-video-preview': -1 },
+    },
+    verification: {
+      google: process.env.GOOGLE_SITE_VERIFICATION,
+      ...(process.env.BING_SITE_VERIFICATION ? { other: { 'msvalidate.01': process.env.BING_SITE_VERIFICATION } } : {}),
     },
   };
 }
