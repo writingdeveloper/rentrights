@@ -1,5 +1,6 @@
 import { Jurisdiction } from '@/lib/rules/types';
 import { stripUnit } from './address';
+import { timeoutFetch } from './http';
 
 type FetchLike = (url: string) => Promise<Response>;
 
@@ -55,13 +56,13 @@ function geocodeUrl(address: string): string {
 }
 
 /** Geocode an address to its jurisdiction + Census-normalized address (or null if unmatched). */
-export async function fetchGeocode(address: string, fetchImpl: FetchLike = fetch): Promise<GeocodeMatch | null> {
+export async function fetchGeocode(address: string, fetchImpl: FetchLike = timeoutFetch()): Promise<GeocodeMatch | null> {
   const res = await fetchImpl(geocodeUrl(address));
   if (!res.ok) throw new Error(`Census geocoder error: ${res.status}`);
   return parseGeocode(await res.json());
 }
 
-export async function fetchJurisdiction(address: string, fetchImpl: FetchLike = fetch): Promise<Jurisdiction | null> {
+export async function fetchJurisdiction(address: string, fetchImpl: FetchLike = timeoutFetch()): Promise<Jurisdiction | null> {
   const res = await fetchImpl(geocodeUrl(address));
   if (!res.ok) throw new Error(`Census geocoder error: ${res.status}`);
   return parseJurisdiction(await res.json());
