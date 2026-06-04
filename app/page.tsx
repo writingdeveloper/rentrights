@@ -76,7 +76,7 @@ export default function Home() {
           onChange={setAddress}
           onSelect={(full) => { setAddress(full); setAnswers({}); run(full, {}); }}
         />
-        <button className="rounded-lg bg-blue-600 px-4 py-2 font-semibold text-white" disabled={loading}>{loading ? t('page.loading') : t('page.check')}</button>
+        <button className="rounded-lg bg-blue-600 px-4 min-h-11 font-semibold text-white" disabled={loading}>{loading ? t('page.loading') : t('page.check')}</button>
       </form>
 
       {loading && <p role="status" className="sr-only">{t('page.loading')}</p>}
