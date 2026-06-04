@@ -79,14 +79,16 @@ export default function Home() {
         <button className="rounded-lg bg-blue-600 px-4 py-2 font-semibold text-white" disabled={loading}>{loading ? t('page.loading') : t('page.check')}</button>
       </form>
 
+      {loading && <p role="status" className="sr-only">{t('page.loading')}</p>}
+
       {error && (
-        <p className="mt-4 rounded-lg bg-red-50 p-3 text-sm text-red-700">
+        <p role="alert" className="mt-4 rounded-lg bg-red-50 p-3 text-sm text-red-700">
           {error === '__NETWORK__' ? t('page.networkError') : t(`error.${error}`)}
         </p>
       )}
 
       {data && (
-        <div className="mt-6">
+        <div className="mt-6" aria-live="polite">
           <ResultCard result={data.result} />
           <IncreaseChecker regime={data.result.regime} />
           {isCovered(data.result.regime) && <WhatToDoNow regime={data.result.regime} />}
