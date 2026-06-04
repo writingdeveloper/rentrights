@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { capStaleness, stalenessMessage, rightsText, capLabel, notFinalBanner, isCovered } from '@/lib/content/rights';
 import { translate } from '@/lib/i18n/t';
 import { CATALOG } from '@/lib/i18n/catalog';
+import { LEGAL } from '@/lib/legal/constants';
 
 const t = (key: string, params?: Record<string, string | number>) => translate(CATALOG.en, key, params, CATALOG.en);
 
@@ -83,5 +84,24 @@ describe('isCovered', () => {
   it('is false for OOJ and UNKNOWN', () => {
     expect(isCovered('OUT_OF_JURISDICTION')).toBe(false);
     expect(isCovered('UNKNOWN')).toBe(false);
+  });
+});
+
+describe('notice bullet', () => {
+  it('is built from LEGAL.notice, including the mailed +5 days', () => {
+    const pts = rightsText('RSO', t).points;
+    const notice = pts.find((p) => p.toLowerCase().includes('notice')) ?? '';
+    expect(notice).toContain(String(LEGAL.notice.smallIncreaseDays)); // 30
+    expect(notice).toContain(String(LEGAL.notice.largeIncreaseDays)); // 90
+    expect(notice).toContain(String(LEGAL.notice.mailExtraDays)); // 5
+    expect(notice.toLowerCase()).toContain('mail');
+  });
+});
+
+describe('reason copy', () => {
+  it('pairs the SFR exemption with Just Cause and drops "parcel"', () => {
+    expect(t('reason.SFR_MAYBE_EXEMPT').toLowerCase()).toContain('still apply');
+    expect(t('reason.UNITS_COUNT', { count: 6 })).toBe('6 homes on the property');
+    expect(t('reason.SINGLE_UNIT').toLowerCase()).not.toContain('parcel');
   });
 });
