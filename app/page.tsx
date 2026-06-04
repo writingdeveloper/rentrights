@@ -52,14 +52,14 @@ export default function Home() {
   }
 
   return (
-    <main className="mx-auto max-w-xl px-4 py-10">
+    <main className="mx-auto max-w-2xl px-4 py-10">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-extrabold text-blue-700">{t('page.title')}</h1>
+        <h1 className="font-serif text-2xl font-extrabold text-primary">{t('page.title')}</h1>
         <div role="group" aria-label={t('page.langLabel')} className="flex gap-1 text-xs">
           <button
             type="button"
             aria-pressed={locale === 'en'}
-            className={`rounded px-3 min-h-11 inline-flex items-center ${locale === 'en' ? 'bg-blue-600 text-white' : 'border'}`}
+            className={`rounded px-3 min-h-11 inline-flex items-center ${locale === 'en' ? 'bg-primary text-background' : 'border border-border'}`}
             onClick={() => setLocale('en')}
           >
             {t('page.langEnglish')}
@@ -67,14 +67,14 @@ export default function Home() {
           <button
             type="button"
             aria-pressed={locale === 'es'}
-            className={`rounded px-3 min-h-11 inline-flex items-center ${locale === 'es' ? 'bg-blue-600 text-white' : 'border'}`}
+            className={`rounded px-3 min-h-11 inline-flex items-center ${locale === 'es' ? 'bg-primary text-background' : 'border border-border'}`}
             onClick={() => setLocale('es')}
           >
             {t('page.langSpanish')}
           </button>
         </div>
       </div>
-      <p className="text-sm text-gray-600">{t('page.tagline')}</p>
+      <p className="text-sm text-muted-foreground">{t('page.tagline')}</p>
 
       <form className="mt-5 flex gap-2" onSubmit={(e) => { e.preventDefault(); setAnswers({}); run(address, {}); }}>
         <AddressAutocomplete
@@ -82,39 +82,46 @@ export default function Home() {
           onChange={setAddress}
           onSelect={(full) => { setAddress(full); setAnswers({}); run(full, {}); }}
         />
-        <button className="rounded-lg bg-blue-600 px-4 min-h-11 font-semibold text-white" disabled={loading}>{loading ? t('page.loading') : t('page.check')}</button>
+        <button className="rounded-lg bg-primary px-4 min-h-11 font-semibold text-background" disabled={loading}>{loading ? t('page.loading') : t('page.check')}</button>
       </form>
 
       {loading && <p role="status" className="sr-only">{t('page.loading')}</p>}
 
       {error && (
-        <p role="alert" className="mt-4 rounded-lg bg-red-50 p-3 text-sm text-red-700">
+        <p role="alert" className="mt-4 rounded-lg border border-border bg-surface-muted p-3 text-sm text-danger">
           {error === '__NETWORK__' ? t('page.networkError') : t(`error.${error}`)}
         </p>
       )}
 
       {data && (
-        <div className="mt-6">
-          {/* Narrow live region: announce only the one-line verdict when it changes,
-              not the whole result block (which would re-read on every answer). */}
-          <p role="status" className="sr-only">{t(`rights.${data.result.regime}.title`)}</p>
-          <ResultCard result={data.result} />
-          <IncreaseChecker regime={data.result.regime} />
-          {isCovered(data.result.regime) && <WhatToDoNow regime={data.result.regime} />}
-          {data.result.questions.length > 0 && (
-            <ConfirmingQuestions
-              questions={data.result.questions}
-              answers={answers}
-              onAnswer={(next) => { setAnswers(next); run(address, next); }}
-            />
-          )}
-          {data.dataWarnings?.map((w: string, i: number) => (
-            <p key={i} className="mt-3 text-xs text-gray-600">{t(`warning.${w}`)}</p>
-          ))}
-          <GetHelp unincorporatedCounty={data.jurisdiction?.placeName === null && data.jurisdiction?.inLACounty === true} />
-          <RecordsDetails reasons={data.result.reasons} />
-          <ShareButton address={address} answers={answers} locale={locale} />
-          <Disclaimer lastVerified={data.lastVerified} />
+        <div className="mt-8 space-y-8 result-reveal">
+          {/* Band 1 — Your answer. Narrow live region announces only the verdict. */}
+          <section>
+            <p role="status" className="sr-only">{t(`rights.${data.result.regime}.title`)}</p>
+            <ResultCard result={data.result} />
+          </section>
+          {/* Band 2 — What to do. */}
+          <section className="space-y-4">
+            <IncreaseChecker regime={data.result.regime} />
+            {isCovered(data.result.regime) && <WhatToDoNow regime={data.result.regime} />}
+            {data.result.questions.length > 0 && (
+              <ConfirmingQuestions
+                questions={data.result.questions}
+                answers={answers}
+                onAnswer={(next) => { setAnswers(next); run(address, next); }}
+              />
+            )}
+            {data.dataWarnings?.map((w: string, i: number) => (
+              <p key={i} className="text-xs text-muted-foreground">{t(`warning.${w}`)}</p>
+            ))}
+          </section>
+          {/* Band 3 — Get help + details. */}
+          <section className="space-y-4">
+            <GetHelp unincorporatedCounty={data.jurisdiction?.placeName === null && data.jurisdiction?.inLACounty === true} />
+            <RecordsDetails reasons={data.result.reasons} />
+            <ShareButton address={address} answers={answers} locale={locale} />
+            <Disclaimer lastVerified={data.lastVerified} />
+          </section>
         </div>
       )}
       <SeoFaq />

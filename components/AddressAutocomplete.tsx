@@ -100,7 +100,7 @@ export function AddressAutocomplete({ value, onChange, onSelect }: {
   return (
     <div className="relative flex-1">
       <input
-        className="w-full rounded-lg border px-3 py-2"
+        className="w-full rounded-lg border border-border bg-surface px-3 py-2"
         placeholder={t('page.placeholder')}
         value={value}
         role="combobox"
@@ -122,13 +122,13 @@ export function AddressAutocomplete({ value, onChange, onSelect }: {
           id="address-suggestions"
           role="listbox"
           aria-label={t('suggest.listLabel')}
-          className="absolute z-10 mt-1 w-full overflow-hidden rounded-lg border border-gray-200 bg-white shadow-lg"
+          className="absolute z-10 mt-1 w-full overflow-hidden rounded-lg border border-border bg-surface shadow-lg"
         >
           {loading && suggestions.length === 0 && (
-            <li className="px-3 py-3 text-sm text-gray-500">{t('suggest.loading')}</li>
+            <li className="px-3 py-3 text-sm text-muted-foreground">{t('suggest.loading')}</li>
           )}
           {!loading && queried && suggestions.length === 0 && (
-            <li className="px-3 py-3 text-sm text-gray-500">{t('suggest.none')}</li>
+            <li className="px-3 py-3 text-sm text-muted-foreground">{t('suggest.none')}</li>
           )}
           {suggestions.map((s, i) => (
             <li
@@ -136,7 +136,7 @@ export function AddressAutocomplete({ value, onChange, onSelect }: {
               id={`addr-opt-${i}`}
               role="option"
               aria-selected={i === active}
-              className={`cursor-pointer px-3 py-3 text-sm ${i === active ? 'bg-blue-50' : ''}`}
+              className={`cursor-pointer px-3 py-3 text-sm ${i === active ? 'bg-primary-soft' : ''}`}
               onMouseEnter={() => setActive(i)}
               onMouseDown={(e) => {
                 e.preventDefault();

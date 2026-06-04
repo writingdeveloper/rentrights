@@ -21,7 +21,7 @@ export function IncreaseChecker({ regime }: { regime: Regime }) {
     return (
       <section className="mt-6">
         <h2 className="text-sm font-semibold">{t('increase.heading')}</h2>
-        <p className="mt-1 text-sm text-gray-600">{t('increase.noCap')}</p>
+        <p className="mt-1 text-sm text-muted-foreground">{t('increase.noCap')}</p>
       </section>
     );
   }
@@ -55,13 +55,13 @@ export function IncreaseChecker({ regime }: { regime: Regime }) {
       tone = null; // NEEDS_INPUT / NOT_APPLICABLE → show nothing
   }
 
-  const toneClass = tone === 'bad' ? 'text-red-700' : tone === 'warn' ? 'text-amber-700' : 'text-green-700';
+  const toneClass = tone === 'bad' ? 'text-danger' : tone === 'warn' ? 'text-warning' : 'text-success';
 
   return (
     <section className="mt-6">
       <h2 className="text-sm font-semibold">{t('increase.heading')}</h2>
       <div className="mt-2 flex gap-2">
-        <label className="flex-1 text-xs text-gray-600">
+        <label className="flex-1 text-xs text-muted-foreground">
           {t('increase.currentLabel')}
           <input
             type="number"
@@ -70,10 +70,10 @@ export function IncreaseChecker({ regime }: { regime: Regime }) {
             value={current}
             onChange={(e) => setCurrent(e.target.value)}
             placeholder={t('increase.currentPlaceholder')}
-            className="mt-1 w-full rounded-lg border px-3 py-2 text-sm"
+            className="mt-1 w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm"
           />
         </label>
-        <label className="flex-1 text-xs text-gray-600">
+        <label className="flex-1 text-xs text-muted-foreground">
           {t('increase.proposedLabel')}
           <input
             type="number"
@@ -82,12 +82,12 @@ export function IncreaseChecker({ regime }: { regime: Regime }) {
             value={proposed}
             onChange={(e) => setProposed(e.target.value)}
             placeholder={t('increase.proposedPlaceholder')}
-            className="mt-1 w-full rounded-lg border px-3 py-2 text-sm"
+            className="mt-1 w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm"
           />
         </label>
       </div>
       {text && <p className={`mt-2 text-sm font-semibold ${toneClass}`}>{text}</p>}
-      {text && <p className="mt-1 text-xs text-gray-600">{t('increase.caveat', { agency })}</p>}
+      {text && <p className="mt-1 text-xs text-muted-foreground">{t('increase.caveat', { agency })}</p>}
     </section>
   );
 }
