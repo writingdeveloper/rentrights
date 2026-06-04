@@ -15,6 +15,7 @@ export function AddressAutocomplete({ value, onChange, onSelect }: {
   const [active, setActive] = useState(-1);
   const blurTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const reqId = useRef(0);
+  const lastChosen = useRef<string | null>(null);
 
   useEffect(() => {
     const q = value.trim();
@@ -22,6 +23,11 @@ export function AddressAutocomplete({ value, onChange, onSelect }: {
       setSuggestions([]);
       setOpen(false);
       setQueried(false);
+      setLoading(false);
+      return;
+    }
+    if (q === lastChosen.current) {
+      setOpen(false);
       setLoading(false);
       return;
     }
@@ -53,6 +59,7 @@ export function AddressAutocomplete({ value, onChange, onSelect }: {
   }, []);
 
   function choose(addr: string) {
+    lastChosen.current = addr;
     if (blurTimer.current) clearTimeout(blurTimer.current);
     onChange(addr);
     setOpen(false);

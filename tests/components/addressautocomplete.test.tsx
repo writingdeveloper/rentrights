@@ -85,4 +85,14 @@ describe('AddressAutocomplete', () => {
     expect(screen.queryByText('STALE, Pasadena, CA')).toBeNull();
     expect(screen.getByText('FRESH, Los Angeles, CA')).toBeTruthy();
   });
+
+  it('does not reopen the dropdown after selecting a suggestion', async () => {
+    mockFetch(['300 South Santa Fe Avenue, Los Angeles, CA']);
+    render(<Harness onSelect={vi.fn()} />);
+    fireEvent.change(screen.getByRole('combobox'), { target: { value: '300 s santa fe' } });
+    const opt = await screen.findByText('300 South Santa Fe Avenue, Los Angeles, CA');
+    fireEvent.mouseDown(opt);
+    await new Promise((r) => setTimeout(r, 350)); // past the debounce window
+    expect(screen.queryByRole('listbox')).toBeNull();
+  });
 });
