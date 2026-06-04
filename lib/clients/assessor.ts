@@ -31,6 +31,25 @@ export function parseParcelFacts(json: unknown): ParcelFacts {
   };
 }
 
+/** Leading house number as a positive integer, or null (fractional/ranged/missing situs). */
+export function parseHouseNo(v: unknown): number | null {
+  const n = Number(v);
+  return Number.isInteger(n) && n > 0 ? n : null;
+}
+
+/** The 5-digit ZIP embedded in a situs line like "LOS ANGELES CA 90026", or null. */
+export function parseZip(v: unknown): string | null {
+  const m = typeof v === 'string' ? v.match(/\b(\d{5})\b/) : null;
+  return m ? m[1] : null;
+}
+
+/** Facts of the one candidate row whose AIN matches, or null if it is not in the set. */
+export function selectFactsByAin(json: unknown, ain: string): ParcelFacts | null {
+  const feats = (json as FeatureCollection)?.features ?? [];
+  const match = feats.find((f) => f.attributes?.AIN != null && String(f.attributes.AIN) === ain);
+  return match ? parseParcelFacts({ features: [match] }) : null;
+}
+
 /**
  * The AIN of the single parcel the point falls in. A confident rooftop point
  * normally intersects exactly one parcel; 0 (point in a right-of-way) or several

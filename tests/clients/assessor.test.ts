@@ -1,5 +1,13 @@
 import { describe, it, expect } from 'vitest';
-import { selectAin, parseParcelFacts, parcelAtPoint, fetchParcel } from '@/lib/clients/assessor';
+import {
+  selectAin,
+  parseParcelFacts,
+  parcelAtPoint,
+  fetchParcel,
+  parseHouseNo,
+  parseZip,
+  selectFactsByAin,
+} from '@/lib/clients/assessor';
 import pais from '../fixtures/pais.json';
 import rolls from '../fixtures/rolls.json';
 import rollsEmpty from '../fixtures/rolls-empty.json';
@@ -81,5 +89,42 @@ describe('fetchParcel', () => {
     const out = await fetchParcel('1411 Murray Dr, Los Angeles', router({ features: [] }));
     expect(out.ain).toBeNull();
     expect(out.facts).toEqual({ yearBuilt: null, units: null, useCode: null });
+  });
+});
+
+describe('parseHouseNo', () => {
+  it('parses a clean house number to a positive integer', () => {
+    expect(parseHouseNo('1411')).toBe(1411);
+  });
+  it('returns null for fractional / ranged / empty / missing', () => {
+    expect(parseHouseNo('1411 1/2')).toBeNull();
+    expect(parseHouseNo('1411-15')).toBeNull();
+    expect(parseHouseNo('')).toBeNull();
+    expect(parseHouseNo(undefined)).toBeNull();
+  });
+});
+
+describe('parseZip', () => {
+  it('extracts the 5-digit zip from a situs line', () => {
+    expect(parseZip('LOS ANGELES CA 90026')).toBe('90026');
+  });
+  it('returns null when there is no 5-digit zip', () => {
+    expect(parseZip('LOS ANGELES CA')).toBeNull();
+    expect(parseZip(undefined)).toBeNull();
+  });
+});
+
+describe('selectFactsByAin', () => {
+  const multi = {
+    features: [
+      { attributes: { AIN: '5424024020', YearBuilt: '1910', Units: 5, UseCode: '0500' } },
+      { attributes: { AIN: '5425003009', YearBuilt: '1931', Units: 6, UseCode: '0500' } },
+    ],
+  };
+  it('parses the facts of the row whose AIN matches', () => {
+    expect(selectFactsByAin(multi, '5425003009')).toEqual({ yearBuilt: 1931, units: 6, useCode: '0500' });
+  });
+  it('returns null when the AIN is not among the candidates', () => {
+    expect(selectFactsByAin(multi, '9999999999')).toBeNull();
   });
 });
