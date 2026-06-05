@@ -26,7 +26,10 @@ export function capLabel(regime: Regime, t: T, onDate = new Date()): string {
   }
   if (regime === 'COUNTY_RSTPO') {
     const p = LEGAL.countyCapPct.find((x) => x.effectiveFrom <= d && (!x.effectiveTo || d <= x.effectiveTo));
-    return p ? t('result.capUpTo', { pct: p.value }) : t('result.capSeeDcba');
+    if (!p) return t('result.capSeeDcba');
+    return p.value != null
+      ? t('result.capUpTo', { pct: p.value })
+      : t('result.capCountyPending', { ceiling: p.ceilingPct ?? 3 });
   }
   return t('result.capNone');
 }

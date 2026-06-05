@@ -19,6 +19,11 @@ describe('capStaleness', () => {
     expect(s?.stale).toBe(true);
     expect(s?.reason).toBe('pending publication');
   });
+  it('flags County RSTPO as pending once the published figure lapses (after 2026-06-30)', () => {
+    const s = capStaleness('COUNTY_RSTPO', new Date('2026-08-01'));
+    expect(s?.stale).toBe(true);
+    expect(s?.reason).toBe('pending publication');
+  });
 });
 
 describe('stalenessMessage', () => {
@@ -45,6 +50,9 @@ describe('rightsText', () => {
 describe('capLabel', () => {
   it('formats the RSO cap on 2026-06-02', () => {
     expect(capLabel('RSO', t, new Date('2026-06-02'))).toBe('up to 3%');
+  });
+  it('formats the County cap as pending (ceiling-only) after 2026-06-30', () => {
+    expect(capLabel('COUNTY_RSTPO', t, new Date('2026-08-01'))).toContain('up to 3%');
   });
 });
 
