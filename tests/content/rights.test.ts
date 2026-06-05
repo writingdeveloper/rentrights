@@ -112,4 +112,19 @@ describe('reason copy', () => {
     expect(t('reason.UNITS_COUNT', { count: 6 })).toBe('6 homes on the property');
     expect(t('reason.SINGLE_UNIT').toLowerCase()).not.toContain('parcel');
   });
+
+  // Legal-critical regression guards (2026-06-04 review). Do not relax these copy
+  // assertions without attorney sign-off — they protect against re-introducing the
+  // two findings the review flagged for launch.
+  it('Issue 1: exemption-notice reason names the non-corporate-owner condition, never asserts a flat "no rent cap"', () => {
+    const r = t('reason.EXEMPTION_NOTICE_GIVEN').toLowerCase();
+    expect(r).toContain('corporation');
+    expect(r).not.toContain('no state rent cap');
+  });
+  it('Issue 2: separate-house help treats ADU/back house as multi-unit, not a single house', () => {
+    const h = t('question.IS_SEPARATE_HOUSE.help').toLowerCase();
+    expect(h).toContain('adu');
+    expect(h).toContain('building with other units');
+    expect(h).not.toContain('counts as a single house');
+  });
 });
