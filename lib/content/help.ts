@@ -9,7 +9,8 @@ export interface HelpOrg {
 
 /**
  * Directory of free tenant-help organizations serving Los Angeles.
- * All URLs and phone numbers are web-verified as of 2026-06-02.
+ * All URLs and phone numbers are web-verified as of 2026-06-04 (agent web-verification;
+ * human re-check still required before public launch).
  */
 export const HELP_ORGS: HelpOrg[] = [
   {

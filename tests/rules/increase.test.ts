@@ -72,4 +72,14 @@ describe('checkIncrease', () => {
   it('COUNTY_JCO: no cap', () => {
     expect(checkIncrease({ regime: 'COUNTY_JCO', currentRent: 2000, proposedRent: 9999, onDate: NOW }).verdict).toBe('NO_CAP');
   });
+
+  it('COUNTY_RSTPO pending range (after 2026-06-30, ceiling 3% / no floor): within / uncertain / over', () => {
+    // 60% of CPI capped at 3%, exact % pending DCBA → ceiling 3% ($2060), floor 0% ($2000).
+    expect(checkIncrease({ regime: 'COUNTY_RSTPO', currentRent: 2000, proposedRent: 2000, onDate: PENDING }).verdict).toBe('WITHIN_RANGE');
+    const u = checkIncrease({ regime: 'COUNTY_RSTPO', currentRent: 2000, proposedRent: 2040, onDate: PENDING });
+    expect(u.verdict).toBe('UNCERTAIN_RANGE');
+    expect(u.capCeilingPct).toBe(3);
+    expect(u.allowedMaxAtCeiling).toBe(2060);
+    expect(checkIncrease({ regime: 'COUNTY_RSTPO', currentRent: 2000, proposedRent: 2100, onDate: PENDING }).verdict).toBe('OVER_RANGE');
+  });
 });
