@@ -66,11 +66,19 @@ export function resolveRegime({ jurisdiction, facts, answers = {}, now = new Dat
     questions.push('BUILT_BEFORE_OCT_1978');
   }
 
-  // --- Unit count / single-family (an explicit answer overrides parcel data) ---
+  // --- Unit count / single-family ---
+  // An explicit answer can resolve MISSING parcel data, but a record-confirmed
+  // 2+ unit parcel is itself the legal trigger for multi-unit coverage — a duplex,
+  // or a house + ADU/back house, is 2+ units on the parcel and RSO-covered (LAMC
+  // §151). So the record wins over a "single stand-alone house" answer; we only
+  // ask IS_SEPARATE_HOUSE when the unit count is unknown.
   let multiUnit: boolean | null;
   if (answers.isCondo === true) {
     multiUnit = false;
     reasons.push({ code: 'SAID_CONDO' });
+  } else if (facts.units != null && facts.units >= 2) {
+    multiUnit = true;
+    reasons.push(facts.units >= 3 ? { code: 'UNITS_COUNT', params: { count: facts.units } } : { code: 'TWO_UNITS' });
   } else if (answers.isSeparateHouse === true) {
     multiUnit = false;
     reasons.push({ code: 'SAID_SEPARATE_HOUSE' });
@@ -84,14 +92,8 @@ export function resolveRegime({ jurisdiction, facts, answers = {}, now = new Dat
   } else if (facts.units == null) {
     multiUnit = null;
     questions.push('IS_SEPARATE_HOUSE');
-  } else if (facts.units >= 3) {
-    multiUnit = true;
-    reasons.push({ code: 'UNITS_COUNT', params: { count: facts.units } });
-  } else if (facts.units === 2) {
-    multiUnit = true;
-    reasons.push({ code: 'TWO_UNITS' });
-    if (answers.isSeparateHouse === undefined) questions.push('IS_SEPARATE_HOUSE');
   } else {
+    // facts.units === 1
     multiUnit = false;
     reasons.push({ code: 'SINGLE_UNIT' });
   }
@@ -188,11 +190,16 @@ function resolveCounty(facts: ParcelFacts, answers: UserAnswers): RegimeResult {
     reasons.push({ code: 'COUNTY_BUILT_1995_AMBIGUOUS' });
   }
 
-  // Unit count / single-family — reuse the same neutral reason codes & questions as the city path.
+  // Unit count / single-family — reuse the same neutral reason codes & questions as the
+  // city path, including the record-wins guard: a record-confirmed 2+ unit parcel stays
+  // multi-unit (RSTPO-eligible) and cannot be downgraded by a "single house" answer.
   let multiUnit: boolean | null;
   if (answers.isCondo === true) {
     multiUnit = false;
     reasons.push({ code: 'SAID_CONDO' });
+  } else if (facts.units != null && facts.units >= 2) {
+    multiUnit = true;
+    reasons.push(facts.units >= 3 ? { code: 'UNITS_COUNT', params: { count: facts.units } } : { code: 'TWO_UNITS' });
   } else if (answers.isSeparateHouse === true) {
     multiUnit = false;
     reasons.push({ code: 'SAID_SEPARATE_HOUSE' });
@@ -205,14 +212,8 @@ function resolveCounty(facts: ParcelFacts, answers: UserAnswers): RegimeResult {
   } else if (facts.units == null) {
     multiUnit = null;
     questions.push('IS_SEPARATE_HOUSE');
-  } else if (facts.units >= 3) {
-    multiUnit = true;
-    reasons.push({ code: 'UNITS_COUNT', params: { count: facts.units } });
-  } else if (facts.units === 2) {
-    multiUnit = true;
-    reasons.push({ code: 'TWO_UNITS' });
-    if (answers.isSeparateHouse === undefined) questions.push('IS_SEPARATE_HOUSE');
   } else {
+    // facts.units === 1
     multiUnit = false;
     reasons.push({ code: 'SINGLE_UNIT' });
   }

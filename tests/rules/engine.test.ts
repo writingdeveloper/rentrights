@@ -33,9 +33,22 @@ describe('resolveRegime', () => {
     expect(r.questions).toContain('BUILT_BEFORE_OCT_1978');
   });
 
-  it('asks separate-house when there are exactly 2 units', () => {
+  it('treats a record-confirmed 2-unit parcel as multi-unit (RSO if pre-1978) without asking separate-house', () => {
     const r = resolveRegime({ jurisdiction: LA, facts: { yearBuilt: 1925, units: 2, useCode: '0500' } });
-    expect(r.questions).toContain('IS_SEPARATE_HOUSE');
+    expect(r.regime).toBe('RSO');
+    expect(r.questions).not.toContain('IS_SEPARATE_HOUSE');
+    expect(r.reasons.some((x) => x.code === 'TWO_UNITS')).toBe(true);
+  });
+
+  it('keeps a record-confirmed 2-unit parcel in RSO even if the renter calls it a single stand-alone house (ADU/duplex guard)', () => {
+    // A house + ADU, or a duplex, is 2 units on the parcel = RSO-covered (LAMC §151);
+    // the renter's "stand-alone" intuition must not strip RSO from a record-confirmed parcel.
+    const r = resolveRegime({
+      jurisdiction: LA,
+      facts: { yearBuilt: 1925, units: 2, useCode: '0500' },
+      answers: { isSeparateHouse: true },
+    });
+    expect(r.regime).toBe('RSO');
   });
 
   it('treats a single-family with no exemption answer as AB1482 (protective default), low confidence, asks exemption', () => {
@@ -133,6 +146,15 @@ describe('resolveRegime', () => {
       facts: { yearBuilt: 1990, units: 1, useCode: '0100' },
     });
     expect(r.regime).toBe('COUNTY_JCO');
+  });
+
+  it('keeps a record-confirmed 2-unit County parcel in COUNTY_RSTPO even if called a single house (ADU/duplex guard)', () => {
+    const r = resolveRegime({
+      jurisdiction: { inLACity: false, placeName: null, incorporated: false, inLACounty: true },
+      facts: { yearBuilt: 1990, units: 2, useCode: '0500' },
+      answers: { isSeparateHouse: true },
+    });
+    expect(r.regime).toBe('COUNTY_RSTPO');
   });
 
   it('lowers confidence at the 1995 County cutoff', () => {
