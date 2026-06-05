@@ -112,7 +112,7 @@
   "help.CES.description": "Grupo comunitario de inquilinos desde 1973; Clínica de Derechos del Inquilino gratuita los sábados por Zoom y apoyo ante desalojos indebidos en LA.",
   "help.ICLC.description": "Bufete de derecho de pobreza que combate la falta de vivienda y la pérdida de vivienda de inquilinos de bajos ingresos, veteranos y personas con discapacidad en LA.",
   "help.NLSLA.description": "Ayuda legal gratuita para defensa contra desalojos, control de rentas y discriminación de vivienda para residentes de bajos ingresos en todo el Condado de LA.",
-  "disclaimer.text": "⚠️ Esto es una estimación basada en registros públicos, no una consulta del registro de LAHD, y no es asesoría legal. Confirme siempre con LAHD antes de actuar. Cifras legales verificadas por última vez el {lastVerified}.",
+  "disclaimer.text": "⚠️ RentRights ofrece información general sobre la ley de renta de LA, no asesoría legal sobre su situación específica. Es una estimación basada en registros públicos, no una consulta del registro de LAHD. Confirme siempre con LAHD (o con la ayuda legal gratuita de abajo) antes de actuar. Cifras legales verificadas por última vez el {lastVerified}.",
   "meta.title": "RentRights — derechos del inquilino en LA, por dirección",
   "meta.description": "Herramienta gratuita y de código abierto que estima sus protecciones de renta en la Ciudad de Los Ángeles a partir de su dirección. No es asesoría legal.",
   "share.button": "Copiar enlace",
@@ -165,7 +165,7 @@
   "faq.q5": "¿Qué significa desalojo con \"causa justa\"?",
   "faq.a5": "\"Causa justa\" significa que el propietario debe tener una razón legalmente válida para terminar tu arrendamiento — como falta de pago o una violación del contrato — en lugar de desalojarte sin motivo. Por ciertas razones sin culpa (como que el dueño se mude), puede que te corresponda asistencia de reubicación.",
   "faq.q6": "¿RentRights es asesoría legal?",
-  "faq.a6": "No. RentRights es una estimación gratuita basada en registros públicos, no una consulta al registro oficial de rentas, y no es asesoría legal. Confirma siempre tu situación con el Departamento de Vivienda de LA (LAHD), el DCBA del Condado de LA, o una organización de ayuda legal para inquilinos antes de actuar.",
+  "faq.a6": "No. RentRights ofrece información legal general, no asesoría legal sobre tu situación específica. Es una estimación gratuita basada en registros públicos, no una consulta al registro oficial de rentas. Confirma siempre tu situación con el Departamento de Vivienda de LA (LAHD), el DCBA del Condado de LA, o una organización de ayuda legal para inquilinos antes de actuar.",
   "faq.q7": "¿Qué tan actualizada está esta información?",
   "faq.a7": "Las cifras legales tienen fecha y se verificaron por última vez el {lastVerified}. Los porcentajes del límite de renta cambian (normalmente cada verano), así que confirma siempre las cifras actuales con la autoridad de vivienda. Los plazos de aviso de aumento son {small} días para aumentos del {threshold}% o menos y {large} días para aumentos mayores, más {mail} días adicionales si el aviso llegó por correo.",
   "error.RATE_LIMITED": "Demasiadas solicitudes. Espera un minuto e inténtalo de nuevo."

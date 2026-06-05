@@ -128,3 +128,19 @@ describe('reason copy', () => {
     expect(h).not.toContain('counts as a single house');
   });
 });
+
+describe('legal positioning (information, not advice)', () => {
+  // Track 1: keep the tool firmly on the "legal information" side of the UPL line —
+  // general information about the law, not advice about the user's specific situation.
+  it('disclaimer frames the tool as general information, not advice about your situation', () => {
+    const d = t('disclaimer.text', { lastVerified: '2026-06-04' }).toLowerCase();
+    expect(d).toContain('general information');
+    expect(d).toContain('not legal advice');
+    expect(d).toContain('specific situation');
+  });
+  it('the "is this legal advice" FAQ draws the information-vs-advice line', () => {
+    const a = t('faq.a6').toLowerCase();
+    expect(a).toContain('general legal information');
+    expect(a).toContain('specific situation');
+  });
+});

@@ -112,7 +112,7 @@
   "help.CES.description": "Grassroots tenant-organizing group since 1973; free Saturday Tenants' Rights Clinic via Zoom and wrongful-eviction support in LA.",
   "help.ICLC.description": "Poverty-law firm fighting homelessness and housing loss for low-income tenants, veterans, and people with disabilities in LA.",
   "help.NLSLA.description": "Free legal aid for eviction defense, rent control, and housing discrimination for low-income residents throughout LA County.",
-  "disclaimer.text": "⚠️ This is an estimate based on public records, not a lookup from LAHD's registry, and is not legal advice. Always confirm with LAHD before acting. Legal figures last verified {lastVerified}.",
+  "disclaimer.text": "⚠️ RentRights gives general information about LA rent law, not legal advice about your specific situation. It's an estimate from public records — not a lookup from LAHD's registry. Always confirm with LAHD (or the free legal aid below) before acting. Legal figures last verified {lastVerified}.",
   "meta.title": "RentRights — LA renter rights, by address",
   "meta.description": "Free, open-source tool that estimates your City of Los Angeles rent-law protections from your address. Not legal advice.",
   "share.button": "Copy link",
@@ -165,7 +165,7 @@
   "faq.q5": "What does \"just cause\" eviction mean?",
   "faq.a5": "\"Just cause\" means your landlord must have a legally valid reason to end your tenancy — such as nonpayment of rent or a lease violation — rather than evicting you for no reason. For certain no-fault reasons (like an owner move-in), you may be owed relocation assistance.",
   "faq.q6": "Is RentRights legal advice?",
-  "faq.a6": "No. RentRights is a free estimate based on public records, not a lookup from the official rent registry, and it is not legal advice. Always confirm your status with the LA Housing Department (LAHD), LA County DCBA, or a tenant legal-aid organization before acting.",
+  "faq.a6": "No. RentRights gives general legal information, not legal advice about your specific situation. It's a free estimate based on public records — not a lookup from the official rent registry. Always confirm your status with the LA Housing Department (LAHD), LA County DCBA, or a tenant legal-aid organization before acting.",
   "faq.q7": "How current is this information?",
   "faq.a7": "Legal figures are dated and were last verified on {lastVerified}. Rent-cap percentages change (typically each summer), so always confirm the current numbers with the housing authority. Rent-increase notice periods are {small} days for increases of {threshold}% or less and {large} days for larger increases, plus {mail} extra days if the notice came by mail.",
   "error.RATE_LIMITED": "Too many requests. Please wait a minute and try again."
