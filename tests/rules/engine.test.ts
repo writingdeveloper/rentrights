@@ -69,6 +69,20 @@ describe('resolveRegime', () => {
     expect(r.regime).toBe('AB1482');
   });
 
+  it('keeps the AB1482 cap (low confidence) even when an exemption notice was given, since the exemption also requires a non-corporate owner', () => {
+    // Civ §1947.12(d)(5) / §1946.2(e)(8): the SFR/condo exemption needs BOTH the
+    // written notice AND a non-corporate owner. We cannot verify ownership, so we
+    // lean protective (cap applies) rather than asserting "no cap."
+    const r = resolveRegime({
+      jurisdiction: LA,
+      facts: { yearBuilt: 1995, units: 1, useCode: '0100' },
+      answers: { hasAb1482ExemptionNotice: true },
+    });
+    expect(r.regime).toBe('AB1482');
+    expect(r.confidence).toBe('low');
+    expect(r.reasons.some((x) => x.code === 'EXEMPTION_NOTICE_GIVEN')).toBe(true);
+  });
+
   it('returns UNKNOWN and asks when parcel facts are missing', () => {
     const r = resolveRegime({ jurisdiction: LA, facts: { yearBuilt: null, units: null, useCode: null } });
     expect(r.regime).toBe('UNKNOWN');

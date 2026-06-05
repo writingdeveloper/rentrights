@@ -96,7 +96,7 @@
   "reason.MULTIUNIT_AB1482": "Construido después del límite del RSO con varias unidades → aplica la AB 1482",
   "reason.MULTIUNIT_BUILDDATE_UNCERTAIN": "Varias unidades, pero la fecha de construcción es incierta → probablemente RSO, pendiente de confirmación",
   "reason.SFR_MAYBE_EXEMPT": "Una vivienda unifamiliar o condominio podría estar exenta del tope de renta de la AB 1482 (si el arrendador dio el aviso requerido) — pero las protecciones contra el desalojo por causa justa de la ciudad siguen aplicando.",
-  "reason.EXEMPTION_NOTICE_GIVEN": "El arrendador entregó un aviso de exención de la AB 1482 → sin tope estatal de renta, pero la Causa Justa de la ciudad sigue aplicando",
+  "reason.EXEMPTION_NOTICE_GIVEN": "Usted indicó que su arrendador le dio un aviso de exención de la AB 1482. Ese aviso elimina el tope de renta estatal solo si el dueño es una persona o familia — no una corporación, REIT ni LLC con un miembro corporativo — así que, por precaución, seguimos mostrando el tope. Las protecciones de Causa Justa de la ciudad aplican de todos modos; confirme su exención con LAHD.",
   "reason.NO_EXEMPTION_NOTICE": "Sin aviso de exención de la AB 1482 → aplica el tope de renta de la AB 1482",
   "reason.OUT_OF_LA_CITY": "{placeName} está fuera de la Ciudad de Los Ángeles",
   "reason.OUTSIDE_LA": "Esta dirección parece estar fuera del Condado de Los Ángeles, que esta herramienta aún no cubre.",

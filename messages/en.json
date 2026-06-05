@@ -96,7 +96,7 @@
   "reason.MULTIUNIT_AB1482": "Built after the RSO cutoff with multiple units → AB 1482 applies",
   "reason.MULTIUNIT_BUILDDATE_UNCERTAIN": "Multiple units, but the build date is uncertain → likely RSO pending confirmation",
   "reason.SFR_MAYBE_EXEMPT": "A single-family home or condo may be exempt from the AB 1482 rent cap (if the landlord gave the required notice) — but citywide Just Cause eviction protections still apply.",
-  "reason.EXEMPTION_NOTICE_GIVEN": "Landlord gave an AB 1482 exemption notice → no state rent cap, but citywide Just Cause still applies",
+  "reason.EXEMPTION_NOTICE_GIVEN": "You said your landlord gave an AB 1482 exemption notice. That notice removes the state rent cap only if the owner is an individual or family — not a corporation, REIT, or corporate-owned LLC — so to stay safe we still show the cap. Citywide Just Cause protections apply either way; confirm your exemption with LAHD.",
   "reason.NO_EXEMPTION_NOTICE": "No AB 1482 exemption notice → AB 1482 rent cap applies",
   "reason.OUT_OF_LA_CITY": "{placeName} is outside the City of Los Angeles",
   "reason.OUTSIDE_LA": "This address appears to be outside Los Angeles County, which this tool doesn't cover yet.",

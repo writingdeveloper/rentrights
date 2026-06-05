@@ -157,8 +157,13 @@ export function resolveRegime({ jurisdiction, facts, answers = {}, now = new Dat
       return { regime: 'AB1482', confidence: 'medium', reasons, questions };
     }
     if (answers.hasAb1482ExemptionNotice) {
+      // A tenant-reported exemption notice does NOT by itself remove the AB 1482
+      // cap: the SFR/condo exemption also requires a non-corporate owner (Civ
+      // §1947.12(d)(5) / §1946.2(e)(8)). We can't verify ownership from parcel
+      // data, so we lean protective — keep the cap and explain the condition —
+      // rather than asserting "no cap." Citywide Just Cause applies regardless.
       reasons.push({ code: 'EXEMPTION_NOTICE_GIVEN' });
-      return { regime: 'JCO_ONLY', confidence: 'medium', reasons, questions };
+      return { regime: 'AB1482', confidence: 'low', reasons, questions };
     }
     reasons.push({ code: 'NO_EXEMPTION_NOTICE' });
     return { regime: 'AB1482', confidence: 'medium', reasons, questions };
