@@ -1,6 +1,8 @@
 // Zero-dependency in-memory fixed-window rate limiter. Defense-in-depth only:
-// it is per-process, so on multi-instance/serverless it under-counts — the
-// authoritative ceiling belongs at the reverse proxy (e.g. Nginx limit_req).
+// it is per-process — on Cloudflare Workers state is per-isolate (near no-op
+// across PoPs), and on multi-instance hosts it under-counts. The authoritative
+// ceiling belongs at the edge: a Cloudflare WAF rate-limiting rule on /api/*
+// for rentrights.soursea.io (or Nginx limit_req on a self-host).
 // Limits here are generous to avoid false-positives behind shared NATs.
 
 type Bucket = { count: number; resetAt: number };
@@ -33,8 +35,15 @@ export function rateLimit(key: string, limit: number, windowMs: number, now: num
   return { ok: false, retryAfterMs: b.resetAt - now };
 }
 
-/** Best-effort client identity for rate-limiting: the first forwarded IP. */
+/**
+ * Best-effort client identity for rate-limiting. CF-Connecting-IP wins: behind
+ * Cloudflare the first X-Forwarded-For hop is client-spoofable (Cloudflare
+ * appends the real IP to a client-supplied XFF). The XFF/x-real-ip fallbacks
+ * keep local dev and non-Cloudflare deploys working.
+ */
 export function clientKey(request: Request): string {
+  const cf = request.headers.get('cf-connecting-ip');
+  if (cf) return cf.trim();
   const xff = request.headers.get('x-forwarded-for');
   if (xff) return xff.split(',')[0].trim();
   return request.headers.get('x-real-ip') ?? 'unknown';

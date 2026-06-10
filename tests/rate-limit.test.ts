@@ -29,6 +29,15 @@ describe('rateLimit', () => {
 });
 
 describe('clientKey', () => {
+  // Behind Cloudflare, X-Forwarded-For is client-spoofable (Cloudflare appends
+  // the real IP to a client-supplied XFF); CF-Connecting-IP is the trustworthy
+  // header and must win.
+  it('prefers cf-connecting-ip over x-forwarded-for', () => {
+    const req = new Request('http://x', {
+      headers: { 'cf-connecting-ip': '192.0.2.99', 'x-forwarded-for': '203.0.113.7, 10.0.0.1' },
+    });
+    expect(clientKey(req)).toBe('192.0.2.99');
+  });
   it('uses the first x-forwarded-for IP', () => {
     const req = new Request('http://x', { headers: { 'x-forwarded-for': '203.0.113.7, 10.0.0.1' } });
     expect(clientKey(req)).toBe('203.0.113.7');

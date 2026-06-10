@@ -1,32 +1,35 @@
-import { describe, it, expect, afterEach } from 'vitest';
+import { describe, it, expect, afterEach, vi } from 'vitest';
 import { siteUrl } from '@/lib/seo/site-url';
 
-const KEYS = ['NEXT_PUBLIC_SITE_URL', 'VERCEL_PROJECT_PRODUCTION_URL', 'VERCEL_URL'] as const;
-function clearEnv() { for (const k of KEYS) delete process.env[k]; }
+function clearEnv() { delete process.env.NEXT_PUBLIC_SITE_URL; }
 
 describe('siteUrl', () => {
-  afterEach(clearEnv);
+  afterEach(() => { clearEnv(); vi.unstubAllEnvs(); });
 
   it('prefers NEXT_PUBLIC_SITE_URL and strips a trailing slash', () => {
     clearEnv();
-    process.env.NEXT_PUBLIC_SITE_URL = 'https://rentrights.org/';
-    expect(siteUrl()).toBe('https://rentrights.org');
+    process.env.NEXT_PUBLIC_SITE_URL = 'https://rentrights.soursea.io/';
+    expect(siteUrl()).toBe('https://rentrights.soursea.io');
   });
 
-  it('falls back to the Vercel production domain (https prefixed)', () => {
-    clearEnv();
-    process.env.VERCEL_PROJECT_PRODUCTION_URL = 'rentrights.vercel.app';
-    expect(siteUrl()).toBe('https://rentrights.vercel.app');
-  });
-
-  it('falls back to the Vercel preview URL', () => {
-    clearEnv();
-    process.env.VERCEL_URL = 'rr-abc123.vercel.app';
-    expect(siteUrl()).toBe('https://rr-abc123.vercel.app');
-  });
-
-  it('defaults to localhost in development', () => {
+  it('defaults to localhost in development/test', () => {
     clearEnv();
     expect(siteUrl()).toBe('http://localhost:3000');
+  });
+
+  // Cloudflare Workers has no VERCEL_*-style URL auto-detection: a production
+  // build without NEXT_PUBLIC_SITE_URL would silently ship localhost canonicals
+  // in robots/sitemap/OG. Fail the build loudly instead.
+  it('throws in production when the resolved origin would be localhost', () => {
+    clearEnv();
+    vi.stubEnv('NODE_ENV', 'production');
+    expect(() => siteUrl()).toThrow(/NEXT_PUBLIC_SITE_URL/);
+  });
+
+  it('returns the explicit origin in production', () => {
+    clearEnv();
+    vi.stubEnv('NODE_ENV', 'production');
+    process.env.NEXT_PUBLIC_SITE_URL = 'https://rentrights.soursea.io';
+    expect(siteUrl()).toBe('https://rentrights.soursea.io');
   });
 });
