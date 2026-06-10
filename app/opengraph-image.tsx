@@ -1,5 +1,11 @@
 import { ImageResponse } from 'next/og';
 
+// Guard: keep this route statically prerendered. If it ever went dynamic it
+// would run satori + resvg-wasm inside the Cloudflare Worker per request — a
+// known rough edge under @opennextjs/cloudflare. force-static turns any
+// accidental dynamization into a build-time error instead.
+export const dynamic = 'force-static';
+
 export const alt = 'RentRights — Know your LA renter rights, free';
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';

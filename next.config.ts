@@ -1,8 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // Self-host: emit a minimal standalone server (.next/standalone/server.js).
-  // Ignored by Vercel; harmless there.
+  // Standalone output: consumed by the OpenNext Cloudflare adapter build
+  // (production) and by deploy/docker/Dockerfile (self-host fallback).
   output: 'standalone',
   async headers() {
     return [
