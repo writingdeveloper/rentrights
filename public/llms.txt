@@ -1,5 +1,7 @@
 # RentRights
 
+Canonical URL: https://rentrights.soursea.io
+
 > RentRights is a free, open-source web tool that estimates a renter's rent-law
 > protections in the City of Los Angeles and unincorporated Los Angeles County
 > from a street address. It is an estimate based on public records, not legal advice.

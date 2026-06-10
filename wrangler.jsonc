@@ -1,0 +1,32 @@
+// Cloudflare Workers config for the OpenNext adapter (@opennextjs/cloudflare).
+// Production: https://rentrights.soursea.io — the `routes` entry below makes
+// `npm run deploy` create the DNS record + TLS cert on the soursea.io zone
+// automatically (zone must be Active in the same Cloudflare account).
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "rentrights",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-06-01",
+  // nodejs_compat is required by the adapter; global_fetch_strictly_public makes
+  // fetch() to our own hostname hit the public internet instead of looping into
+  // this worker (official get-started template).
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  // Runtime vars for request-time server code. NEXT_PUBLIC_SITE_URL is ALSO
+  // inlined at build time from .env.production — keep both in sync.
+  // GOOGLE_SITE_VERIFICATION / BING_SITE_VERIFICATION can be added here once
+  // the search-console properties for rentrights.soursea.io exist (the tokens
+  // are public meta-tag values, not secrets).
+  "vars": {
+    "NEXT_PUBLIC_SITE_URL": "https://rentrights.soursea.io"
+  },
+  "routes": [
+    { "pattern": "rentrights.soursea.io", "custom_domain": true }
+  ],
+  // Local preview port. Port 3000 is reserved for an unrelated app on this
+  // machine — never use it.
+  "dev": { "port": 8788 }
+}

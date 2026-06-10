@@ -24,6 +24,14 @@ function Harness({ onSelect }: { onSelect: (a: string) => void }) {
 }
 
 describe('AddressAutocomplete', () => {
+  // The placeholder is not a reliable accessible name (WCAG 4.1.2): the
+  // site's primary control must expose a real label to screen readers.
+  it('exposes an accessible name on the address combobox', () => {
+    mockFetch([]);
+    render(<Harness onSelect={vi.fn()} />);
+    expect(screen.getByRole('combobox', { name: 'Street address' })).toBeTruthy();
+  });
+
   it('shows suggestions after typing ≥4 chars', async () => {
     mockFetch(['300 South Santa Fe Avenue, Los Angeles, CA', '300 South Santa Fe Avenue, Long Beach, CA']);
     render(<Harness onSelect={vi.fn()} />);

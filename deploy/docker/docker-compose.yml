@@ -1,7 +1,11 @@
+# ARCHIVED self-host alternative. The supported production path is Cloudflare
+# Workers (`npm run deploy`) at https://rentrights.soursea.io — see /README.md.
+# Run from the repo root: docker compose -f deploy/docker/docker-compose.yml up
 services:
   rentrights:
     build:
-      context: .
+      context: ../..
+      dockerfile: deploy/docker/Dockerfile
       args:
         # Build-time: inlined into the bundle (canonical/OG/sitemap origin).
         NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:-}

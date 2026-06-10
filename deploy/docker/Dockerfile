@@ -12,7 +12,8 @@ RUN npm ci
 FROM node:22-alpine AS build
 WORKDIR /app
 # NEXT_PUBLIC_* are INLINED at build time, so the canonical/OG/sitemap origin
-# must be passed here (not at runtime). On Vercel this is auto-detected and unused.
+# must be passed here (not at runtime). The committed .env.production already
+# carries the Cloudflare production origin; this ARG overrides it if set.
 ARG NEXT_PUBLIC_SITE_URL
 ENV NEXT_PUBLIC_SITE_URL=$NEXT_PUBLIC_SITE_URL
 ENV NEXT_TELEMETRY_DISABLED=1
