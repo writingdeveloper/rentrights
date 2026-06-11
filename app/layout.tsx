@@ -8,6 +8,7 @@ import { translate } from '@/lib/i18n/t';
 import { CATALOG } from '@/lib/i18n/catalog';
 import { siteUrl } from '@/lib/seo/site-url';
 import { JsonLd } from '@/components/JsonLd';
+import { CloudflareAnalytics } from '@/components/CloudflareAnalytics';
 import { organizationJsonLd, webSiteJsonLd, webApplicationJsonLd } from '@/lib/seo/jsonld';
 
 const inter = Inter({ variable: '--font-inter', subsets: ['latin'], display: 'swap' });
@@ -77,6 +78,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
         <JsonLd data={webSiteJsonLd(base, locale)} />
         <JsonLd data={webApplicationJsonLd(base, locale)} />
         <LocaleProvider initialLocale={locale}>{children}</LocaleProvider>
+        <CloudflareAnalytics />
       </body>
     </html>
   );
