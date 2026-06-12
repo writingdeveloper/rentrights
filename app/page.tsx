@@ -98,7 +98,7 @@ export default function Home() {
           {/* Band 1 — Your answer. Narrow live region announces only the verdict. */}
           <section>
             <p role="status" className="sr-only">{t(`rights.${data.result.regime}.title`)}</p>
-            <ResultCard result={data.result} />
+            <ResultCard result={data.result} lastVerified={data.lastVerified} />
           </section>
           {/* Band 2 — What to do. */}
           <section className="space-y-4">

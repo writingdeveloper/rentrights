@@ -27,6 +27,7 @@
   "result.capSeeState": "See state guidance",
   "result.capNone": "No state/local rent cap — but Just Cause protections apply",
   "result.reassure": "You have rights — here's what we found for your address.",
+  "result.verifiedBadge": "Figures verified {date}",
   "result.detailsToggle": "See the records behind this estimate",
   "whatToDo.heading": "What you can do now",
   "whatToDo.step1": "Save or screenshot this page.",
