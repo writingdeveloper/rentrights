@@ -13,13 +13,19 @@ const NOTICE_PARAMS = {
   lastVerified: LEGAL.lastVerified,
 };
 
+// Per-question interpolation params (most answers take none).
+const FAQ_PARAMS: Record<number, Record<string, string | number>> = {
+  7: NOTICE_PARAMS,
+  9: { evictionDays: LEGAL.evictionAnswerCourtDays },
+};
+
 export function SeoFaq() {
   const t = useT();
   // Build the Q&A once; the SAME strings feed the visible list and the schema
   // so the FAQPage JSON-LD always matches what users (and AI crawlers) see.
-  const faqs = [1, 2, 3, 4, 5, 6, 7].map((n) => ({
+  const faqs = [1, 2, 3, 4, 5, 6, 7, 8, 9].map((n) => ({
     q: t(`faq.q${n}`),
-    a: t(`faq.a${n}`, n === 7 ? NOTICE_PARAMS : undefined),
+    a: t(`faq.a${n}`, FAQ_PARAMS[n]),
   }));
 
   return (
