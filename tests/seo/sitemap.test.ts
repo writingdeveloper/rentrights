@@ -6,9 +6,14 @@ import { LEGAL } from '@/lib/legal/constants';
 describe('sitemap', () => {
   it('uses the dedicated content-updated date for lastModified (not the legal-verified date)', () => {
     const entries = sitemap();
-    expect(entries).toHaveLength(1);
     const lastmod = entries[0].lastModified as Date;
     expect(new Date(lastmod).toISOString().slice(0, 10)).toBe(CONTENT_LAST_UPDATED);
+  });
+
+  it('lists both the default and the Spanish (/es) URL so Google can index each language', () => {
+    const urls = sitemap().map((e) => e.url);
+    expect(urls.some((u) => u.endsWith('/'))).toBe(true);
+    expect(urls.some((u) => u.endsWith('/es'))).toBe(true);
   });
 
   it('content-updated is at least as recent as the legal verification date', () => {
