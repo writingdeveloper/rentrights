@@ -21,12 +21,7 @@ export function classifyUseCode(useCode: string | null): 'apartment' | 'sfr' | '
 export function resolveRegime({ jurisdiction, facts, answers = {}, now = new Date() }: ResolveInput): RegimeResult {
   if (!jurisdiction.inLACity) {
     if (jurisdiction.placeName !== null) {
-      return {
-        regime: 'OUT_OF_JURISDICTION',
-        confidence: 'high',
-        reasons: [{ code: 'OUT_OF_LA_CITY', params: { placeName: jurisdiction.placeName } }],
-        questions: [],
-      };
+      return resolveIncorporatedCity(jurisdiction.placeName, facts, answers);
     }
     if (jurisdiction.inLACounty) {
       return resolveCounty(facts, answers);
@@ -171,6 +166,81 @@ export function resolveRegime({ jurisdiction, facts, answers = {}, now = new Dat
 
   // multiUnit === null → not enough information yet.
   return { regime: 'UNKNOWN', confidence: 'low', reasons, questions };
+}
+
+// Incorporated city other than LA City → AB 1482 baseline. AB 1482 is statewide,
+// so these renters always have at least the state cap + just cause; their city
+// MAY have stronger local control, which we don't model (YAGNI + legal risk).
+// We reuse the city path's unit-count / SFR-exemption logic but deliberately
+// SKIP the RSO (Oct 1978) and 15-year new-construction branches — both are LA
+// City only. Skipping new-construction-exempt errs PROTECTIVE (shows the cap a
+// genuinely new unit may not owe), matching the engine's safe-direction rule;
+// the INCORPORATED_CITY reason + generic "confirm with your city" banner cover
+// the residual uncertainty. Confidence is capped at medium for this path.
+function resolveIncorporatedCity(placeName: string, facts: ParcelFacts, answers: UserAnswers): RegimeResult {
+  const reasons: ReasonItem[] = [{ code: 'INCORPORATED_CITY', params: { placeName } }];
+  const questions: QuestionId[] = [];
+  const unsure = answers.unsure ?? [];
+
+  // Unit count / single-family — same neutral reason codes & record-wins guard as
+  // the city path (a record-confirmed 2+ unit parcel can't be downgraded).
+  let multiUnit: boolean | null;
+  if (answers.isCondo === true) {
+    multiUnit = false;
+    reasons.push({ code: 'SAID_CONDO' });
+  } else if (facts.units != null && facts.units >= 2) {
+    multiUnit = true;
+    reasons.push(facts.units >= 3 ? { code: 'UNITS_COUNT', params: { count: facts.units } } : { code: 'TWO_UNITS' });
+  } else if (answers.isSeparateHouse === true) {
+    multiUnit = false;
+    reasons.push({ code: 'SAID_SEPARATE_HOUSE' });
+  } else if (answers.isSeparateHouse === false) {
+    multiUnit = true;
+    reasons.push({ code: 'SAID_NOT_SEPARATE_HOUSE' });
+  } else if (unsure.includes('IS_SEPARATE_HOUSE')) {
+    multiUnit = true;
+    reasons.push({ code: 'ASSUMED_MULTIUNIT' });
+  } else if (facts.units == null) {
+    multiUnit = null;
+    questions.push('IS_SEPARATE_HOUSE');
+  } else {
+    multiUnit = false;
+    reasons.push({ code: 'SINGLE_UNIT' });
+  }
+  if (multiUnit === true && answers.isCondo === undefined && classifyUseCode(facts.useCode) !== 'apartment') {
+    if (unsure.includes('IS_CONDO')) reasons.push({ code: 'ASSUMED_NOT_CONDO' });
+    else questions.push('IS_CONDO');
+  }
+
+  if (multiUnit === true) {
+    reasons.push({ code: 'MULTIUNIT_AB1482' });
+    return { regime: 'AB1482', confidence: 'medium', reasons, questions };
+  }
+
+  if (multiUnit === false) {
+    // Single-family / condo: AB 1482 unless the landlord gave an exemption notice.
+    // Same protective sequencing as the city path, but confidence never exceeds
+    // medium here (local-ordinance uncertainty).
+    if (answers.hasAb1482ExemptionNotice === undefined && !unsure.includes('AB1482_EXEMPTION_NOTICE')) {
+      questions.push('AB1482_EXEMPTION_NOTICE');
+      reasons.push({ code: 'SFR_MAYBE_EXEMPT' });
+      return { regime: 'AB1482', confidence: 'low', reasons, questions };
+    }
+    if (unsure.includes('AB1482_EXEMPTION_NOTICE')) {
+      reasons.push({ code: 'ASSUMED_NO_EXEMPTION' });
+      reasons.push({ code: 'NO_EXEMPTION_NOTICE' });
+      return { regime: 'AB1482', confidence: 'medium', reasons, questions };
+    }
+    if (answers.hasAb1482ExemptionNotice) {
+      reasons.push({ code: 'EXEMPTION_NOTICE_GIVEN' });
+      return { regime: 'AB1482', confidence: 'low', reasons, questions };
+    }
+    reasons.push({ code: 'NO_EXEMPTION_NOTICE' });
+    return { regime: 'AB1482', confidence: 'medium', reasons, questions };
+  }
+
+  // multiUnit === null → not enough info yet; still AB1482-bound once answered.
+  return { regime: 'AB1482', confidence: 'low', reasons, questions };
 }
 
 // Unincorporated LA County → County RSTPO. Fully covered (cap + just cause) requires

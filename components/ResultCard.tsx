@@ -42,7 +42,7 @@ export function ResultCard({ result }: { result: RegimeResult }) {
           {rights.points.map((p, i) => <li key={i}>{p}</li>)}
         </ul>
         <div className="mt-4 rounded-lg border border-warning bg-warning-soft p-2 text-xs font-semibold text-warning">
-          {notFinalBanner(result.regime, t)}
+          {notFinalBanner(result.regime, t, result.reasons)}
         </div>
       </div>
     </div>
