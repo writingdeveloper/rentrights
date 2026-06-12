@@ -7,10 +7,10 @@ import { RegimeResult } from '@/lib/rules/types';
 
 afterEach(cleanup);
 
-function renderCard(result: RegimeResult) {
+function renderCard(result: RegimeResult, props: { lastVerified?: string; now?: Date } = {}) {
   return render(
     <LocaleProvider initialLocale="en">
-      <ResultCard result={result} />
+      <ResultCard result={result} {...props} />
     </LocaleProvider>,
   );
 }
@@ -47,6 +47,33 @@ describe('ResultCard', () => {
     expect(banner).toContain('DCBA');
     expect(banner).toContain('(800) 593-8222');
     expect(banner).not.toContain('(866) 557-7368');
+  });
+
+  it('shows a "Figures verified {date}" freshness badge when the cap is current', () => {
+    // 2026-06-11: the RSO 3% cap (2025-07-01→2026-06-30) is current, not stale.
+    renderCard(
+      { regime: 'RSO', confidence: 'high', reasons: [{ code: 'IN_LA_CITY' }], questions: [] },
+      { lastVerified: '2026-06-04', now: new Date('2026-06-11') },
+    );
+    expect(screen.getByText(/verified 2026-06-04/i)).toBeTruthy();
+  });
+
+  it('hides the freshness badge (shows the pending notice instead) when the cap is stale', () => {
+    // 2026-07-15: the RSO cap is pending publication (value:null from 2026-07-01).
+    renderCard(
+      { regime: 'RSO', confidence: 'high', reasons: [{ code: 'IN_LA_CITY' }], questions: [] },
+      { lastVerified: '2026-06-04', now: new Date('2026-07-15') },
+    );
+    expect(screen.queryByText(/verified 2026-06-04/i)).toBeNull();
+    expect(screen.getByText(/pending publication/i)).toBeTruthy();
+  });
+
+  it('renders no freshness badge for non-detailed results even with a lastVerified date', () => {
+    renderCard(
+      { regime: 'OUT_OF_JURISDICTION', confidence: 'high', reasons: [{ code: 'OUTSIDE_LA' }], questions: [] },
+      { lastVerified: '2026-06-04', now: new Date('2026-06-11') },
+    );
+    expect(screen.queryByText(/verified 2026-06-04/i)).toBeNull();
   });
 
   it('hides reassurance, confidence, and cap for OUT_OF_JURISDICTION', () => {

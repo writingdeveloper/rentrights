@@ -3,11 +3,15 @@ import { RegimeResult } from '@/lib/rules/types';
 import { rightsText, capLabel, capStaleness, stalenessMessage, notFinalBanner, isCovered } from '@/lib/content/rights';
 import { useT } from '@/lib/i18n/LocaleProvider';
 
-export function ResultCard({ result }: { result: RegimeResult }) {
+export function ResultCard({ result, lastVerified, now = new Date() }: { result: RegimeResult; lastVerified?: string; now?: Date }) {
   const t = useT();
   const rights = rightsText(result.regime, t);
   const detailed = result.regime !== 'OUT_OF_JURISDICTION' && result.regime !== 'UNKNOWN';
   const covered = isCovered(result.regime);
+  // Freshness as a trust signal: when the figure is current we surface the
+  // verification date right by the cap (our edge over stale-data competitors);
+  // when it's pending/stale the amber staleness line takes that slot instead.
+  const staleness = detailed ? capStaleness(result.regime, now) : null;
   // Non-color status cue (WCAG 1.4.1): icon + tinted token surface keyed by coverage.
   const icon = covered ? '✓' : 'ⓘ';
   const heroSurface = covered ? 'bg-success-soft' : 'bg-warning-soft';
@@ -27,11 +31,14 @@ export function ResultCard({ result }: { result: RegimeResult }) {
                   {t(`result.confidence.${result.confidence}`)}
                 </span>
                 <p className="mt-2 text-xs font-medium uppercase tracking-wide text-muted-foreground">{t('result.legalIncrease')}</p>
-                <p className={`text-3xl font-extrabold tabular-nums ${heroAccent}`}>{capLabel(result.regime, t)}</p>
-                {(() => {
-                  const s = capStaleness(result.regime);
-                  return s?.stale ? <p className="mt-1 text-xs text-muted-foreground">⚠ {stalenessMessage(s, t, result.regime)}</p> : null;
-                })()}
+                <p className={`text-3xl font-extrabold tabular-nums ${heroAccent}`}>{capLabel(result.regime, t, now)}</p>
+                {staleness?.stale ? (
+                  <p className="mt-1 text-xs text-muted-foreground">⚠ {stalenessMessage(staleness, t, result.regime)}</p>
+                ) : lastVerified ? (
+                  <p className="mt-1 text-xs font-medium text-success">
+                    <span aria-hidden="true">✓</span> {t('result.verifiedBadge', { date: lastVerified })}
+                  </p>
+                ) : null}
               </>
             )}
           </div>
