@@ -9,6 +9,7 @@ import { useT, useLocale } from '@/lib/i18n/LocaleProvider';
 import { ShareButton } from '@/components/ShareButton';
 import { IncreaseChecker } from '@/components/IncreaseChecker';
 import { WhatToDoNow } from '@/components/WhatToDoNow';
+import { EvictionNotice } from '@/components/EvictionNotice';
 import { RecordsDetails } from '@/components/RecordsDetails';
 import { isCovered } from '@/lib/content/rights';
 import { decodeShare } from '@/lib/share/code';
@@ -104,6 +105,7 @@ export default function Home() {
           <section className="space-y-4">
             <IncreaseChecker regime={data.result.regime} />
             {isCovered(data.result.regime) && <WhatToDoNow regime={data.result.regime} reasons={data.result.reasons} />}
+            <EvictionNotice />
             {data.result.questions.length > 0 && (
               <ConfirmingQuestions
                 questions={data.result.questions}

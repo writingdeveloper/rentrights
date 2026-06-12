@@ -59,6 +59,11 @@ export const LEGAL = {
   // Rent-increase notice periods (CA Civ §827, amended SB1103 eff. 2025-01-01).
   notice: { smallIncreaseDays: 30, largeIncreaseDays: 90, largeThresholdPct: 10, mailExtraDays: 5 },
 
+  // Deadline to file an Answer to an unlawful-detainer (eviction) summons:
+  // 10 COURT days (excludes weekends/court holidays), CCP §1167 as amended by
+  // AB 2347, eff. 2025-01-01 (was 5 calendar days). Substitute service adds 5.
+  evictionAnswerCourtDays: 10,
+
   // Relocation assistance (LA City RSO, eff. 2025-07-01) and AB 1482.
   relocation: {
     rsoEligible: { lt3yr: 10650, gte3yr: 13950 },

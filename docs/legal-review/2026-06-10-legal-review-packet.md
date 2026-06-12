@@ -54,6 +54,7 @@ last re-verified **2026-06-04** against LAHD, the Civil Code, and DCBA pages.
 | RSO relocation (eligible tenants) | $10,650 (<3 yrs) / $13,950 (≥3 yrs) | 2025-07-01 → | LAHD relocation bulletin 2025-26 |
 | RSO relocation (qualified tenants) | $22,450 (<3 yrs) / $26,550 (≥3 yrs) | 2025-07-01 → | LAHD relocation bulletin 2025-26 |
 | AB 1482 relocation | 1 month's rent (no-fault) | current | Civ. §1946.2(d) |
+| Unlawful-detainer answer deadline | **10 court days** (excl. weekends/court holidays; +5 if substitute service) | from 2025-01-01 | CCP §1167 as amended by **AB 2347** (was 5 calendar days) |
 
 Note: we deliberately did **not** adopt the "RSO 3% through 2027" claim that
 appears on some third-party sites — our reading of the 2026 RSO amendment is
@@ -77,6 +78,16 @@ that the fixed 3% ends 2026-06-30 and the 90%-of-CPI (1%–4%) formula starts
    your local rent/housing authority") with LAHD/DCBA named only when the regime
    is known. For pending periods we show a ceiling-only range (e.g. "up to 4%")
    rather than a number.
+
+5. **Eviction-notice emergency callout (added 2026-06-11, RR-7).** A collapsed
+   "Already received an eviction notice or court papers?" callout now appears on
+   every result, linking to the free **Tenant Power Toolkit**
+   (tenantpowertoolkit.org) and stating the renter "generally has **10 court
+   days** — not counting weekends or court holidays — to file a response" to an
+   unlawful detainer (CCP §1167 as amended by AB 2347, eff. 2025-01-01; we
+   deliberately do NOT use the obsolete "5 days"). Is the 10-court-day framing
+   accurate and adequately caveated for a lay audience, and is pointing renters
+   to the Tenant Power Toolkit (a non-legal-aid self-help tool) appropriate?
 
 ## 5. Open questions (we know these need a lawyer)
 

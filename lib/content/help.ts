@@ -4,7 +4,7 @@ export interface HelpOrg {
   url: string; // current, web-verified
   phone?: string; // current, web-verified
   languages?: string[];
-  tags: ('city' | 'legal-aid' | 'workshop' | 'hotline' | 'county')[];
+  tags: ('city' | 'legal-aid' | 'workshop' | 'hotline' | 'county' | 'eviction-defense')[];
 }
 
 /**
@@ -76,6 +76,15 @@ export const HELP_ORGS: HelpOrg[] = [
     phone: '(800) 433-6251',
     languages: ['English', 'Spanish'],
     tags: ['legal-aid'],
+  },
+  {
+    // Self-help eviction-Answer tool (NOT a legal-aid org — it says so itself).
+    // Free, bilingual; for renters already served with an unlawful-detainer.
+    name: 'Tenant Power Toolkit',
+    descriptionKey: 'help.TPT.description',
+    url: 'https://tenantpowertoolkit.org',
+    languages: ['English', 'Spanish'],
+    tags: ['eviction-defense'],
   },
 ];
 
