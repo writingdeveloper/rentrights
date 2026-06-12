@@ -1,6 +1,6 @@
 # RentRights — Legal Review Packet (for pro-bono / clinic review)
 
-Prepared: 2026-06-10 · Live site: https://rentrights.soursea.io · Source: https://github.com/writingdeveloper/rentrights
+Prepared: 2026-06-10 · Live site: https://rentrights.writingdeveloper.blog · Source: https://github.com/writingdeveloper/rentrights
 Contact: Si Hyeong Lee ([add your contact email])
 
 ## 1. What RentRights is (and is not)
@@ -113,7 +113,7 @@ that the fixed 3% ends 2026-06-30 and the 90%-of-CPI (1%–4%) formula starts
 
 ## 6. How to review
 
-- Live: https://rentrights.soursea.io (English/Español toggle, no sign-up).
+- Live: https://rentrights.writingdeveloper.blog (English/Español toggle, no sign-up).
 - Copy: `messages/en.json` / `messages/es.json` in the repo hold every string.
 - Figures: `lib/legal/constants.ts`.
 - 200 automated tests lock the legal-critical copy (e.g. the exemption-notice

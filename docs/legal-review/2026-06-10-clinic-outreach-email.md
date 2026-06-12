@@ -22,7 +22,7 @@ Subject: **Free LA tenant-rights estimator — request for a legal-accuracy read
 Hi [name / clinic],
 
 I'm an independent developer in Los Angeles. I built **RentRights**
-(https://rentrights.soursea.io), a free, open-source, English/Spanish web tool
+(https://rentrights.writingdeveloper.blog), a free, open-source, English/Spanish web tool
 that estimates — from a street address and public parcel records — whether a
 renter's home is likely covered by the City of LA RSO, AB 1482, LA County's
 RSTPO, or just-cause-only rules, and what the current annual increase cap is.
@@ -48,7 +48,7 @@ packet as a PDF or a Google Doc, whichever is easier.
 Thank you for the work you do for LA tenants,
 
 Si Hyeong Lee
-[add your contact email] · https://rentrights.soursea.io
+[add your contact email] · https://rentrights.writingdeveloper.blog
 
 ## Notes
 

@@ -1,9 +1,8 @@
 # Docker self-host (archived alternative)
 
-The **supported production path is Cloudflare Workers** via the OpenNext
-adapter (`npm run deploy`), serving https://rentrights.soursea.io. This Docker
-setup is kept as a self-host escape hatch; it is **not exercised by CI or QA**
-and may rot.
+The **supported production path is Vercel** (native Next.js), serving
+https://rentrights.writingdeveloper.blog. This Docker setup is kept as a
+self-host escape hatch; it is **not exercised by CI or QA** and may rot.
 
 From the repo root:
 
