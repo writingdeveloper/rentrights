@@ -103,7 +103,7 @@ export default function Home() {
           {/* Band 2 — What to do. */}
           <section className="space-y-4">
             <IncreaseChecker regime={data.result.regime} />
-            {isCovered(data.result.regime) && <WhatToDoNow regime={data.result.regime} />}
+            {isCovered(data.result.regime) && <WhatToDoNow regime={data.result.regime} reasons={data.result.reasons} />}
             {data.result.questions.length > 0 && (
               <ConfirmingQuestions
                 questions={data.result.questions}

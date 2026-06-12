@@ -7,10 +7,39 @@ const WEHO: Jurisdiction = { inLACity: false, placeName: 'West Hollywood city', 
 const NOW = new Date('2026-06-02'); // cutoffYear = 2011
 
 describe('resolveRegime', () => {
-  it('flags out-of-jurisdiction addresses', () => {
+  it('treats an incorporated city (not LA City) as AB1482 baseline, not out-of-jurisdiction', () => {
     const r = resolveRegime({ jurisdiction: WEHO, facts: { yearBuilt: 1950, units: 4, useCode: '0500' } });
-    expect(r.regime).toBe('OUT_OF_JURISDICTION');
-    expect(r.confidence).toBe('high');
+    expect(r.regime).toBe('AB1482');
+    // Inherent local-ordinance uncertainty caps confidence at medium, never high.
+    expect(r.confidence).toBe('medium');
+    expect(r.reasons[0].code).toBe('INCORPORATED_CITY');
+    expect(r.reasons[0].params?.placeName).toBe('West Hollywood city');
+  });
+
+  it('does NOT apply the RSO (1978) branch in an incorporated city — an old multi-unit is AB1482, not RSO', () => {
+    const r = resolveRegime({ jurisdiction: WEHO, facts: { yearBuilt: 1925, units: 6, useCode: '0500' } });
+    expect(r.regime).toBe('AB1482');
+    expect(r.reasons.some((x) => x.code === 'BUILT_BEFORE_CUTOFF')).toBe(false);
+  });
+
+  it('does NOT apply the 15-year new-construction exemption in an incorporated city (protective: keeps the cap)', () => {
+    const r = resolveRegime({ jurisdiction: WEHO, facts: { yearBuilt: 2024, units: 8, useCode: '0500' }, now: NOW });
+    expect(r.regime).toBe('AB1482');
+    expect(r.confidence).toBe('medium');
+    expect(r.reasons.some((x) => x.code === 'NEW_CONSTRUCTION_EXEMPT')).toBe(false);
+  });
+
+  it('asks the AB1482 exemption-notice question for an incorporated-city single-family home (low confidence)', () => {
+    const r = resolveRegime({ jurisdiction: WEHO, facts: { yearBuilt: 1995, units: 1, useCode: '0100' }, now: NOW });
+    expect(r.regime).toBe('AB1482');
+    expect(r.confidence).toBe('low');
+    expect(r.questions).toContain('AB1482_EXEMPTION_NOTICE');
+  });
+
+  it('asks IS_SEPARATE_HOUSE when the incorporated-city unit count is unknown', () => {
+    const r = resolveRegime({ jurisdiction: WEHO, facts: { yearBuilt: 1990, units: null, useCode: null }, now: NOW });
+    expect(r.regime).toBe('AB1482');
+    expect(r.questions).toContain('IS_SEPARATE_HOUSE');
   });
 
   it('classifies a pre-1978 multi-unit LA building as RSO with high confidence (1411 Murray Dr)', () => {

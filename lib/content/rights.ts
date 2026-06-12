@@ -1,5 +1,5 @@
 import { LEGAL } from '@/lib/legal/constants';
-import { Regime } from '@/lib/rules/types';
+import { Regime, ReasonItem } from '@/lib/rules/types';
 import { stalenessFor, Staleness } from '@/lib/legal/staleness';
 import { cityAuthority, countyAuthority } from '@/lib/content/help';
 
@@ -64,8 +64,13 @@ export function capStaleness(regime: Regime, onDate = new Date()): Staleness | n
  * County regimes (COUNTY_RSTPO/COUNTY_JCO) → LA County DCBA. For
  * OUT_OF_JURISDICTION / UNKNOWN we don't know the right agency, so we show a
  * generic "your local rent/housing authority" message rather than a wrong phone.
+ * An incorporated-city AB 1482 result (reasons include INCORPORATED_CITY) is also
+ * generic — LAHD only administers LA City, so we must not send those renters there.
  */
-export function notFinalBanner(regime: Regime, t: T): string {
+export function notFinalBanner(regime: Regime, t: T, reasons: ReasonItem[] = []): string {
+  if (reasons.some((r) => r.code === 'INCORPORATED_CITY')) {
+    return t('result.notFinalGeneric');
+  }
   if (regime === 'COUNTY_RSTPO' || regime === 'COUNTY_JCO') {
     return t('result.notFinal', { agency: t('staleness.authority.dcba'), phone: countyAuthority.phone ?? '' });
   }
