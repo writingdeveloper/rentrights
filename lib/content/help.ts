@@ -3,6 +3,10 @@ export interface HelpOrg {
   descriptionKey: string;
   url: string; // current, web-verified
   phone?: string; // current, web-verified
+  // Free online intake/consultation (so renters can ask for help without calling).
+  // Government / government-partnership portals only; web-verified 2026-06-11.
+  onlineUrl?: string;
+  onlineLabelKey?: string;
   languages?: string[];
   tags: ('city' | 'legal-aid' | 'workshop' | 'hotline' | 'county' | 'eviction-defense')[];
 }
@@ -18,6 +22,8 @@ export const HELP_ORGS: HelpOrg[] = [
     descriptionKey: 'help.LAHD.description',
     url: 'https://housing.lacity.gov',
     phone: '(866) 557-7368',
+    onlineUrl: 'https://housing.lacity.gov/residents/file-a-complaint',
+    onlineLabelKey: 'help.online.lahd',
     languages: ['English', 'Spanish'],
     tags: ['city', 'hotline'],
   },
@@ -26,6 +32,8 @@ export const HELP_ORGS: HelpOrg[] = [
     descriptionKey: 'help.STAY_HOUSED.description',
     url: 'https://www.stayhousedla.org',
     phone: '(888) 694-0040',
+    onlineUrl: 'https://www.stayhousedla.org/get-legal-help',
+    onlineLabelKey: 'help.online.stayHoused',
     languages: ['English', 'Spanish'],
     tags: ['legal-aid', 'workshop', 'hotline'],
   },
@@ -50,6 +58,8 @@ export const HELP_ORGS: HelpOrg[] = [
     descriptionKey: 'help.DCBA.description',
     url: 'https://dcba.lacounty.gov',
     phone: '(800) 593-8222',
+    onlineUrl: 'https://dcba.lacounty.gov/rentresolution/',
+    onlineLabelKey: 'help.online.dcba',
     languages: ['English', 'Spanish'],
     tags: ['county', 'hotline'],
   },
