@@ -8,8 +8,8 @@ describe('siteUrl', () => {
 
   it('prefers NEXT_PUBLIC_SITE_URL and strips a trailing slash', () => {
     clearEnv();
-    process.env.NEXT_PUBLIC_SITE_URL = 'https://rentrights.soursea.io/';
-    expect(siteUrl()).toBe('https://rentrights.soursea.io');
+    process.env.NEXT_PUBLIC_SITE_URL = 'https://rentrights.writingdeveloper.blog/';
+    expect(siteUrl()).toBe('https://rentrights.writingdeveloper.blog');
   });
 
   it('defaults to localhost in development/test', () => {
@@ -17,9 +17,8 @@ describe('siteUrl', () => {
     expect(siteUrl()).toBe('http://localhost:3000');
   });
 
-  // Cloudflare Workers has no VERCEL_*-style URL auto-detection: a production
-  // build without NEXT_PUBLIC_SITE_URL would silently ship localhost canonicals
-  // in robots/sitemap/OG. Fail the build loudly instead.
+  // A production build without NEXT_PUBLIC_SITE_URL would silently ship
+  // localhost canonicals in robots/sitemap/OG. Fail the build loudly instead.
   it('throws in production when the resolved origin would be localhost', () => {
     clearEnv();
     vi.stubEnv('NODE_ENV', 'production');
@@ -29,7 +28,7 @@ describe('siteUrl', () => {
   it('returns the explicit origin in production', () => {
     clearEnv();
     vi.stubEnv('NODE_ENV', 'production');
-    process.env.NEXT_PUBLIC_SITE_URL = 'https://rentrights.soursea.io';
-    expect(siteUrl()).toBe('https://rentrights.soursea.io');
+    process.env.NEXT_PUBLIC_SITE_URL = 'https://rentrights.writingdeveloper.blog';
+    expect(siteUrl()).toBe('https://rentrights.writingdeveloper.blog');
   });
 });

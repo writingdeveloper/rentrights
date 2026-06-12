@@ -10,24 +10,23 @@ Free, open-source tool: enter a **City of Los Angeles** address and get an *hone
 - `npm test`
 
 ## Deploy
-Production runs on **Cloudflare Workers** via the OpenNext adapter at **https://rentrights.soursea.io**.
+Production runs on **Vercel** (native Next.js) at **https://rentrights.writingdeveloper.blog**.
 
-- `npm run preview` — build with `opennextjs-cloudflare` and serve on the real workerd runtime at http://localhost:8788 (port 3000 is never used).
-- `npm run deploy` — build + `wrangler deploy`. The `routes` entry in `wrangler.jsonc` attaches the custom domain (DNS record + TLS cert are created automatically on the `soursea.io` zone; the zone must be Active in the deploying Cloudflare account).
-- Auth: `npx wrangler login` (interactive OAuth), or `CLOUDFLARE_API_TOKEN` + `CLOUDFLARE_ACCOUNT_ID`.
+- Deploys on push to `master` via Vercel's GitHub integration; or `vercel --prod` with the CLI.
+- The Vercel project's domain is `rentrights.writingdeveloper.blog`.
+- Analytics is cookieless **Vercel Web Analytics** (enable it in the project's Analytics tab; `<Analytics/>` is wired in `app/layout.tsx`). No cookies, no consent banner.
 
 Environment:
-- `NEXT_PUBLIC_SITE_URL` is **build-time** (inlined by `next build`); the committed `.env.production` pins it to the production origin. A production build that would resolve to localhost fails fast (`lib/seo/site-url.ts`).
-- Runtime vars (`UPSTREAM_TIMEOUT_MS`, `GOOGLE_SITE_VERIFICATION`, `BING_SITE_VERIFICATION`) go in `wrangler.jsonc` `"vars"`; locally in `.dev.vars`.
+- `NEXT_PUBLIC_SITE_URL` is **build-time** (inlined by `next build`); the committed `.env.production` pins it to the production origin. A production build that would resolve to localhost fails fast (`lib/seo/site-url.ts`). Mirror it in the Vercel project env to be safe.
+- Runtime vars (`UPSTREAM_TIMEOUT_MS`, `GOOGLE_SITE_VERIFICATION`, `BING_SITE_VERIFICATION`) go in the Vercel project env.
 
-Launch checklist (zone-level, dashboard):
-- Add the one free **WAF rate-limiting rule** on `soursea.io`: path starts with `/api/` and host `rentrights.soursea.io`, by IP, ~15 req/10s, Block — the in-app limiter (`lib/rate-limit.ts`) is per-isolate best-effort only.
-- Disable the `*.workers.dev` preview URL for the Worker so traffic can't bypass the zone WAF.
-- After deploy, `curl -sI https://rentrights.soursea.io/` must show `X-Content-Type-Options: nosniff`, `X-Frame-Options: DENY`, `Referrer-Policy: no-referrer` (privacy-load-bearing: keeps share-link addresses out of Referer).
+Launch checklist:
+- Add a **Vercel Firewall** rate-limiting rule on `/api/*` (by IP) — the in-app limiter (`lib/rate-limit.ts`) is per-instance best-effort only.
+- After deploy, `curl -sI https://rentrights.writingdeveloper.blog/` must show `X-Content-Type-Options: nosniff`, `X-Frame-Options: DENY`, `Referrer-Policy: no-referrer` (privacy-load-bearing: keeps share-link addresses out of Referer).
 
 A Docker self-host alternative is archived in `deploy/docker/` (unsupported, not exercised by CI).
 
 ## Architecture
 See `docs/superpowers/specs/2026-06-02-rentrights-design.md` and `docs/superpowers/plans/`.
 
-Legal figures live in `lib/legal/constants.ts` with a `lastVerified` date and per-period effective dates. **Update cadence:** RSO % (Jul 1), AB 1482 % (Aug 1), relocation (Jul 1). After updating, run `npm test` then `npm run deploy`.
+Legal figures live in `lib/legal/constants.ts` with a `lastVerified` date and per-period effective dates. **Update cadence:** RSO % (Jul 1), AB 1482 % (Aug 1), relocation (Jul 1). After updating, run `npm test`, then bump `CONTENT_LAST_UPDATED` in `lib/seo/content-updated.ts` if the FAQ/home copy changed, and push (Vercel auto-deploys).

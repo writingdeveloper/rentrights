@@ -1,5 +1,5 @@
-# ARCHIVED self-host alternative. The supported production path is Cloudflare
-# Workers (`npm run deploy`) at https://rentrights.soursea.io — see /README.md.
+# ARCHIVED self-host alternative. The supported production path is Vercel
+# at https://rentrights.writingdeveloper.blog — see /README.md.
 # Run from the repo root: docker compose -f deploy/docker/docker-compose.yml up
 services:
   rentrights:

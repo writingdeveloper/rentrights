@@ -1,8 +1,7 @@
 // Zero-dependency in-memory fixed-window rate limiter. Defense-in-depth only:
-// it is per-process — on Cloudflare Workers state is per-isolate (near no-op
-// across PoPs), and on multi-instance hosts it under-counts. The authoritative
-// ceiling belongs at the edge: a Cloudflare WAF rate-limiting rule on /api/*
-// for rentrights.soursea.io (or Nginx limit_req on a self-host).
+// it is per-process — on serverless/multi-instance hosts it under-counts across
+// instances. The authoritative ceiling belongs at the edge: a Vercel Firewall
+// rate-limiting rule on /api/* (or Nginx limit_req on a self-host).
 // Limits here are generous to avoid false-positives behind shared NATs.
 
 type Bucket = { count: number; resetAt: number };

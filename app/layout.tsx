@@ -8,7 +8,7 @@ import { translate } from '@/lib/i18n/t';
 import { CATALOG } from '@/lib/i18n/catalog';
 import { siteUrl } from '@/lib/seo/site-url';
 import { JsonLd } from '@/components/JsonLd';
-import { CloudflareAnalytics } from '@/components/CloudflareAnalytics';
+import { Analytics } from '@vercel/analytics/next';
 import { pageAlternates } from '@/lib/seo/alternates';
 import { organizationJsonLd, webSiteJsonLd, webApplicationJsonLd } from '@/lib/seo/jsonld';
 
@@ -91,7 +91,10 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
         <JsonLd data={webSiteJsonLd(base, locale)} />
         <JsonLd data={webApplicationJsonLd(base, locale)} />
         <LocaleProvider initialLocale={locale}>{children}</LocaleProvider>
-        <CloudflareAnalytics />
+        {/* Cookieless Vercel Web Analytics — no consent banner needed, keeps the
+            "nothing stored" posture. Collects data only when deployed on Vercel
+            with Analytics enabled. */}
+        <Analytics />
       </body>
     </html>
   );
