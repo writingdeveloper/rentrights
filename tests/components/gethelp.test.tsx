@@ -39,6 +39,30 @@ describe('GetHelp', () => {
     expect(link).toBeTruthy();
   });
 
+  it('offers a free online (non-phone) help link for the government authorities', () => {
+    render(
+      <LocaleProvider initialLocale="en">
+        <GetHelp />
+      </LocaleProvider>,
+    );
+    // LAHD online complaint, DCBA online mediation, Stay Housed LA online legal help.
+    const lahd = screen.getByText(/^LAHD/).closest('li')!;
+    expect(lahd.querySelector('a[href*="housing.lacity.gov/residents/file-a-complaint"]')).toBeTruthy();
+    const dcba = screen.getByText(/DCBA/).closest('li')!;
+    expect(dcba.querySelector('a[href*="dcba.lacounty.gov/rentresolution"]')).toBeTruthy();
+    const stay = screen.getByText('Stay Housed LA').closest('li')!;
+    expect(stay.querySelector('a[href*="stayhousedla.org/get-legal-help"]')).toBeTruthy();
+  });
+
+  it('shows the "prefer not to call?" online intro', () => {
+    render(
+      <LocaleProvider initialLocale="en">
+        <GetHelp />
+      </LocaleProvider>,
+    );
+    expect(screen.getByText(/prefer not to call/i)).toBeTruthy();
+  });
+
   it('renders each phone as a tel: link', () => {
     render(
       <LocaleProvider initialLocale="en">

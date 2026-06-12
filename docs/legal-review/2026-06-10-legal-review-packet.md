@@ -100,7 +100,13 @@ that the fixed 3% ends 2026-06-30 and the 90%-of-CPI (1%–4%) formula starts
    conservative treatment (we don't exempt) acceptable as an estimate?
 3. Is the get-help directory (LAHD, DCBA, Stay Housed LA, SAJE, LAFLA, CES,
    Inner City Law Center, NLSLA — names/phones in §6 of the site) appropriate
-   to list, and is any organization missing or mischaracterized?
+   to list, and is any organization missing or mischaracterized? **Added
+   2026-06-11 (RR-8): free government online-intake links beside the phones —
+   LAHD "File a complaint online" (housing.lacity.gov/residents/file-a-complaint),
+   DCBA "Request free mediation online" (dcba.lacounty.gov/rentresolution/),
+   Stay Housed LA "Apply for free legal help online" (stayhousedla.org/get-legal-help).
+   These URLs are agent-web-verified only — please confirm they are the correct
+   current intake pages.**
 4. UPL check: does anything in the result page (esp. the increase checker
    verdicts: "Over the legal cap — the most they can legally charge is about
    $X") cross from information into advice in your view? We can soften further.
