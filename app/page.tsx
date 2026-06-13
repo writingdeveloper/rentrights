@@ -76,6 +76,10 @@ export default function Home() {
         </div>
       </div>
       <p className="text-sm text-muted-foreground">{t('page.tagline')}</p>
+      {/* Honest "pending formal review" posture (RR-2): the legal figures are
+          AI + statute verified, not yet attorney/legal-aid reviewed. Shown up
+          front since the site is live to real renters. */}
+      <p className="mt-1 text-xs text-muted-foreground">{t('page.reviewStatus')}</p>
 
       <form className="mt-5 flex gap-2" onSubmit={(e) => { e.preventDefault(); setAnswers({}); run(address, {}); }}>
         <AddressAutocomplete
