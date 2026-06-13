@@ -13,7 +13,7 @@ docker compose -f deploy/docker/docker-compose.yml up -d --build
 Notes:
 - `.dockerignore` stays at the repo root (the build context root).
 - `NEXT_PUBLIC_SITE_URL` is inlined at build time; the committed
-  `.env.production` provides the Cloudflare origin, so pass the build arg if
+  `.env.production` provides the production origin, so pass the build arg if
   you self-host on a different domain.
 - Rate limiting: the in-app limiter is best-effort — put a `limit_req`-style
   rule on your reverse proxy.

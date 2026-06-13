@@ -36,11 +36,6 @@ yarn-error.log*
 # canonical production origin — committed on purpose (not a secret)
 !.env.production
 
-# cloudflare (OpenNext adapter)
-/.open-next/
-.dev.vars
-cloudflare-env.d.ts
-
 # vercel
 .vercel
 
@@ -56,6 +51,3 @@ next-env.d.ts
 /playwright-report/
 /playwright/.cache/
 .playwright-mcp/
-
-# wrangler local state
-.wrangler/

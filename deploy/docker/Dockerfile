@@ -13,7 +13,7 @@ FROM node:22-alpine AS build
 WORKDIR /app
 # NEXT_PUBLIC_* are INLINED at build time, so the canonical/OG/sitemap origin
 # must be passed here (not at runtime). The committed .env.production already
-# carries the Cloudflare production origin; this ARG overrides it if set.
+# carries the production origin; this ARG overrides it for a different domain.
 ARG NEXT_PUBLIC_SITE_URL
 ENV NEXT_PUBLIC_SITE_URL=$NEXT_PUBLIC_SITE_URL
 ENV NEXT_TELEMETRY_DISABLED=1
