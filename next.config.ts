@@ -1,8 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // Standalone output: consumed by the OpenNext Cloudflare adapter build
-  // (production) and by deploy/docker/Dockerfile (self-host fallback).
+  // Standalone output for the archived Docker self-host path (deploy/docker/).
+  // Vercel — the supported production target — builds natively and ignores this.
   output: 'standalone',
   async headers() {
     return [
@@ -14,6 +14,8 @@ const nextConfig: NextConfig = {
           // Keeps the URL fragment (which can carry the renter's address in a
           // share link) out of Referer headers.
           { key: 'Referrer-Policy', value: 'no-referrer' },
+          // No feature on the site uses these powerful APIs; deny them site-wide.
+          { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=()' },
         ],
       },
     ];

@@ -35,14 +35,14 @@ export function rateLimit(key: string, limit: number, windowMs: number, now: num
 }
 
 /**
- * Best-effort client identity for rate-limiting. CF-Connecting-IP wins: behind
- * Cloudflare the first X-Forwarded-For hop is client-spoofable (Cloudflare
- * appends the real IP to a client-supplied XFF). The XFF/x-real-ip fallbacks
- * keep local dev and non-Cloudflare deploys working.
+ * Best-effort client identity for rate-limiting. On Vercel the platform
+ * OVERWRITES x-forwarded-for with the real client IP and does not forward
+ * client-supplied values, so the leftmost hop is trustworthy. We deliberately do
+ * NOT read cf-connecting-ip: it is not a Vercel header, so a client could send it
+ * to forge an identity and slip past this limiter. x-real-ip is the fallback for
+ * local dev and other proxies.
  */
 export function clientKey(request: Request): string {
-  const cf = request.headers.get('cf-connecting-ip');
-  if (cf) return cf.trim();
   const xff = request.headers.get('x-forwarded-for');
   if (xff) return xff.split(',')[0].trim();
   return request.headers.get('x-real-ip') ?? 'unknown';

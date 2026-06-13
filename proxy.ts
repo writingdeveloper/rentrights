@@ -6,7 +6,10 @@ import type { NextRequest } from 'next/server';
 // This gives Spanish content a crawlable, indexable URL + hreflang without a
 // duplicate page tree, so Googlebot (which crawls as en-US) can surface the
 // Spanish version. "/" stays cookie/Accept-Language negotiated for users.
-export function middleware(req: NextRequest) {
+//
+// Next 16 renamed the Middleware file convention to Proxy (same behavior); this
+// file is the renamed `middleware.ts`.
+export function proxy(req: NextRequest) {
   const url = req.nextUrl.clone();
   url.pathname = '/';
   const headers = new Headers(req.headers);

@@ -29,17 +29,18 @@ describe('rateLimit', () => {
 });
 
 describe('clientKey', () => {
-  // Behind Cloudflare, X-Forwarded-For is client-spoofable (Cloudflare appends
-  // the real IP to a client-supplied XFF); CF-Connecting-IP is the trustworthy
-  // header and must win.
-  it('prefers cf-connecting-ip over x-forwarded-for', () => {
+  // On Vercel the platform OVERWRITES x-forwarded-for with the real client IP and
+  // does not forward client-supplied values, so the leftmost hop is trustworthy.
+  it('uses the first x-forwarded-for IP', () => {
+    const req = new Request('http://x', { headers: { 'x-forwarded-for': '203.0.113.7, 10.0.0.1' } });
+    expect(clientKey(req)).toBe('203.0.113.7');
+  });
+  // cf-connecting-ip is NOT a Vercel header — it is client-supplied (spoofable),
+  // so it must be ignored, never trusted over the platform's x-forwarded-for.
+  it('ignores a client-supplied cf-connecting-ip (spoofable on Vercel)', () => {
     const req = new Request('http://x', {
       headers: { 'cf-connecting-ip': '192.0.2.99', 'x-forwarded-for': '203.0.113.7, 10.0.0.1' },
     });
-    expect(clientKey(req)).toBe('192.0.2.99');
-  });
-  it('uses the first x-forwarded-for IP', () => {
-    const req = new Request('http://x', { headers: { 'x-forwarded-for': '203.0.113.7, 10.0.0.1' } });
     expect(clientKey(req)).toBe('203.0.113.7');
   });
   it('falls back to x-real-ip, then "unknown"', () => {
