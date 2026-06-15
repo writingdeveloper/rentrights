@@ -1,5 +1,7 @@
 # RentRights — know your LA renter rights from your address
 
+**English** · [Español](README.es.md)
+
 **Live:** https://rentrights.writingdeveloper.blog · **Stack:** Next.js 16 (App Router) · React 19 · TypeScript · Tailwind v4 · Vitest/Playwright · Vercel
 
 RentRights turns a Los Angeles street address into an **honest, sourced estimate**
@@ -9,13 +11,14 @@ just-cause-only — plus the current legal rent-increase cap, a rent-increase
 **legality checker**, and the renter's key protections. Free, **bilingual
 (English/Spanish)**, no sign-up, nothing stored.
 
-It's a real tool for a real audience (millions of LA renters), built to be
+It exists because most LA renters don't know which of four overlapping rent laws
+applies to them — and getting it wrong costs money or a home. The goal is to be
 *correct and honest about uncertainty* rather than confidently wrong.
 
 > It's an estimate from public records, **not legal advice** — the UI says so and
 > routes every renter to LAHD / DCBA / free legal aid to confirm.
 
----
+![A RentRights result: the rent regime (RSO), the current legal increase cap (up to 3%), a freshness badge, and the renter's key protections](docs/screenshots/result-rso.png)
 
 ## Try it (reviewer's guide)
 
@@ -26,14 +29,18 @@ Open the [live site](https://rentrights.writingdeveloper.blog) and enter:
 | `1411 Murray Dr, Los Angeles` | **RSO** — pre-1978 multi-unit, cap "up to 3%", high confidence, real parcel facts (built 1931, 6 units) |
 | `8800 Sunset Blvd, West Hollywood` | **AB 1482** — incorporated city ≠ LA City, routed to the state baseline |
 | `2424 Fair Oaks Ave, Altadena` | **LA County RSTPO/JCO** — unincorporated area detected from Census data |
-| any single-family home | **AB 1482 + a confirming question** (exemption notice) — the "we need a little more info" path |
+| any single-family home | **AB 1482 + a confirming question** — the "we need a little more info" path |
 
 Then try the **rent-increase checker** (e.g. current 2000 → proposed 2200 shows
 "over the legal cap, max ≈ $2,060"), switch to **/es** for Spanish, and open
 "See the records behind this estimate" to view the public data the verdict is
 built from.
 
----
+## Screenshots
+
+| Home | Honest confirming-questions | Spanish (`/es`) |
+|---|---|---|
+| ![RentRights home page](docs/screenshots/home-en.png) | ![When records are incomplete, RentRights asks targeted confirming questions instead of guessing](docs/screenshots/questions.png) | ![The same tool in Spanish](docs/screenshots/home-es.png) |
 
 ## Why it's interesting (engineering highlights)
 
