@@ -42,7 +42,7 @@
   "whatToDo.step2": "Confirm your rights for free — call {agency}: {phone}.",
   "whatToDo.step2Generic": "Confirm your rights with your city's rent or housing office, and check whether your city has its own rent control.",
   "whatToDo.step3": "Get free legal help below.",
-  "question.heading": "A couple of quick questions to improve accuracy:",
+  "question.heading": "Answer {count} quick question(s) to confirm your result:",
   "question.BUILT_BEFORE_OCT_1978.q": "Is your building older — finished before October 1978?",
   "question.BUILT_BEFORE_OCT_1978.help": "Older buildings usually get LA's strongest rent protections (RSO). Not sure of the exact year? That's normal — pick \"I'm not sure\" and we'll stay on the protective side.",
   "question.BUILT_BEFORE_OCT_1978.yes": "Yes — before Oct 1978",

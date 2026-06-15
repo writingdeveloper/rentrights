@@ -105,11 +105,14 @@ export default function Home() {
             <p role="status" className="sr-only">{t(`rights.${data.result.regime}.title`)}</p>
             <ResultCard result={data.result} lastVerified={data.lastVerified} />
           </section>
-          {/* Band 2 — What to do. */}
+          {/* Band 2 — What to do. Pending confirming-questions (and the records
+              warning that explains them) come FIRST, right under the verdict, so
+              the renter immediately sees whether more input is needed; their
+              absence means the result is complete. */}
           <section className="space-y-4">
-            <IncreaseChecker regime={data.result.regime} />
-            {isCovered(data.result.regime) && <WhatToDoNow regime={data.result.regime} reasons={data.result.reasons} />}
-            <EvictionNotice />
+            {data.dataWarnings?.map((w: string, i: number) => (
+              <p key={i} className="text-xs text-muted-foreground">{t(`warning.${w}`)}</p>
+            ))}
             {data.result.questions.length > 0 && (
               <ConfirmingQuestions
                 questions={data.result.questions}
@@ -117,9 +120,9 @@ export default function Home() {
                 onAnswer={(next) => { setAnswers(next); run(address, next); }}
               />
             )}
-            {data.dataWarnings?.map((w: string, i: number) => (
-              <p key={i} className="text-xs text-muted-foreground">{t(`warning.${w}`)}</p>
-            ))}
+            <IncreaseChecker regime={data.result.regime} />
+            {isCovered(data.result.regime) && <WhatToDoNow regime={data.result.regime} reasons={data.result.reasons} />}
+            <EvictionNotice />
           </section>
           {/* Band 3 — Get help + details. */}
           <section className="space-y-4">
