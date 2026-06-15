@@ -135,3 +135,7 @@ than a stale number.
 RentRights provides **general legal information, not legal advice**, and an
 *estimate* from public records — not a lookup from LAHD's official registry.
 Renters are always routed to LAHD, LA County DCBA, or free legal aid to confirm.
+
+## License
+
+[MIT](LICENSE) — free to use, adapt, and build on.
