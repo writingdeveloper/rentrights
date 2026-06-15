@@ -62,6 +62,16 @@ describe('AddressAutocomplete', () => {
     expect(onSelect).toHaveBeenCalledWith('300 South Santa Fe Avenue, Los Angeles, CA');
   });
 
+  it('closes the dropdown on Enter when no suggestion is highlighted (form submit)', async () => {
+    mockFetch(['300 South Santa Fe Avenue, Los Angeles, CA']);
+    render(<Harness onSelect={vi.fn()} />);
+    const input = screen.getByRole('combobox');
+    fireEvent.change(input, { target: { value: '300 s santa fe' } });
+    await screen.findByText('300 South Santa Fe Avenue, Los Angeles, CA'); // open
+    fireEvent.keyDown(input, { key: 'Enter' }); // submit typed address, nothing highlighted
+    expect(screen.queryByRole('listbox')).toBeNull(); // list closed, won't cover the result
+  });
+
   it('does not query or open for queries under 4 chars', async () => {
     const fetchSpy = vi.fn();
     vi.stubGlobal('fetch', fetchSpy);

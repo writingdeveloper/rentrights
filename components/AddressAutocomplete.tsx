@@ -90,6 +90,10 @@ export function AddressAutocomplete({ value, onChange, onSelect }: {
       if (active >= 0) {
         e.preventDefault();
         choose(suggestions[active]);
+      } else {
+        // Submitting the typed address (no highlighted suggestion): close the list
+        // so it never lingers over the result the form is about to render.
+        setOpen(false);
       }
     } else if (e.key === 'Escape') {
       setOpen(false);

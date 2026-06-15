@@ -54,42 +54,50 @@ export function ConfirmingQuestions({ questions, answers, onAnswer }: {
   onAnswer: (next: UserAnswers) => void;
 }) {
   const t = useT();
+  // A distinct, primary-toned callout so it's unmistakable that answering these
+  // refines the result — this is the renter's next action, not background info.
+  // Rendered right under the verdict (see app/page.tsx) and absent when there's
+  // nothing to answer, so "no callout" reads as "your result is complete".
   return (
-    <div className="mt-4 space-y-4">
-      <h2 className="text-sm font-semibold">{t('question.heading')}</h2>
-      {questions.map((id) => {
-        const m = QUESTION_META[id];
-        const renderBtn = (opt: Opt) => (
-          <button
-            key={opt.labelKey}
-            type="button"
-            onClick={() => onAnswer(withAnswer(answers, id, opt))}
-            className={`w-full rounded-lg border px-3 py-3 text-left text-sm ${
-              opt.common ? 'border-success bg-success-soft font-semibold text-success' : 'border-border'
-            }`}
-          >
-            {t(opt.labelKey)}
-            {opt.common && <span className="ml-1 text-xs font-normal text-success">· {t('question.common')}</span>}
-          </button>
-        );
-        return (
-          <div key={id} className="rounded-xl border border-border p-3">
-            <p className="text-sm font-medium">{t(`question.${id}.q`)}</p>
-            <p className="mt-1 text-xs text-muted-foreground">{t(`question.${id}.help`)}</p>
-            <div className="mt-2 flex flex-col gap-2">
-              {renderBtn(m.primary)}
-              {renderBtn(m.secondary)}
-              <button
-                type="button"
-                onClick={() => onAnswer(withUnsure(answers, id, m.primary.key))}
-                className="w-full rounded-lg border border-dashed border-border-strong px-3 py-3 text-left text-sm text-muted-foreground"
-              >
-                {t('question.unsure')}
-              </button>
+    <div className="mt-4 space-y-3 rounded-xl border border-primary bg-primary-soft p-4">
+      <h2 className="text-sm font-semibold text-foreground">
+        {t('question.heading', { count: questions.length })}
+      </h2>
+      <div className="space-y-4">
+        {questions.map((id) => {
+          const m = QUESTION_META[id];
+          const renderBtn = (opt: Opt) => (
+            <button
+              key={opt.labelKey}
+              type="button"
+              onClick={() => onAnswer(withAnswer(answers, id, opt))}
+              className={`w-full rounded-lg border px-3 py-3 text-left text-sm ${
+                opt.common ? 'border-success bg-success-soft font-semibold text-success' : 'border-border bg-surface'
+              }`}
+            >
+              {t(opt.labelKey)}
+              {opt.common && <span className="ml-1 text-xs font-normal text-success">· {t('question.common')}</span>}
+            </button>
+          );
+          return (
+            <div key={id} className="rounded-xl border border-border bg-surface p-3">
+              <p className="text-sm font-medium">{t(`question.${id}.q`)}</p>
+              <p className="mt-1 text-xs text-muted-foreground">{t(`question.${id}.help`)}</p>
+              <div className="mt-2 flex flex-col gap-2">
+                {renderBtn(m.primary)}
+                {renderBtn(m.secondary)}
+                <button
+                  type="button"
+                  onClick={() => onAnswer(withUnsure(answers, id, m.primary.key))}
+                  className="w-full rounded-lg border border-dashed border-border-strong bg-surface px-3 py-3 text-left text-sm text-muted-foreground"
+                >
+                  {t('question.unsure')}
+                </button>
+              </div>
             </div>
-          </div>
-        );
-      })}
+          );
+        })}
+      </div>
     </div>
   );
 }

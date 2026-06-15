@@ -42,7 +42,7 @@
   "whatToDo.step2": "Confirme sus derechos gratis — llame a {agency}: {phone}.",
   "whatToDo.step2Generic": "Confirme sus derechos con la oficina de renta o vivienda de su ciudad, y verifique si su ciudad tiene su propio control de renta.",
   "whatToDo.step3": "Obtenga ayuda legal gratuita abajo.",
-  "question.heading": "Unas preguntas rápidas para mejorar la precisión:",
+  "question.heading": "Responda {count} pregunta(s) rápida(s) para confirmar su resultado:",
   "question.BUILT_BEFORE_OCT_1978.q": "¿Su edificio es más antiguo — terminado antes de octubre de 1978?",
   "question.BUILT_BEFORE_OCT_1978.help": "Los edificios antiguos suelen tener las protecciones de renta más fuertes de LA (RSO). ¿No sabe el año exacto? Es normal — elija \"No estoy seguro/a\" y nos quedamos del lado protector.",
   "question.BUILT_BEFORE_OCT_1978.yes": "Sí — antes de oct. 1978",
