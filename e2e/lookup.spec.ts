@@ -7,15 +7,21 @@ test('RSO result for a pre-1978 multi-unit LA address', async ({ page }) => {
   // Date-stable assertions only (cap % is date-dependent — do NOT assert "3%").
   await expect(page.getByText(/Rent Stabilization Ordinance/)).toBeVisible();
   await expect(page.getByText('High confidence')).toBeVisible();
+
+  // "Built in 1931" and unit count live inside the <details> RecordsDetails toggle.
+  // Expand it before asserting.
+  await page.getByText('See the records behind this estimate').click();
   await expect(page.getByText(/Built in 1931/)).toBeVisible();
-  await expect(page.getByText(/6 units on the parcel/)).toBeVisible();
+  // Reason key UNITS_COUNT renders as "{count} homes on the property"
+  await expect(page.getByText(/6 homes on the property/)).toBeVisible();
 });
 
 test('friendly error for an unfindable address', async ({ page }) => {
   await page.goto('/');
   await page.getByPlaceholder('1234 S Main St, Los Angeles').fill('asdfqwer zxcv nowhere');
   await page.getByRole('button', { name: 'Check' }).click();
-  await expect(page.getByText(/could not find that address/i)).toBeVisible();
+  // error.ADDRESS_NOT_FOUND = "We couldn't find that address. Make sure it includes the city..."
+  await expect(page.getByText(/couldn.t find that address/i)).toBeVisible();
 });
 
 test('unincorporated LA County guidance + DCBA in get-help', async ({ page }) => {
