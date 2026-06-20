@@ -33,7 +33,7 @@ describe('ResultCard', () => {
     expect(screen.getByText(/Legal annual increase/)).toBeTruthy();
     expect(screen.queryByText(/Built in 1931/)).toBeNull();
     expect(screen.queryByText(/6 units on the parcel/)).toBeNull();
-    expect(screen.getByText(/free estimate/i).textContent).toContain('(866) 557-7368');
+    expect(screen.getByText(/Confirm free with the LA Housing Department/i).textContent).toContain('(866) 557-7368');
   });
 
   it('routes the banner to LA County DCBA for County regimes', () => {
@@ -43,8 +43,7 @@ describe('ResultCard', () => {
       reasons: [{ code: 'UNINCORPORATED_COUNTY' }],
       questions: [],
     });
-    const banner = screen.getByText(/free estimate/i).textContent ?? '';
-    expect(banner).toContain('DCBA');
+    const banner = screen.getByText(/Confirm free with LA County DCBA/i).textContent ?? '';
     expect(banner).toContain('(800) 593-8222');
     expect(banner).not.toContain('(866) 557-7368');
   });
@@ -87,8 +86,82 @@ describe('ResultCard', () => {
     expect(screen.queryByText(/You have rights/)).toBeNull();
     expect(screen.queryByText('High confidence')).toBeNull();
     expect(screen.queryByText(/Legal annual increase/)).toBeNull();
-    const banner = screen.getByText(/free estimate/i).textContent ?? '';
-    expect(banner).not.toContain('(866) 557-7368');
-    expect(banner).not.toContain('(800) 593-8222');
+    // OOJ gets generic confirm line (no specific phone)
+    const confirmEl = document.body.textContent ?? '';
+    expect(confirmEl).not.toContain('(866) 557-7368');
+    expect(confirmEl).not.toContain('(800) 593-8222');
+  });
+
+  // NEW TASK 5 TESTS
+
+  it('shows result.finalAnswer (with check icon label) when questions is empty', () => {
+    renderCard({
+      regime: 'RSO',
+      confidence: 'high',
+      reasons: [{ code: 'IN_LA_CITY' }],
+      questions: [],
+    });
+    expect(screen.getByText(/Final answer/i)).toBeTruthy();
+    expect(screen.queryByText(/Almost there/i)).toBeNull();
+  });
+
+  it('shows result.almostThere when questions exist', () => {
+    renderCard({
+      regime: 'UNKNOWN',
+      confidence: 'low',
+      reasons: [],
+      questions: ['BUILT_BEFORE_OCT_1978'],
+    });
+    expect(screen.getByText(/Almost there/i)).toBeTruthy();
+    expect(screen.queryByText(/Final answer/i)).toBeNull();
+  });
+
+  it('renders a labelled shield-check icon (role=img) for a covered result', () => {
+    renderCard({
+      regime: 'RSO',
+      confidence: 'high',
+      reasons: [{ code: 'IN_LA_CITY' }],
+      questions: [],
+    });
+    expect(screen.getByRole('img', { name: /protected/i })).toBeTruthy();
+  });
+
+  it('renders a $60 example line for RSO (3% cap) on $2,000 rent within the valid cap period', () => {
+    renderCard(
+      {
+        regime: 'RSO',
+        confidence: 'high',
+        reasons: [{ code: 'IN_LA_CITY' }],
+        questions: [],
+      },
+      { now: new Date('2026-06-11') },
+    );
+    // 3% of $2,000 = $60/mo
+    expect(screen.getByText(/\$60/)).toBeTruthy();
+    expect(screen.getByText(/example/i)).toBeTruthy();
+  });
+
+  it('omits the $ example line when the RSO cap is pending (no single numeric value)', () => {
+    renderCard(
+      {
+        regime: 'RSO',
+        confidence: 'high',
+        reasons: [{ code: 'IN_LA_CITY' }],
+        questions: [],
+      },
+      { now: new Date('2026-07-15') },
+    );
+    expect(screen.queryByText(/example/i)).toBeNull();
+  });
+
+  it('renders exactly one consolidated honest/confirm line (not multiple banners)', () => {
+    renderCard({
+      regime: 'RSO',
+      confidence: 'high',
+      reasons: [{ code: 'IN_LA_CITY' }],
+      questions: [],
+    });
+    const confirmMatches = screen.queryAllByText(/Estimate from public records/i);
+    expect(confirmMatches).toHaveLength(1);
   });
 });

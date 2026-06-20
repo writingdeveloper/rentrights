@@ -20,7 +20,7 @@ describe('County regimes in the UI', () => {
     render(<LocaleProvider initialLocale="en"><ResultCard result={countyRsto} /></LocaleProvider>);
     expect(screen.getByText(/LA County Rent Stabilization/)).toBeTruthy();
     expect(screen.getByText(/You have rights/)).toBeTruthy();
-    expect(screen.getByText(/free estimate/i).textContent).toContain('DCBA');
+    expect(screen.getByText(/Confirm free with LA County DCBA/i).textContent).toContain('DCBA');
   });
 
   it('IncreaseChecker flags an over-cap increase for COUNTY_RSTPO', () => {

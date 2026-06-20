@@ -16,6 +16,12 @@ import { decodeShare } from '@/lib/share/code';
 import { AddressAutocomplete } from '@/components/AddressAutocomplete';
 import { LookupResult } from '@/lib/compute/lookup';
 import { SeoFaq } from '@/components/SeoFaq';
+import { Wordmark } from '@/components/Wordmark';
+import { Hero } from '@/components/Hero';
+import { TrustChips } from '@/components/TrustChips';
+import { HowItWorks } from '@/components/HowItWorks';
+import { ResultSkeleton } from '@/components/ResultSkeleton';
+import { CONTENT_LAST_UPDATED } from '@/lib/seo/content-updated';
 
 export default function Home() {
   const t = useT();
@@ -52,11 +58,15 @@ export default function Home() {
     finally { setLoading(false); }
   }
 
+  const isHome = !loading && !data && !error;
+  const isResult = !loading && !!data;
+
   return (
     <main className="mx-auto max-w-2xl px-4 py-10">
+      {/* ── Header: Wordmark (full on home, compact on result) + lang toggle ── */}
       <div className="flex items-center justify-between">
-        <h1 className="font-serif text-2xl font-extrabold text-primary">{t('page.title')}</h1>
-        <div role="group" aria-label={t('page.langLabel')} className="flex gap-1 text-xs">
+        {isResult ? <Wordmark compact /> : <Wordmark />}
+        <div role="group" aria-label={t('page.langLabel')} className="flex gap-1 text-sm">
           <button
             type="button"
             aria-pressed={locale === 'en'}
@@ -75,31 +85,83 @@ export default function Home() {
           </button>
         </div>
       </div>
-      <p className="text-sm text-muted-foreground">{t('page.tagline')}</p>
-      {/* Honest "pending formal review" posture (RR-2): the legal figures are
-          AI + statute verified, not yet attorney/legal-aid reviewed. Shown up
-          front since the site is live to real renters. */}
-      <p className="mt-1 text-xs text-muted-foreground">{t('page.reviewStatus')}</p>
 
-      <form className="mt-5 flex gap-2" onSubmit={(e) => { e.preventDefault(); setAnswers({}); run(address, {}); }}>
-        <AddressAutocomplete
-          value={address}
-          onChange={setAddress}
-          onSelect={(full) => { setAddress(full); setAnswers({}); run(full, {}); }}
-        />
-        <button className="rounded-lg bg-primary px-4 min-h-11 font-semibold text-background" disabled={loading}>{loading ? t('page.loading') : t('page.check')}</button>
-      </form>
+      {/* sr-only h1 for the loading & error states (home uses Hero's visible h1; result has its own) */}
+      {!isHome && !isResult && <h1 className="sr-only">{t('hero.headline')}</h1>}
 
-      {loading && <p role="status" className="sr-only">{t('page.loading')}</p>}
-
-      {error && (
-        <p role="alert" className="mt-4 rounded-lg border border-border bg-surface-muted p-3 text-sm text-danger">
-          {error === '__NETWORK__' ? t('page.networkError') : t(`error.${error}`)}
-        </p>
+      {/* ── Home state: Hero → form → trust chips → how it works ── */}
+      {isHome && (
+        <>
+          {/* Hero provides the single visible h1 on the home view */}
+          <Hero />
+          {/* Honest posture — warm, calm, not-legal-advice + updated date */}
+          <p className="mt-2 text-sm text-muted-foreground">{t('page.trustLine', { date: CONTENT_LAST_UPDATED })}</p>
+        </>
       )}
 
-      {data && (
+      {/* ── Address form (always visible except when showing a full result) ── */}
+      {!isResult && (
+        <form
+          className="mt-5 flex gap-2"
+          onSubmit={(e) => { e.preventDefault(); setAnswers({}); run(address, {}); }}
+        >
+          <AddressAutocomplete
+            value={address}
+            onChange={setAddress}
+            onSelect={(full) => { setAddress(full); setAnswers({}); run(full, {}); }}
+          />
+          <button
+            className="rounded-lg bg-primary px-4 min-h-11 font-semibold text-background"
+            disabled={loading}
+          >
+            {loading ? t('page.loading') : t('page.check')}
+          </button>
+        </form>
+      )}
+
+      {/* ── Home: trust chips + how it works (below form) ── */}
+      {isHome && (
+        <>
+          <TrustChips date={CONTENT_LAST_UPDATED} />
+          <HowItWorks />
+        </>
+      )}
+
+      {/* ── Loading state: ResultSkeleton replaces blank ── */}
+      {loading && <ResultSkeleton />}
+
+      {/* ── Error state: friendly block with retry + fallback ── */}
+      {error && !loading && (
+        <div role="alert" className="mt-4 rounded-lg border border-border bg-surface-muted p-4 space-y-3">
+          <p className="text-sm text-danger">
+            {error === '__NETWORK__' ? t('page.networkError') : t(`error.${error}`)}
+          </p>
+          <button
+            type="button"
+            className="rounded-lg bg-primary px-4 py-2 min-h-11 text-sm font-semibold text-background"
+            onClick={() => run(address, answers)}
+          >
+            {t('page.tryAgain')}
+          </button>
+          <p className="text-sm text-muted-foreground">
+            <a
+              href="https://assessor.lacounty.gov/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline underline-offset-2"
+            >
+              {t('page.errorFallback')}
+            </a>
+          </p>
+        </div>
+      )}
+
+      {/* ── Result state: sr-only h1 + 3-band result ── */}
+      {isResult && (
         <div className="mt-8 space-y-8 result-reveal">
+          {/* Exactly one h1 on the result view — screen-reader only */}
+          <h1 className="sr-only">{t('result.pageHeading')}</h1>
+
           {/* Band 1 — Your answer. Narrow live region announces only the verdict. */}
           <section>
             <p role="status" className="sr-only">{t(`rights.${data.result.regime}.title`)}</p>
@@ -111,7 +173,7 @@ export default function Home() {
               absence means the result is complete. */}
           <section className="space-y-4">
             {data.dataWarnings?.map((w: string, i: number) => (
-              <p key={i} className="text-xs text-muted-foreground">{t(`warning.${w}`)}</p>
+              <p key={i} className="text-sm text-muted-foreground">{t(`warning.${w}`)}</p>
             ))}
             {data.result.questions.length > 0 && (
               <ConfirmingQuestions
@@ -133,6 +195,8 @@ export default function Home() {
           </section>
         </div>
       )}
+
+      {/* ── SeoFaq always at the bottom of main so it stays below the fold ── */}
       <SeoFaq />
     </main>
   );

@@ -104,7 +104,7 @@ export function AddressAutocomplete({ value, onChange, onSelect }: {
   return (
     <div className="relative flex-1">
       <input
-        className="w-full rounded-lg border border-border bg-surface px-3 py-2"
+        className="w-full rounded-lg border border-border-input bg-surface px-3 min-h-11"
         placeholder={t('page.placeholder')}
         aria-label={t('page.addressLabel')}
         value={value}

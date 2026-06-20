@@ -18,5 +18,6 @@ test('share link round-trip restores address and result in a new page', async ({
 
 test('a Spanish share link renders the result in Spanish', async ({ page }) => {
   await page.goto('/#a=1411+Murray+Dr%2C+Los+Angeles%2C+CA&lang=es');
-  await expect(page.getByText(/Ordenanza de Estabilización de Rentas/)).toBeVisible();
+  // Use heading role to avoid strict-mode clash with the sr-only <p role="status">.
+  await expect(page.getByRole('heading', { name: /Ordenanza de Estabilización de Rentas/ })).toBeVisible();
 });

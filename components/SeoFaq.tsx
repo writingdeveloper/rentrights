@@ -31,7 +31,7 @@ export function SeoFaq() {
   return (
     <section aria-labelledby="faq-heading" className="mt-12 border-t border-border pt-8">
       <p className="text-sm text-muted-foreground">{t('faq.intro')}</p>
-      <h2 id="faq-heading" className="mt-6 text-lg font-bold">{t('faq.heading')}</h2>
+      <h2 id="faq-heading" className="mt-6 text-base font-semibold text-muted-foreground">{t('faq.heading')}</h2>
       <dl className="mt-3 space-y-4">
         {faqs.map(({ q, a }, i) => (
           <div key={i}>

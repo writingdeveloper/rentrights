@@ -4,6 +4,7 @@ import { encodeShare } from '@/lib/share/code';
 import { UserAnswers } from '@/lib/rules/types';
 import { Locale } from '@/lib/i18n/catalog';
 import { useT } from '@/lib/i18n/LocaleProvider';
+import { Icon } from '@/components/Icon';
 
 export function ShareButton({ address, answers, locale }: { address: string; answers: UserAnswers; locale: Locale }) {
   const t = useT();
@@ -38,10 +39,14 @@ export function ShareButton({ address, answers, locale }: { address: string; ans
 
   return (
     <div className="mt-4">
-      <button type="button" onClick={onShare} aria-live="polite" className="rounded-lg border border-border px-3 min-h-11 inline-flex items-center text-sm font-semibold">
+      <button type="button" onClick={onShare} className="rounded-lg border border-border px-3 min-h-11 inline-flex items-center gap-2 text-sm font-semibold">
+        <Icon name="share-2" size={16} aria-hidden="true" />
         {copied ? t('share.copied') : t('share.button')}
       </button>
-      <p className="mt-1 text-xs text-muted-foreground">{t('share.privacyNote')}</p>
+      {/* Dedicated live region announces "Copied!" to screen readers without
+          aria-live on the interactive button (which causes double-announcements). */}
+      <span role="status" aria-live="polite" className="sr-only">{copied ? t('share.copied') : ''}</span>
+      <p className="mt-1 text-sm text-muted-foreground">{t('share.privacyNote')}</p>
       {fallbackUrl && (
         <input
           readOnly

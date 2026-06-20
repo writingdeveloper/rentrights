@@ -2,6 +2,7 @@
 import { Regime, ReasonItem } from '@/lib/rules/types';
 import { useT } from '@/lib/i18n/LocaleProvider';
 import { cityAuthority, countyAuthority } from '@/lib/content/help';
+import { Icon } from '@/components/Icon';
 
 export function WhatToDoNow({ regime, reasons = [] }: { regime: Regime; reasons?: ReasonItem[] }) {
   const t = useT();
@@ -14,10 +15,19 @@ export function WhatToDoNow({ regime, reasons = [] }: { regime: Regime; reasons?
   return (
     <section className="mt-4 rounded-xl border border-warning bg-warning-soft p-3">
       <h2 className="text-sm font-semibold text-warning">{t('whatToDo.heading')}</h2>
-      <ol className="mt-1 list-decimal pl-5 text-sm text-warning">
-        <li>{t('whatToDo.step1')}</li>
-        <li>{incorporated ? t('whatToDo.step2Generic') : t('whatToDo.step2', { agency, phone: auth.phone ?? '' })}</li>
-        <li>{t('whatToDo.step3')}</li>
+      <ol className="mt-1 space-y-1 text-sm text-warning">
+        <li className="flex items-start gap-2">
+          <Icon name="check" size={16} aria-hidden="true" className="mt-0.5 shrink-0" />
+          {t('whatToDo.step1')}
+        </li>
+        <li className="flex items-start gap-2">
+          <Icon name="arrow-right" size={16} aria-hidden="true" className="mt-0.5 shrink-0" />
+          {incorporated ? t('whatToDo.step2Generic') : t('whatToDo.step2', { agency, phone: auth.phone ?? '' })}
+        </li>
+        <li className="flex items-start gap-2">
+          <Icon name="arrow-right" size={16} aria-hidden="true" className="mt-0.5 shrink-0" />
+          {t('whatToDo.step3')}
+        </li>
       </ol>
     </section>
   );

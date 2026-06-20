@@ -13,7 +13,7 @@ import { pageAlternates } from '@/lib/seo/alternates';
 import { organizationJsonLd, webSiteJsonLd, webApplicationJsonLd } from '@/lib/seo/jsonld';
 
 const inter = Inter({ variable: '--font-inter', subsets: ['latin'], display: 'swap' });
-const fraunces = Fraunces({ variable: '--font-fraunces', subsets: ['latin'], display: 'swap' });
+const fraunces = Fraunces({ variable: '--font-fraunces', subsets: ['latin'], display: 'swap', axes: ['opsz', 'SOFT', 'WONK'] });
 
 async function getLocale() {
   const h = await headers();
@@ -34,8 +34,8 @@ async function isSpanishPath() {
 export const viewport: Viewport = {
   colorScheme: 'light dark',
   themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#FBFCFD' },
-    { media: '(prefers-color-scheme: dark)', color: '#0C111A' },
+    { media: '(prefers-color-scheme: light)', color: '#F6F4EF' },
+    { media: '(prefers-color-scheme: dark)', color: '#15140F' },
   ],
 };
 
