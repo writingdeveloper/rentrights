@@ -28,8 +28,6 @@
   "result.confidence.medium": "Confianza media",
   "result.confidence.low": "Confianza baja",
   "result.legalIncrease": "Aumento legal anual (actual)",
-  "result.notFinal": "Esta es una estimación gratuita. Confirme sus derechos gratis con {agency}: {phone}.",
-  "result.notFinalGeneric": "Esta es una estimación gratuita. Confirme sus derechos con su autoridad local de vivienda/renta.",
   "result.capUpTo": "hasta {pct}%",
   "result.capRsoPending": "{floor}–{ceiling}% (LAHD publica la cifra exacta)",
   "result.capCountyPending": "hasta {ceiling}% (el DCBA publica la cifra exacta)",
@@ -227,5 +225,7 @@
   "page.errorFallback": "También puede buscar su dirección en el Tasador del Condado de LA (LA County Assessor).",
   "result.pageHeading": "Su resultado de protección de alquiler",
   "page.checkAnother": "Consultar otra dirección",
-  "increase.noCapHeading": "No aplica un tope de aumento"
+  "increase.noCapHeading": "No aplica un tope de aumento",
+  "increase.countyTierNote": "Es posible que aplique un tope más alto (2,93% para propiedades pequeñas o 3,93% para unidades de lujo) — confírmelo con el Departamento de Asuntos del Consumidor y Empresariales del Condado de LA (DCBA).",
+  "increase.countyJcoAb1482Note": "La AB 1482 aún podría limitar los aumentos de renta en edificios de más de aproximadamente 15 años de antigüedad — confírmelo con el DCBA."
 }

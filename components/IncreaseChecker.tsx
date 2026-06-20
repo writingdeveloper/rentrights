@@ -23,6 +23,10 @@ export function IncreaseChecker({ regime }: { regime: Regime }) {
       <section className="mt-6">
         <h2 className="text-sm font-semibold">{t('increase.noCapHeading')}</h2>
         <p className="mt-1 text-sm text-muted-foreground">{t('increase.noCap')}</p>
+        {/* Item 8: COUNTY_JCO no-cap understates AB 1482 — strengthen disclosure. */}
+        {regime === 'COUNTY_JCO' && (
+          <p className="mt-2 text-sm text-muted-foreground">{t('increase.countyJcoAb1482Note')}</p>
+        )}
       </section>
     );
   }
@@ -118,6 +122,12 @@ export function IncreaseChecker({ regime }: { regime: Regime }) {
         {/* Full detailed sentence */}
         {text && <p className={`mt-1 text-sm font-semibold ${toneClass}`}>{text}</p>}
         {text && <p className="mt-1 text-sm text-muted-foreground">{t('increase.caveat', { agency })}</p>}
+        {/* Item 7: COUNTY_RSTPO OVER_CAP may be a false positive for small-property
+            (2.93%) or luxury (3.93%) units whose cap is higher than the base 1.93%.
+            DO NOT change the cap math — just surface a disclosure note. */}
+        {regime === 'COUNTY_RSTPO' && r.verdict === 'OVER_CAP' && (
+          <p className="mt-2 text-sm text-muted-foreground">{t('increase.countyTierNote')}</p>
+        )}
       </div>
     </section>
   );

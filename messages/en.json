@@ -28,8 +28,6 @@
   "result.confidence.medium": "Medium confidence",
   "result.confidence.low": "Low confidence",
   "result.legalIncrease": "Legal annual increase (current)",
-  "result.notFinal": "This is a free estimate. Confirm your rights for free with {agency}: {phone}.",
-  "result.notFinalGeneric": "This is a free estimate. Confirm your rights with your local rent/housing authority.",
   "result.capUpTo": "up to {pct}%",
   "result.capRsoPending": "{floor}–{ceiling}% (LAHD publishes the exact figure)",
   "result.capCountyPending": "up to {ceiling}% (DCBA publishes the exact figure)",
@@ -227,5 +225,7 @@
   "page.errorFallback": "You can also look up your address on the LA County Assessor.",
   "result.pageHeading": "Your rent protection result",
   "page.checkAnother": "Check a different address",
-  "increase.noCapHeading": "No rent-increase cap applies"
+  "increase.noCapHeading": "No rent-increase cap applies",
+  "increase.countyTierNote": "A higher cap (small-property 2.93% or luxury 3.93%) may apply to your unit — confirm with the LA County Dept. of Consumer & Business Affairs (DCBA).",
+  "increase.countyJcoAb1482Note": "AB 1482 may still cap rent increases for buildings over approximately 15 years old — confirm with DCBA."
 }
