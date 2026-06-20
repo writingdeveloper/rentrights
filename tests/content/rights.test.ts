@@ -27,13 +27,18 @@ describe('capStaleness', () => {
 });
 
 describe('stalenessMessage', () => {
-  it('mentions the expected update date when present', () => {
-    const msg = stalenessMessage({ stale: true, reason: 'past expected update', expectedUpdate: '2026-08-01' }, t);
-    expect(msg).toContain('2026-08-01');
+  it('mentions the expected update date when present (formatted, EN)', () => {
+    // Default locale is 'en'; expects "August 1, 2026" (formatted), not raw ISO.
+    const msg = stalenessMessage({ stale: true, reason: 'past expected update', expectedUpdate: '2026-08-01' }, t, undefined, 'en');
+    expect(msg).toContain('August 1, 2026');
     expect(msg.toLowerCase()).toContain('lahd');
   });
+  it('mentions the expected update date formatted in ES', () => {
+    const msg = stalenessMessage({ stale: true, reason: 'past expected update', expectedUpdate: '2026-08-01' }, t, undefined, 'es');
+    expect(msg).toContain('1 de agosto de 2026');
+  });
   it('points AB1482 figures to the state, not LAHD', () => {
-    const msg = stalenessMessage({ stale: true, reason: 'pending publication', expectedUpdate: '2027-08-01' }, t, 'AB1482');
+    const msg = stalenessMessage({ stale: true, reason: 'pending publication', expectedUpdate: '2027-08-01' }, t, 'AB1482', 'en');
     expect(msg.toLowerCase()).not.toContain('lahd');
     expect(msg.toLowerCase()).toContain('state');
   });

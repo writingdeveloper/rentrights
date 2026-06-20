@@ -2,6 +2,7 @@ import { LEGAL } from '@/lib/legal/constants';
 import { Regime, ReasonItem } from '@/lib/rules/types';
 import { stalenessFor, Staleness } from '@/lib/legal/staleness';
 import { cityAuthority, countyAuthority } from '@/lib/content/help';
+import { formatDate } from '@/lib/format/date';
 
 type T = (key: string, params?: Record<string, string | number>) => string;
 
@@ -80,8 +81,9 @@ export function notFinalBanner(regime: Regime, t: T, reasons: ReasonItem[] = [])
   return t('result.notFinalGeneric');
 }
 
-export function stalenessMessage(s: Staleness, t: T, regime?: Regime): string {
-  const when = s.expectedUpdate ? t('staleness.whenSuffix', { date: s.expectedUpdate }) : '';
+export function stalenessMessage(s: Staleness, t: T, regime?: Regime, locale: 'en' | 'es' = 'en'): string {
+  const formattedDate = s.expectedUpdate ? formatDate(s.expectedUpdate, locale) : '';
+  const when = formattedDate ? t('staleness.whenSuffix', { date: formattedDate }) : '';
   const who =
     regime === 'AB1482'
       ? t('staleness.authority.state')

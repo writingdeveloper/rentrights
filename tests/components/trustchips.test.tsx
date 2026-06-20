@@ -20,9 +20,10 @@ describe('TrustChips', () => {
     expect(screen.getByText('Public records')).toBeTruthy();
   });
 
-  it('renders the passed date in the "Updated" chip', () => {
+  it('renders the passed date in the "Updated" chip (formatted, EN)', () => {
     renderChips('en', '2026-06-12');
-    expect(screen.getByText('Updated 2026-06-12')).toBeTruthy();
+    // EN: "Updated June 12, 2026" (formatted, not raw ISO)
+    expect(screen.getByText('Updated June 12, 2026')).toBeTruthy();
   });
 
   it('renders "Free, nothing saved" chip (EN)', () => {
@@ -41,8 +42,9 @@ describe('TrustChips', () => {
     expect(screen.getByText('Gratis, no guardamos nada')).toBeTruthy();
   });
 
-  it('renders the date in ES template', () => {
+  it('renders the date in ES template (formatted, ES)', () => {
     renderChips('es', '2026-06-12');
-    expect(screen.getByText('Actualizado 2026-06-12')).toBeTruthy();
+    // ES: "Actualizado 12 de junio de 2026" (formatted, not raw ISO)
+    expect(screen.getByText('Actualizado 12 de junio de 2026')).toBeTruthy();
   });
 });

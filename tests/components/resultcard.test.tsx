@@ -54,7 +54,8 @@ describe('ResultCard', () => {
       { regime: 'RSO', confidence: 'high', reasons: [{ code: 'IN_LA_CITY' }], questions: [] },
       { lastVerified: '2026-06-04', now: new Date('2026-06-11') },
     );
-    expect(screen.getByText(/verified 2026-06-04/i)).toBeTruthy();
+    // EN locale: expects "June 4, 2026" (formatted), not the raw ISO string.
+    expect(screen.getByText(/verified June 4, 2026/i)).toBeTruthy();
   });
 
   it('hides the freshness badge (shows the pending notice instead) when the cap is stale', () => {
@@ -63,7 +64,7 @@ describe('ResultCard', () => {
       { regime: 'RSO', confidence: 'high', reasons: [{ code: 'IN_LA_CITY' }], questions: [] },
       { lastVerified: '2026-06-04', now: new Date('2026-07-15') },
     );
-    expect(screen.queryByText(/verified 2026-06-04/i)).toBeNull();
+    expect(screen.queryByText(/verified June 4, 2026/i)).toBeNull();
     expect(screen.getByText(/pending publication/i)).toBeTruthy();
   });
 
@@ -72,7 +73,7 @@ describe('ResultCard', () => {
       { regime: 'OUT_OF_JURISDICTION', confidence: 'high', reasons: [{ code: 'OUTSIDE_LA' }], questions: [] },
       { lastVerified: '2026-06-04', now: new Date('2026-06-11') },
     );
-    expect(screen.queryByText(/verified 2026-06-04/i)).toBeNull();
+    expect(screen.queryByText(/verified June 4, 2026/i)).toBeNull();
   });
 
   it('hides reassurance, confidence, and cap for OUT_OF_JURISDICTION', () => {

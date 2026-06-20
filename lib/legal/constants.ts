@@ -5,12 +5,12 @@ export interface CapPeriod extends DatedValue<number | null> {
   ceilingPct?: number;
 }
 
-// All figures re-verified 2026-06-04 against LAHD / CA Civil Code / LA County DCBA —
+// All figures re-verified 2026-06-19 against LAHD / CA Civil Code / LA County DCBA —
 // see docs/superpowers/plans/2026-06-04-rentrights-legal-corrections.md. The RSO
 // 2026-07-01 figure stays pending (new 90%-of-CPI formula, floor 1% / ceiling 4%);
 // "3% through 2027" is an uncorroborated third-party conflation and is NOT adopted.
 export const LEGAL = {
-  lastVerified: '2026-06-04',
+  lastVerified: '2026-06-19',
 
   // RSO eligibility: certificate of occupancy on or before Oct 1, 1978.
   rsoBuildCutoffYear: 1978,

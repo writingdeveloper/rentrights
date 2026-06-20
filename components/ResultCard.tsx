@@ -3,8 +3,9 @@ import { RegimeResult } from '@/lib/rules/types';
 import { rightsText, capLabel, capStaleness, stalenessMessage, isCovered } from '@/lib/content/rights';
 import { cityAuthority, countyAuthority } from '@/lib/content/help';
 import { LEGAL } from '@/lib/legal/constants';
-import { useT } from '@/lib/i18n/LocaleProvider';
+import { useT, useLocale } from '@/lib/i18n/LocaleProvider';
 import { Icon } from '@/components/Icon';
+import { formatDate } from '@/lib/format/date';
 
 function money(n: number): string {
   return n.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
@@ -63,6 +64,7 @@ function eyebrowKey(covered: boolean, hasQuestions: boolean, confidence: string)
 
 export function ResultCard({ result, lastVerified, now = new Date() }: { result: RegimeResult; lastVerified?: string; now?: Date }) {
   const t = useT();
+  const { locale } = useLocale();
   const rights = rightsText(result.regime, t);
   const detailed = result.regime !== 'OUT_OF_JURISDICTION' && result.regime !== 'UNKNOWN';
   const covered = isCovered(result.regime);
@@ -124,11 +126,11 @@ export function ResultCard({ result, lastVerified, now = new Date() }: { result:
 
                     {/* Verified date pill or staleness warning */}
                     {staleness?.stale ? (
-                      <p className="mt-1 text-sm text-muted-foreground">⚠ {stalenessMessage(staleness, t, result.regime)}</p>
+                      <p className="mt-1 text-sm text-muted-foreground">⚠ {stalenessMessage(staleness, t, result.regime, locale)}</p>
                     ) : lastVerified ? (
                       <span className="mt-2 inline-flex items-center gap-1 rounded-pill bg-surface px-3 py-1 text-sm font-medium text-success">
-                        <Icon name="shield-check" label={t('result.verifiedBadge', { date: lastVerified })} size={14} />
-                        {t('result.verifiedBadge', { date: lastVerified })}
+                        <Icon name="shield-check" label={t('result.verifiedBadge', { date: formatDate(lastVerified, locale) })} size={14} />
+                        {t('result.verifiedBadge', { date: formatDate(lastVerified, locale) })}
                       </span>
                     ) : null}
                   </>

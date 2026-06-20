@@ -22,6 +22,7 @@ import { TrustChips } from '@/components/TrustChips';
 import { HowItWorks } from '@/components/HowItWorks';
 import { ResultSkeleton } from '@/components/ResultSkeleton';
 import { CONTENT_LAST_UPDATED } from '@/lib/seo/content-updated';
+import { formatDate } from '@/lib/format/date';
 
 export default function Home() {
   const t = useT();
@@ -95,7 +96,7 @@ export default function Home() {
           {/* Hero provides the single visible h1 on the home view */}
           <Hero />
           {/* Honest posture — warm, calm, not-legal-advice + updated date */}
-          <p className="mt-2 text-sm text-muted-foreground">{t('page.trustLine', { date: CONTENT_LAST_UPDATED })}</p>
+          <p className="mt-2 text-sm text-muted-foreground">{t('page.trustLine', { date: formatDate(CONTENT_LAST_UPDATED, locale) })}</p>
         </>
       )}
 
