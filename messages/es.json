@@ -225,5 +225,7 @@
   "how.step3": "Compruebe si un aumento es legal",
   "page.tryAgain": "Intentar de nuevo",
   "page.errorFallback": "También puede buscar su dirección en el Tasador del Condado de LA (LA County Assessor).",
-  "result.pageHeading": "Su resultado de protección de alquiler"
+  "result.pageHeading": "Su resultado de protección de alquiler",
+  "page.checkAnother": "Consultar otra dirección",
+  "increase.noCapHeading": "No aplica un tope de aumento"
 }

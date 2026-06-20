@@ -225,5 +225,7 @@
   "how.step3": "Check if an increase is legal",
   "page.tryAgain": "Try again",
   "page.errorFallback": "You can also look up your address on the LA County Assessor.",
-  "result.pageHeading": "Your rent protection result"
+  "result.pageHeading": "Your rent protection result",
+  "page.checkAnother": "Check a different address",
+  "increase.noCapHeading": "No rent-increase cap applies"
 }

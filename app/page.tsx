@@ -66,7 +66,26 @@ export default function Home() {
     <main className="mx-auto max-w-2xl px-4 py-10">
       {/* ── Header: Wordmark (full on home, compact on result) + lang toggle ── */}
       <div className="flex items-center justify-between">
-        {isResult ? <Wordmark compact /> : <Wordmark />}
+        {isResult ? (
+          <div className="flex items-center gap-3">
+            <Wordmark compact />
+            <button
+              type="button"
+              onClick={() => {
+                setData(null);
+                setError(null);
+                setAddress('');
+                setAnswers({});
+                if (window.location.hash) {
+                  history.replaceState(null, '', window.location.pathname + window.location.search);
+                }
+              }}
+              className="rounded-lg border border-border px-3 min-h-9 text-sm font-medium text-muted-foreground hover:bg-surface-muted"
+            >
+              {t('page.checkAnother')}
+            </button>
+          </div>
+        ) : <Wordmark />}
         <div role="group" aria-label={t('page.langLabel')} className="flex gap-1 text-sm">
           <button
             type="button"
@@ -183,7 +202,7 @@ export default function Home() {
                 onAnswer={(next) => { setAnswers(next); run(address, next); }}
               />
             )}
-            <IncreaseChecker regime={data.result.regime} />
+            {data.result.questions.length === 0 && <IncreaseChecker regime={data.result.regime} />}
             {isCovered(data.result.regime) && <WhatToDoNow regime={data.result.regime} reasons={data.result.reasons} />}
             <EvictionNotice />
           </section>
