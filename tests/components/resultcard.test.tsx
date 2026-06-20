@@ -117,14 +117,18 @@ describe('ResultCard', () => {
     expect(screen.queryByText(/Final answer/i)).toBeNull();
   });
 
-  it('renders a labelled shield-check icon (role=img) for a covered result', () => {
+  it('renders the eyebrow label as visible text (not a labelled img) to avoid SR double-announcement', () => {
+    // Fix 1: eyebrow icon is now decorative (aria-hidden); the adjacent visible text is the only SR announcement.
     renderCard({
       regime: 'RSO',
       confidence: 'high',
       reasons: [{ code: 'IN_LA_CITY' }],
       questions: [],
     });
-    expect(screen.getByRole('img', { name: /protected/i })).toBeTruthy();
+    // The eyebrow text is present as visible text
+    expect(screen.getByText(/protected/i)).toBeTruthy();
+    // No role="img" with that label — would cause double-announcement
+    expect(screen.queryByRole('img', { name: /protected/i })).toBeNull();
   });
 
   it('renders a $60 example line for RSO (3% cap) on $2,000 rent within the valid cap period', () => {

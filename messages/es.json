@@ -22,6 +22,7 @@
   "errorPage.home": "Volver al inicio",
   "page.langLabel": "Idioma",
   "suggest.listLabel": "Sugerencias de dirección",
+  "suggest.count": "{count} resultado(s) disponible(s)",
   "share.fallbackLabel": "Enlace para compartir",
   "result.confidence.high": "Confianza alta",
   "result.confidence.medium": "Confianza media",

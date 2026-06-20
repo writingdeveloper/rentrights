@@ -7,7 +7,7 @@ export function RecordsDetails({ reasons }: { reasons: ReasonItem[] }) {
   if (reasons.length === 0) return null;
   return (
     <details className="mt-4 rounded-xl border border-border p-3">
-      <summary className="cursor-pointer text-sm text-muted-foreground">{t('result.detailsToggle')}</summary>
+      <summary className="flex min-h-6 cursor-pointer items-center text-sm text-muted-foreground">{t('result.detailsToggle')}</summary>
       <ul className="mt-2 list-disc pl-5 text-sm text-foreground">
         {reasons.map((r, i) => (
           <li key={i}>{t(`reason.${r.code}`, r.params)}</li>

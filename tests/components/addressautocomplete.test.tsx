@@ -127,4 +127,38 @@ describe('AddressAutocomplete', () => {
     await new Promise((r) => setTimeout(r, 350)); // past the debounce window
     expect(screen.queryByRole('listbox')).toBeNull();
   });
+
+  // Fix 2: ARIA listbox validity — no non-option children inside the <ul role="listbox">
+  it('does not render the listbox when there are no suggestions (status shown outside listbox)', async () => {
+    mockFetch([]);
+    render(<Harness onSelect={vi.fn()} />);
+    fireEvent.change(screen.getByRole('combobox'), { target: { value: '300 s santa fe' } });
+    // Wait until the status text appears (may appear in multiple nodes: aria-live + visible div)
+    await screen.findAllByText(/No matching address/i);
+    // The listbox must not appear — no real option items exist
+    expect(screen.queryByRole('listbox')).toBeNull();
+  });
+
+  it('announces suggestion count in aria-live region when suggestions load', async () => {
+    mockFetch(['300 South Santa Fe Avenue, Los Angeles, CA', '300 South Santa Fe Avenue, Long Beach, CA']);
+    render(<Harness onSelect={vi.fn()} />);
+    fireEvent.change(screen.getByRole('combobox'), { target: { value: '300 s santa fe' } });
+    // Wait for suggestions to appear
+    await screen.findByText('300 South Santa Fe Avenue, Los Angeles, CA');
+    // The aria-live region should announce the count
+    expect(screen.getByText(/2 result/i)).toBeTruthy();
+  });
+
+  it('listbox only contains role=option children (no invalid ARIA owned elements)', async () => {
+    mockFetch(['300 South Santa Fe Avenue, Los Angeles, CA', '300 South Santa Fe Avenue, Long Beach, CA']);
+    render(<Harness onSelect={vi.fn()} />);
+    fireEvent.change(screen.getByRole('combobox'), { target: { value: '300 s santa fe' } });
+    await screen.findByText('300 South Santa Fe Avenue, Los Angeles, CA');
+    const listbox = screen.getByRole('listbox');
+    // Every direct child of the listbox must be role=option
+    const nonOptions = Array.from(listbox.children).filter(
+      (el) => el.getAttribute('role') !== 'option',
+    );
+    expect(nonOptions).toHaveLength(0);
+  });
 });

@@ -22,6 +22,7 @@
   "errorPage.home": "Back to home",
   "page.langLabel": "Language",
   "suggest.listLabel": "Address suggestions",
+  "suggest.count": "{count} result(s) available",
   "share.fallbackLabel": "Shareable link",
   "result.confidence.high": "High confidence",
   "result.confidence.medium": "Medium confidence",

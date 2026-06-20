@@ -95,7 +95,7 @@ export function ResultCard({ result, lastVerified, now = new Date() }: { result:
           <div className={`${heroSurface} p-5`}>
             {/* Eyebrow */}
             <p className={`mb-2 text-sm font-bold uppercase tracking-wide ${heroAccent}`}>
-              <Icon name={iconName} label={iconLabel} size={16} className="mr-1 inline-block align-text-bottom" />
+              <Icon name={iconName} size={16} className="mr-1 inline-block align-text-bottom" aria-hidden="true" />
               {iconLabel}
             </p>
 
@@ -129,7 +129,7 @@ export function ResultCard({ result, lastVerified, now = new Date() }: { result:
                       <p className="mt-1 text-sm text-muted-foreground">⚠ {stalenessMessage(staleness, t, result.regime, locale)}</p>
                     ) : lastVerified ? (
                       <span className="mt-2 inline-flex items-center gap-1 rounded-pill bg-surface px-3 py-1 text-sm font-medium text-success">
-                        <Icon name="shield-check" label={t('result.verifiedBadge', { date: formatDate(lastVerified, locale) })} size={14} />
+                        <Icon name="shield-check" size={14} aria-hidden="true" />
                         {t('result.verifiedBadge', { date: formatDate(lastVerified, locale) })}
                       </span>
                     ) : null}
