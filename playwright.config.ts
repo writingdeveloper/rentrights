@@ -18,9 +18,13 @@ export default defineConfig({
     trace: 'on-first-retry',
   },
   webServer: {
-    // next.config.ts sets output:'standalone', so the correct server is
-    // node .next/standalone/server.js (not `next start`).
-    command: `npm run build && PORT=${PORT} node .next/standalone/server.js`,
+    // Use `next dev` for e2e: next.config sets output:'standalone', which makes
+    // `next start` unstable (it warns and crashes under sustained load) and makes
+    // the standalone server.js need static assets copied beside it plus a
+    // bash-only `PORT=` prefix. `next dev -p ${PORT}` is cross-platform, stable,
+    // serves the real CSS/fonts (so the axe gate tests styled pages), and runs
+    // the API routes — exactly what these behavioural + a11y specs need.
+    command: `npx next dev -p ${PORT}`,
     url: `http://localhost:${PORT}`,
     timeout: 180_000,
     reuseExistingServer: !process.env.CI,
