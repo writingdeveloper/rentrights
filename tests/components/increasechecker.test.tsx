@@ -3,6 +3,7 @@ import { afterEach, describe, it, expect } from 'vitest';
 import { cleanup, render, screen, fireEvent } from '@testing-library/react';
 import { IncreaseChecker } from '@/components/IncreaseChecker';
 import { LocaleProvider } from '@/lib/i18n/LocaleProvider';
+import { CATALOG } from '@/lib/i18n/catalog';
 
 afterEach(cleanup);
 
@@ -73,5 +74,12 @@ describe('IncreaseChecker', () => {
     expect(screen.getByText(/Within the legal limit/i)).toBeTruthy();
     // Detailed sentence still present
     expect(screen.getByText(/Within the legal cap/i)).toBeTruthy();
+  });
+
+  it('increase.uncertain key exists in both EN and ES catalogs', () => {
+    expect(typeof CATALOG.en['increase.uncertain']).toBe('string');
+    expect(CATALOG.en['increase.uncertain'].length).toBeGreaterThan(0);
+    expect(typeof CATALOG.es['increase.uncertain']).toBe('string');
+    expect(CATALOG.es['increase.uncertain'].length).toBeGreaterThan(0);
   });
 });

@@ -1,6 +1,7 @@
 'use client';
 import { LEGAL } from '@/lib/legal/constants';
 import { useT } from '@/lib/i18n/LocaleProvider';
+import { Icon } from '@/components/Icon';
 
 // Emergency path for renters already served with an eviction (unlawful-detainer)
 // lawsuit — a different, time-critical need from "estimate my protections".
@@ -11,7 +12,8 @@ export function EvictionNotice() {
   const t = useT();
   return (
     <details className="rounded-xl border border-danger/40 bg-surface-muted p-3">
-      <summary className="cursor-pointer text-sm font-semibold text-danger">
+      <summary className="flex cursor-pointer items-center gap-2 text-sm font-semibold text-danger">
+        <Icon name="alert-triangle" size={16} aria-hidden="true" />
         {t('eviction.summary')}
       </summary>
       <div className="mt-2 space-y-2 text-sm text-foreground">

@@ -209,6 +209,7 @@
   "increase.empty": "Enter both amounts to see if it's allowed.",
   "increase.within": "Within the legal limit",
   "increase.over": "Over the legal limit",
+  "increase.uncertain": "May be over the limit",
   "question.progress": "Question {n} of {total}",
   "question.reassure": "Not sure? That's okay — we'll keep your estimate conservative.",
   "hero.headline": "You have rights.",

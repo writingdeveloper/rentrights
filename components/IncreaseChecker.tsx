@@ -62,7 +62,7 @@ export function IncreaseChecker({ regime }: { regime: Regime }) {
     case 'UNCERTAIN_RANGE':
       tone = 'warn';
       text = t('increase.verdict.uncertainRange', { floorMax: money(r.allowedMaxAtFloor!), ceilingMax: money(r.allowedMaxAtCeiling!) });
-      shortWord = null; // uncertain → no short word
+      shortWord = t('increase.uncertain');
       shortIcon = 'alert-triangle';
       break;
     default:
