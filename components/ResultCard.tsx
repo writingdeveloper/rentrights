@@ -103,7 +103,7 @@ export function ResultCard({ result, lastVerified, now = new Date() }: { result:
 
             <div className="flex items-start gap-3">
               <div>
-                <h2 className="font-display text-2xl font-bold leading-tight">{t('result.likelyPrefix')} {rights.title}</h2>
+                <h2 className="font-display text-2xl font-bold leading-tight">{rights.title}</h2>
                 {detailed && (
                   <>
                     <span className={`mt-2 inline-block rounded-full bg-surface px-3 py-0.5 text-sm font-semibold ${heroAccent}`}>
