@@ -7,7 +7,7 @@ export function Hero() {
 
   return (
     <div className="py-8">
-      <h1 className="font-display text-4xl font-bold text-primary leading-tight">
+      <h1 className="font-display text-4xl font-bold text-primary">
         {t('hero.headline')}
       </h1>
       <p className="mt-3 text-lg text-muted-foreground leading-relaxed max-w-prose">
