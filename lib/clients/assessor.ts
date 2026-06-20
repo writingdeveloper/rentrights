@@ -5,9 +5,14 @@ import { timeoutFetch } from './http';
 type FetchLike = (url: string) => Promise<Response>;
 
 const PAIS = 'https://assessor.gis.lacounty.gov/assessor/rest/services/PAIS/pais_parcels/MapServer/0/query';
+// NOTE: The ArcGIS FeatureServer name "Parcel_Data_2021_Table" is a static
+// resource identifier assigned when the dataset was first published — it does
+// NOT mean only 2021 data. The service stores ALL roll years and this code
+// filters to the relevant year via the `RollYear` field in each query.
+// Do NOT "fix" this to a newer year; the URL is correct as-is.
 const ROLLS =
   'https://services.arcgis.com/RmCCgQtiZLDCtblq/arcgis/rest/services/Parcel_Data_2021_Table/FeatureServer/0/query';
-const LATEST_ROLL_YEAR = '2025';
+const LATEST_ROLL_YEAR = process.env.ROLL_YEAR || '2025';
 
 const EMPTY: ParcelFacts = { yearBuilt: null, units: null, useCode: null };
 
@@ -144,7 +149,13 @@ export async function fetchParcel(
 
   let facts: ParcelFacts | null = null;
   if (ref.zip && ref.houseNo != null) {
-    facts = await fetchRollsBySitus(ref.ain, ref.zip, ref.houseNo, fetchImpl);
+    try {
+      facts = await fetchRollsBySitus(ref.ain, ref.zip, ref.houseNo, fetchImpl);
+    } catch {
+      // AbortError (timeout) or HTTP error from the indexed situs query — fall
+      // through to the AIN-indexed fallback below so the caller still gets facts.
+      facts = null;
+    }
   }
   if (facts == null) {
     facts = await fetchRolls(ref.ain, fetchImpl);
