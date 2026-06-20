@@ -85,8 +85,8 @@ test.describe('a11y: home page (light)', () => {
   test('home ES — no serious/critical violations', async ({ page }) => {
     await page.goto('/');
     await page.getByRole('button', { name: 'Español' }).click();
-    // Spanish hero headline (hero.headline in es.json = "Tienes derechos.")
-    await expect(page.getByRole('heading', { level: 1, name: /Tienes derechos/i })).toBeVisible();
+    // Spanish hero headline (hero.headline in es.json = "Usted tiene derechos.")
+    await expect(page.getByRole('heading', { level: 1, name: /Usted tiene derechos/i})).toBeVisible();
     await assertNoA11yViolations(page);
   });
 });
@@ -103,7 +103,7 @@ test.describe('a11y: home page (dark)', () => {
   test('home ES — no serious/critical violations', async ({ page }) => {
     await page.goto('/');
     await page.getByRole('button', { name: 'Español' }).click();
-    await expect(page.getByRole('heading', { level: 1, name: /Tienes derechos/i })).toBeVisible();
+    await expect(page.getByRole('heading', { level: 1, name: /Usted tiene derechos/i})).toBeVisible();
     await assertNoA11yViolations(page);
   });
 });
