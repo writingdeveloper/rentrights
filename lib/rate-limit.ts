@@ -41,9 +41,25 @@ export function rateLimit(key: string, limit: number, windowMs: number, now: num
  * NOT read cf-connecting-ip: it is not a Vercel header, so a client could send it
  * to forge an identity and slip past this limiter. x-real-ip is the fallback for
  * local dev and other proxies.
+ *
+ * SELF-HOST NOTE: When deploying behind your own reverse proxy (Nginx, Caddy,
+ * Traefik, etc.) you MUST configure it to pass the real client IP via
+ * X-Forwarded-For or X-Real-IP. Without this, all requests with no identifiable
+ * IP will share the 'unknown' bucket below and exhaust it quickly.
  */
 export function clientKey(request: Request): string {
   const xff = request.headers.get('x-forwarded-for');
   if (xff) return xff.split(',')[0].trim();
-  return request.headers.get('x-real-ip') ?? 'unknown';
+  const xri = request.headers.get('x-real-ip');
+  if (xri) return xri.trim();
+  // No IP header present — all such requests share this bucket with a tighter
+  // limit to prevent a self-host misconfiguration from becoming a free-for-all.
+  return 'unknown';
 }
+
+// Conservative shared limit applied to requests without any client IP header.
+// 5 req/min is tight enough to be meaningful but loose enough for a lone
+// developer who hasn't yet configured X-Forwarded-For on their proxy.
+// On Vercel this path is never hit (the platform always sets x-forwarded-for).
+export const UNKNOWN_KEY_LIMIT = 5;
+export const UNKNOWN_KEY_WINDOW_MS = 60_000;
