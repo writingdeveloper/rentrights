@@ -208,5 +208,18 @@
   "increase.within": "Dentro del límite legal",
   "increase.over": "Por encima del límite legal",
   "question.progress": "Pregunta {n} de {total}",
-  "question.reassure": "¿No estás seguro? No pasa nada — mantendremos una estimación conservadora."
+  "question.reassure": "¿No estás seguro? No pasa nada — mantendremos una estimación conservadora.",
+  "hero.headline": "Tienes derechos.",
+  "hero.sub": "Descubre qué ley protege tu hogar en LA — y si tu aumento de alquiler es legal — con solo tu dirección.",
+  "trust.records": "Registros públicos",
+  "trust.updated": "Actualizado {date}",
+  "trust.free": "Gratis, no guardamos nada",
+  "trust.bilingual": "English / Español",
+  "how.heading": "Cómo funciona",
+  "how.step1": "Ingresa tu dirección",
+  "how.step2": "Mira tus protecciones y el tope de alquiler",
+  "how.step3": "Comprueba si un aumento es legal",
+  "page.tryAgain": "Intentar de nuevo",
+  "page.errorFallback": "También puedes buscar tu dirección en el Tasador del Condado de LA (LA County Assessor).",
+  "result.pageHeading": "Tu resultado de protección de alquiler"
 }

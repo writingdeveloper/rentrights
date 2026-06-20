@@ -208,5 +208,18 @@
   "increase.within": "Within the legal limit",
   "increase.over": "Over the legal limit",
   "question.progress": "Question {n} of {total}",
-  "question.reassure": "Not sure? That's okay — we'll keep your estimate conservative."
+  "question.reassure": "Not sure? That's okay — we'll keep your estimate conservative.",
+  "hero.headline": "You have rights.",
+  "hero.sub": "Find out which law protects your LA home — and whether your rent increase is legal — from just your address.",
+  "trust.records": "Public records",
+  "trust.updated": "Updated {date}",
+  "trust.free": "Free, nothing saved",
+  "trust.bilingual": "English / Español",
+  "how.heading": "How it works",
+  "how.step1": "Enter your address",
+  "how.step2": "See your protections & rent cap",
+  "how.step3": "Check if an increase is legal",
+  "page.tryAgain": "Try again",
+  "page.errorFallback": "You can also look up your address on the LA County Assessor.",
+  "result.pageHeading": "Your rent protection result"
 }
