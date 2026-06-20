@@ -21,7 +21,7 @@ export function IncreaseChecker({ regime }: { regime: Regime }) {
   if (regime === 'JCO_ONLY' || regime === 'COUNTY_JCO') {
     return (
       <section className="mt-6">
-        <h2 className="text-sm font-semibold">{t('increase.heading')}</h2>
+        <h2 className="text-sm font-semibold">{t('increase.noCapHeading')}</h2>
         <p className="mt-1 text-sm text-muted-foreground">{t('increase.noCap')}</p>
       </section>
     );
