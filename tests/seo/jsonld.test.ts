@@ -24,6 +24,17 @@ describe('jsonld builders', () => {
     expect(w.publisher).toEqual({ '@id': `${BASE}#org` });
   });
 
+  it('website has a SearchAction potentialAction for address lookup', () => {
+    const w = webSiteJsonLd(BASE, 'en');
+    const action = w.potentialAction as Record<string, unknown>;
+    expect(action['@type']).toBe('SearchAction');
+    const target = action.target as Record<string, unknown>;
+    expect(target['@type']).toBe('EntryPoint');
+    expect(typeof target.urlTemplate).toBe('string');
+    expect((target.urlTemplate as string).includes('{search_term_string}')).toBe(true);
+    expect(action['query-input']).toBe('required name=search_term_string');
+  });
+
   it('web application is a free utility', () => {
     const a = webApplicationJsonLd(BASE, 'en');
     expect(a['@type']).toBe('WebApplication');

@@ -16,6 +16,10 @@ const csp = [
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' blob: data:",
   "font-src 'self'",
+  // Explicit connect-src 'self' for Vercel Analytics (/_vercel/insights/*)
+  // and any fetch calls this app makes; keeps same-origin and makes future
+  // additions (e.g. a CDN) an explicit, reviewable change.
+  "connect-src 'self'",
   "object-src 'none'",
   "base-uri 'self'",
   "form-action 'self'",
