@@ -193,5 +193,21 @@
   "faq.a8": "Yes. California's AB 1482 applies statewide, so renters in other incorporated cities still have at least the state rent cap (5% plus local inflation, up to 10% per year) and just-cause eviction protection after 12 months. Your city may also have its own stronger local rent control, so confirm with your city. For these addresses RentRights estimates the AB 1482 baseline.",
   "faq.q9": "I already got an eviction notice — how long do I have to respond?",
   "faq.a9": "If you've been served with an eviction lawsuit (an \"unlawful detainer\") in California, you generally have {evictionDays} court days — not counting weekends or court holidays — to file a written response, or the landlord can win automatically by default. Free help is available from the Tenant Power Toolkit and local legal aid — don't wait.",
-  "error.RATE_LIMITED": "Too many requests. Please wait a minute and try again."
+  "error.RATE_LIMITED": "Too many requests. Please wait a minute and try again.",
+  "result.eyebrow.protected": "Protected (estimated)",
+  "result.eyebrow.likely": "Likely protected",
+  "result.eyebrow.needsInfo": "Needs a quick answer",
+  "result.eyebrow.notCovered": "Likely not covered",
+  "result.finalAnswer": "Final answer — nothing more to enter",
+  "result.almostThere": "Almost there — answer the question below to confirm",
+  "result.capExample": "On {rent} rent, that's about {amount}/mo more (example)",
+  "result.confirmLine": "Estimate from public records. Confirm free with the LA Housing Department (LAHD): {phone}",
+  "result.confirmLineCounty": "Estimate from public records. Confirm free with LA County DCBA: {phone}",
+  "result.confirmLineGeneric": "Estimate from public records. Confirm free with your local rent/housing authority.",
+  "increase.cardTitle": "Check your specific increase",
+  "increase.empty": "Enter both amounts to see if it's allowed.",
+  "increase.within": "Within the legal limit",
+  "increase.over": "Over the legal limit",
+  "question.progress": "Question {n} of {total}",
+  "question.reassure": "Not sure? That's okay — we'll keep your estimate conservative."
 }

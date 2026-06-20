@@ -193,5 +193,21 @@
   "faq.a8": "Sí. La ley AB 1482 de California aplica en todo el estado, así que los inquilinos en otras ciudades incorporadas tienen al menos el límite estatal de renta (5% más la inflación local, hasta 10% por año) y protección de desalojo con causa justa después de 12 meses. Su ciudad también puede tener su propio control de renta local más fuerte, así que confírmelo con su ciudad. Para estas direcciones, RentRights estima la base de AB 1482.",
   "faq.q9": "Ya recibí un aviso de desalojo, ¿cuánto tiempo tengo para responder?",
   "faq.a9": "Si le entregaron una demanda de desalojo (un \"unlawful detainer\") en California, por lo general tiene {evictionDays} días hábiles de corte — sin contar fines de semana ni días feriados de la corte — para presentar una respuesta por escrito, o el arrendador puede ganar automáticamente por incumplimiento. Hay ayuda gratuita del Tenant Power Toolkit y de asistencia legal local — no espere.",
-  "error.RATE_LIMITED": "Demasiadas solicitudes. Espera un minuto e inténtalo de nuevo."
+  "error.RATE_LIMITED": "Demasiadas solicitudes. Espera un minuto e inténtalo de nuevo.",
+  "result.eyebrow.protected": "Protegido (estimado)",
+  "result.eyebrow.likely": "Probablemente protegido",
+  "result.eyebrow.needsInfo": "Falta un dato rápido",
+  "result.eyebrow.notCovered": "Probablemente no cubierto",
+  "result.finalAnswer": "Respuesta final — no falta nada",
+  "result.almostThere": "Ya casi — responde la pregunta de abajo para confirmar",
+  "result.capExample": "Con un alquiler de {rent}, son unos {amount}/mes más (ejemplo)",
+  "result.confirmLine": "Estimación basada en registros públicos. Confírmalo gratis con el Departamento de Vivienda de LA (LAHD): {phone}",
+  "result.confirmLineCounty": "Estimación basada en registros públicos. Confírmalo gratis con el DCBA del Condado de LA: {phone}",
+  "result.confirmLineGeneric": "Estimación basada en registros públicos. Confírmalo gratis con tu autoridad local de vivienda/renta.",
+  "increase.cardTitle": "Comprueba tu aumento",
+  "increase.empty": "Ingresa ambos montos para ver si está permitido.",
+  "increase.within": "Dentro del límite legal",
+  "increase.over": "Por encima del límite legal",
+  "question.progress": "Pregunta {n} de {total}",
+  "question.reassure": "¿No estás seguro? No pasa nada — mantendremos una estimación conservadora."
 }
