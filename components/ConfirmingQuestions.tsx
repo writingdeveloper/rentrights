@@ -63,6 +63,8 @@ export function ConfirmingQuestions({ questions, answers, onAnswer }: {
       <h2 className="text-sm font-semibold text-foreground">
         {t('question.heading', { count: questions.length })}
       </h2>
+      {/* Reassurance shown once for the whole callout, not duplicated per question */}
+      <p className="text-sm text-muted-foreground">{t('question.reassure')}</p>
       <div className="space-y-4">
         {questions.map((id, idx) => {
           const m = QUESTION_META[id];
@@ -98,8 +100,6 @@ export function ConfirmingQuestions({ questions, answers, onAnswer }: {
                 >
                   {t('question.unsure')}
                 </button>
-                {/* Reassurance line near "I'm not sure" */}
-                <p className="text-sm text-muted-foreground">{t('question.reassure')}</p>
               </div>
             </div>
           );
