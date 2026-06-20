@@ -29,13 +29,13 @@ describe('Hero', () => {
 
   it('renders the headline text (ES)', () => {
     renderHero('es');
-    expect(screen.getByText('Tienes derechos.')).toBeTruthy();
+    expect(screen.getByText('Usted tiene derechos.')).toBeTruthy();
   });
 
   it('renders the sub text (ES)', () => {
     renderHero('es');
     expect(
-      screen.getByText(/Descubre qué ley protege tu hogar en LA/),
+      screen.getByText(/Descubra qué ley protege su hogar en LA/),
     ).toBeTruthy();
   });
 

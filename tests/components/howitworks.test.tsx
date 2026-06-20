@@ -34,9 +34,9 @@ describe('HowItWorks', () => {
 
   it('renders all 3 steps (ES)', () => {
     renderHow('es');
-    expect(screen.getByText('Ingresa tu dirección')).toBeTruthy();
-    expect(screen.getByText('Mira tus protecciones y el tope de alquiler')).toBeTruthy();
-    expect(screen.getByText('Comprueba si un aumento es legal')).toBeTruthy();
+    expect(screen.getByText('Ingrese su dirección')).toBeTruthy();
+    expect(screen.getByText('Vea sus protecciones y el tope de alquiler')).toBeTruthy();
+    expect(screen.getByText('Compruebe si un aumento es legal')).toBeTruthy();
   });
 
   it('renders step numbers 1, 2, 3', () => {
