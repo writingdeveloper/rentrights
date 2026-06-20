@@ -2,6 +2,8 @@
   "page.title": "RentRights",
   "page.tagline": "Conozca sus derechos como inquilino en la Ciudad de LA — gratis, sin registro, no se guarda nada.",
   "page.reviewStatus": "Herramienta comunitaria — verificada con IA y la legislación vigente, pendiente de revisión formal por asistencia legal. No es asesoría legal.",
+  "page.trustLine": "Una herramienta comunitaria gratuita. Verificamos cada cifra con las leyes de renta oficiales de LA (actualizado {date}) — información sólida, no asesoría legal. Confírmalo siempre con el departamento de vivienda.",
+  "records.aiNote": "Las cifras se verifican con IA y la legislación vigente y están pendientes de revisión formal por asistencia legal.",
   "page.placeholder": "1234 S Main St, Los Angeles",
   "page.addressLabel": "Dirección",
   "suggest.loading": "Buscando direcciones…",

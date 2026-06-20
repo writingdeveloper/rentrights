@@ -94,8 +94,8 @@ export default function Home() {
         <>
           {/* Hero provides the single visible h1 on the home view */}
           <Hero />
-          {/* Honest "pending formal review" posture (RR-2) */}
-          <p className="mt-1 text-xs text-muted-foreground">{t('page.reviewStatus')}</p>
+          {/* Honest posture — warm, calm, not-legal-advice + updated date */}
+          <p className="mt-2 text-sm text-muted-foreground">{t('page.trustLine', { date: CONTENT_LAST_UPDATED })}</p>
         </>
       )}
 
@@ -173,7 +173,7 @@ export default function Home() {
               absence means the result is complete. */}
           <section className="space-y-4">
             {data.dataWarnings?.map((w: string, i: number) => (
-              <p key={i} className="text-xs text-muted-foreground">{t(`warning.${w}`)}</p>
+              <p key={i} className="text-sm text-muted-foreground">{t(`warning.${w}`)}</p>
             ))}
             {data.result.questions.length > 0 && (
               <ConfirmingQuestions

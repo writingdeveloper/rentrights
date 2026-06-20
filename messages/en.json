@@ -2,6 +2,8 @@
   "page.title": "RentRights",
   "page.tagline": "Know your renter rights in the City of LA — free, no sign-up, nothing stored.",
   "page.reviewStatus": "Community tool — AI- and statute-checked, pending formal legal-aid review. Not legal advice.",
+  "page.trustLine": "A free community tool. We check every figure against LA's official rent laws (updated {date}) — solid information, not legal advice. Always confirm with the housing department.",
+  "records.aiNote": "Figures are AI- and statute-checked and pending formal legal-aid review.",
   "page.placeholder": "1234 S Main St, Los Angeles",
   "page.addressLabel": "Street address",
   "suggest.loading": "Looking up addresses…",

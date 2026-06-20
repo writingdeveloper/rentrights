@@ -13,6 +13,7 @@ export function RecordsDetails({ reasons }: { reasons: ReasonItem[] }) {
           <li key={i}>{t(`reason.${r.code}`, r.params)}</li>
         ))}
       </ul>
+      <p className="mt-3 text-sm text-muted-foreground">{t('records.aiNote')}</p>
     </details>
   );
 }

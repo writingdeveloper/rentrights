@@ -33,4 +33,9 @@ describe('RecordsDetails', () => {
     const { container } = renderDetails([]);
     expect(container.querySelector('details')).toBeNull();
   });
+
+  it('shows the AI/pending-review disclosure note (records.aiNote)', () => {
+    renderDetails([{ code: 'IN_LA_CITY' }]);
+    expect(screen.getByText(/AI- and statute-checked and pending formal legal-aid review/i)).toBeTruthy();
+  });
 });
