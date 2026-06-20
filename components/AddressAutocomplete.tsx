@@ -122,19 +122,21 @@ export function AddressAutocomplete({ value, onChange, onSelect }: {
           blurTimer.current = setTimeout(() => setOpen(false), 150);
         }}
       />
-      {showList && (
+      {/* aria-live region: announces loading/no-results status and suggestion count to SRs.
+          Lives OUTSIDE the listbox so the listbox only ever owns role="option" children. */}
+      <div aria-live="polite" aria-atomic="true" className="sr-only">
+        {showList && loading && suggestions.length === 0 && t('suggest.loading')}
+        {showList && !loading && queried && suggestions.length === 0 && t('suggest.none')}
+        {showList && !loading && suggestions.length > 0 && t('suggest.count', { count: suggestions.length })}
+      </div>
+      {/* Only render the listbox when there are real option items — invalid ARIA to own non-option children */}
+      {showList && suggestions.length > 0 && (
         <ul
           id="address-suggestions"
           role="listbox"
           aria-label={t('suggest.listLabel')}
           className="absolute z-10 mt-1 w-full overflow-hidden rounded-lg border border-border bg-surface shadow-lg"
         >
-          {loading && suggestions.length === 0 && (
-            <li className="px-3 py-3 text-sm text-muted-foreground">{t('suggest.loading')}</li>
-          )}
-          {!loading && queried && suggestions.length === 0 && (
-            <li className="px-3 py-3 text-sm text-muted-foreground">{t('suggest.none')}</li>
-          )}
           {suggestions.map((s, i) => (
             <li
               key={`${s}-${i}`}
@@ -152,6 +154,17 @@ export function AddressAutocomplete({ value, onChange, onSelect }: {
             </li>
           ))}
         </ul>
+      )}
+      {/* Non-option status messages rendered outside the listbox, visually below the input */}
+      {showList && loading && suggestions.length === 0 && (
+        <div className="absolute z-10 mt-1 w-full overflow-hidden rounded-lg border border-border bg-surface shadow-lg px-3 py-3 text-sm text-muted-foreground">
+          {t('suggest.loading')}
+        </div>
+      )}
+      {showList && !loading && queried && suggestions.length === 0 && (
+        <div className="absolute z-10 mt-1 w-full overflow-hidden rounded-lg border border-border bg-surface shadow-lg px-3 py-3 text-sm text-muted-foreground">
+          {t('suggest.none')}
+        </div>
       )}
     </div>
   );

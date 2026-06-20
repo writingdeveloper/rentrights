@@ -13,11 +13,11 @@ export function WhatToDoNow({ regime, reasons = [] }: { regime: Regime; reasons?
   const auth = isCounty ? countyAuthority : cityAuthority;
   const agency = isCounty ? t('staleness.authority.dcba') : t('staleness.authority.lahd');
   return (
-    <section className="mt-4 rounded-xl border border-warning bg-warning-soft p-3">
-      <h2 className="text-sm font-semibold text-warning">{t('whatToDo.heading')}</h2>
-      <ol className="mt-1 space-y-1 text-sm text-warning">
+    <section className="mt-4 rounded-xl border border-success bg-success-soft p-3">
+      <h2 className="text-sm font-semibold text-success">{t('whatToDo.heading')}</h2>
+      <ol className="mt-1 space-y-1 text-sm text-foreground">
         <li className="flex items-start gap-2">
-          <Icon name="check" size={16} aria-hidden="true" className="mt-0.5 shrink-0" />
+          <Icon name="arrow-right" size={16} aria-hidden="true" className="mt-0.5 shrink-0" />
           {t('whatToDo.step1')}
         </li>
         <li className="flex items-start gap-2">

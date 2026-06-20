@@ -13,8 +13,8 @@ test('toggle to Spanish re-renders the result and persists via cookie', async ({
 
   await page.reload();
   // After reload the cookie keeps Spanish: the hero headline is Spanish and Español is pressed.
-  // ("Tienes derechos." is the Spanish hero.headline; "Conozca sus derechos" is in a
-  //  translation key that no longer renders in the redesigned UI.)
-  await expect(page.getByText(/Tienes derechos/)).toBeVisible();
+  // ("Usted tiene derechos." is the Spanish hero.headline after the usted-register
+  //  normalization; the old "Conozca sus derechos" key no longer renders.)
+  await expect(page.getByText(/Usted tiene derechos/)).toBeVisible();
   await expect(page.getByRole('button', { name: 'Español' })).toHaveAttribute('aria-pressed', 'true');
 });

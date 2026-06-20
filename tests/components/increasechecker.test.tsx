@@ -19,13 +19,28 @@ describe('IncreaseChecker', () => {
     expect(screen.getByText(/Over the legal cap/i)).toBeTruthy();
   });
 
-  it('shows a no-cap note for JCO_ONLY', () => {
+  it('shows a no-cap note for JCO_ONLY with a non-interrogative heading', () => {
     render(
       <LocaleProvider initialLocale="en">
         <IncreaseChecker regime="JCO_ONLY" />
       </LocaleProvider>,
     );
     expect(screen.getByText(/no maximum increase amount/i)).toBeTruthy();
+    // Heading must NOT be the interrogative "Is your rent increase legal?" on the no-cap path
+    expect(screen.queryByText(/Is your rent increase legal\?/i)).toBeNull();
+    // Instead shows the calm declarative heading
+    expect(screen.getByText(/No rent-increase cap applies/i)).toBeTruthy();
+  });
+
+  it('shows a no-cap note for COUNTY_JCO with non-interrogative heading', () => {
+    render(
+      <LocaleProvider initialLocale="en">
+        <IncreaseChecker regime="COUNTY_JCO" />
+      </LocaleProvider>,
+    );
+    expect(screen.getByText(/no maximum increase amount/i)).toBeTruthy();
+    expect(screen.queryByText(/Is your rent increase legal\?/i)).toBeNull();
+    expect(screen.getByText(/No rent-increase cap applies/i)).toBeTruthy();
   });
 
   it('renders nothing for out-of-jurisdiction', () => {

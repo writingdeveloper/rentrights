@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { capStaleness, stalenessMessage, rightsText, capLabel, notFinalBanner, isCovered } from '@/lib/content/rights';
+import { capStaleness, stalenessMessage, rightsText, capLabel, isCovered } from '@/lib/content/rights';
 import { translate } from '@/lib/i18n/t';
 import { CATALOG } from '@/lib/i18n/catalog';
 import { LEGAL } from '@/lib/legal/constants';
@@ -27,13 +27,18 @@ describe('capStaleness', () => {
 });
 
 describe('stalenessMessage', () => {
-  it('mentions the expected update date when present', () => {
-    const msg = stalenessMessage({ stale: true, reason: 'past expected update', expectedUpdate: '2026-08-01' }, t);
-    expect(msg).toContain('2026-08-01');
+  it('mentions the expected update date when present (formatted, EN)', () => {
+    // Default locale is 'en'; expects "August 1, 2026" (formatted), not raw ISO.
+    const msg = stalenessMessage({ stale: true, reason: 'past expected update', expectedUpdate: '2026-08-01' }, t, undefined, 'en');
+    expect(msg).toContain('August 1, 2026');
     expect(msg.toLowerCase()).toContain('lahd');
   });
+  it('mentions the expected update date formatted in ES', () => {
+    const msg = stalenessMessage({ stale: true, reason: 'past expected update', expectedUpdate: '2026-08-01' }, t, undefined, 'es');
+    expect(msg).toContain('1 de agosto de 2026');
+  });
   it('points AB1482 figures to the state, not LAHD', () => {
-    const msg = stalenessMessage({ stale: true, reason: 'pending publication', expectedUpdate: '2027-08-01' }, t, 'AB1482');
+    const msg = stalenessMessage({ stale: true, reason: 'pending publication', expectedUpdate: '2027-08-01' }, t, 'AB1482', 'en');
     expect(msg.toLowerCase()).not.toContain('lahd');
     expect(msg.toLowerCase()).toContain('state');
   });
@@ -53,33 +58,6 @@ describe('capLabel', () => {
   });
   it('formats the County cap as pending (ceiling-only) after 2026-06-30', () => {
     expect(capLabel('COUNTY_RSTPO', t, new Date('2026-08-01'))).toContain('up to 3%');
-  });
-});
-
-describe('notFinalBanner', () => {
-  it('points city regimes (RSO/AB1482/JCO_ONLY) to LAHD with its hotline', () => {
-    for (const regime of ['RSO', 'AB1482', 'JCO_ONLY'] as const) {
-      const msg = notFinalBanner(regime, t);
-      expect(msg).toContain('LAHD');
-      expect(msg).toContain('(866) 557-7368');
-    }
-  });
-  it('points County regimes to LA County DCBA with its hotline, not LAHD', () => {
-    for (const regime of ['COUNTY_RSTPO', 'COUNTY_JCO'] as const) {
-      const msg = notFinalBanner(regime, t);
-      expect(msg).toContain('DCBA');
-      expect(msg).toContain('(800) 593-8222');
-      expect(msg).not.toContain('LAHD');
-      expect(msg).not.toContain('(866) 557-7368');
-    }
-  });
-  it('uses a generic local-authority message for OOJ/UNKNOWN (no specific agency phone)', () => {
-    for (const regime of ['OUT_OF_JURISDICTION', 'UNKNOWN'] as const) {
-      const msg = notFinalBanner(regime, t);
-      expect(msg).not.toContain('(866) 557-7368');
-      expect(msg).not.toContain('(800) 593-8222');
-      expect(msg.toLowerCase()).toContain('local');
-    }
   });
 });
 

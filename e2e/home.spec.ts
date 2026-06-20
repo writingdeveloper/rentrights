@@ -1,8 +1,9 @@
 import { test, expect } from '@playwright/test';
 
 /**
- * Phase 3 home-page IA tests.
- * DO NOT run these in CI until Phase 5 — they require a live preview URL.
+ * Home-page end-to-end tests.
+ * These run in CI via e2e.yml (scheduled) against a next dev server
+ * started by playwright.config.ts webServer.
  */
 
 test('home: hero headline is visible on first load', async ({ page }) => {
@@ -27,7 +28,7 @@ test('home: FAQ heading appears below the how-it-works section', async ({ page }
 
 test('home: trust chips render with a date', async ({ page }) => {
   await page.goto('/');
-  await expect(page.getByText(/Updated \d{4}/)).toBeVisible();
+  await expect(page.getByText(/Updated \w+ \d{1,2}, \d{4}/)).toBeVisible();
   // Use exact:true to avoid matching the FAQ answer text that also contains these words.
   await expect(page.getByText('Public records', { exact: true })).toBeVisible();
   await expect(page.getByText('Free, nothing saved', { exact: true })).toBeVisible();

@@ -17,6 +17,10 @@
   --warning: #9C5400;
   --warning-soft: #FBEFDD;
   --danger: #B42318;
+  /* Elevation primitives (light) — referenced by the shadow tokens below */
+  --elev-sm: 0 1px 2px rgba(35,38,43,.06);
+  --elev-md: 0 6px 20px rgba(35,38,43,.08);
+  --elev-lg: 0 16px 40px rgba(35,38,43,.10);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -37,6 +41,10 @@
     --warning: #E5A85A;
     --warning-soft: #241B10;
     --danger: #F0857A;
+    /* Elevation primitives (dark) — true-black shadows are visible on dark surfaces */
+    --elev-sm: 0 1px 2px rgba(0,0,0,.45);
+    --elev-md: 0 6px 20px rgba(0,0,0,.50);
+    --elev-lg: 0 16px 40px rgba(0,0,0,.55);
   }
 }
 
@@ -60,9 +68,9 @@
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-serif: var(--font-fraunces), ui-serif, Georgia, serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
-  --shadow-sm: 0 1px 2px rgba(35,38,43,.06);
-  --shadow-md: 0 6px 20px rgba(35,38,43,.08);
-  --shadow-lg: 0 16px 40px rgba(35,38,43,.10);
+  --shadow-sm: var(--elev-sm);
+  --shadow-md: var(--elev-md);
+  --shadow-lg: var(--elev-lg);
   --radius: 12px;
   --radius-lg: 18px;
   --radius-pill: 999px;

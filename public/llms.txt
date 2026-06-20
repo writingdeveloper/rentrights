@@ -12,6 +12,10 @@ Canonical URL: https://rentrights.writingdeveloper.blog
   rent ordinance (RSTPO), or just-cause-only protections.
 - Shows the current annual rent-increase cap and the renter's key protections
   (rent caps, "just cause" eviction, relocation assistance, notice periods).
+- Includes an interactive rent-increase legality checker: enter your current rent
+  and the proposed new rent to see instantly whether the increase is within the
+  legal cap for your unit.
+- Fully bilingual: available in English and Español (Spanish).
 - Free, no sign-up, nothing stored.
 
 ## Key facts

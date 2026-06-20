@@ -11,8 +11,8 @@ import { Icon } from '@/components/Icon';
 export function EvictionNotice() {
   const t = useT();
   return (
-    <details className="rounded-xl border border-danger/40 bg-surface-muted p-3">
-      <summary className="flex cursor-pointer items-center gap-2 text-sm font-semibold text-danger">
+    <details className="rounded-xl border border-danger bg-surface-muted p-3">
+      <summary className="flex min-h-6 cursor-pointer items-center gap-2 text-sm font-semibold text-danger">
         <Icon name="alert-triangle" size={16} aria-hidden="true" />
         {t('eviction.summary')}
       </summary>

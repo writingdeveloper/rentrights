@@ -22,6 +22,14 @@ export function webSiteJsonLd(base: string, locale: string): Json {
     description: 'Estimate your LA renter rights and rent-increase cap from your address.',
     inLanguage: locale,
     publisher: { '@id': `${base}#org` },
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: {
+        '@type': 'EntryPoint',
+        urlTemplate: `${base}/?address={search_term_string}`,
+      },
+      'query-input': 'required name=search_term_string',
+    },
   };
 }
 

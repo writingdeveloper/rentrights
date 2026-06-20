@@ -62,8 +62,48 @@ describe('ConfirmingQuestions', () => {
     expect(screen.getByText(/Question 2 of 2/i)).toBeTruthy();
   });
 
-  it('renders the reassurance line near the "I\'m not sure" control', () => {
+  it('renders the reassurance line (once) in the callout', () => {
     renderQs(vi.fn());
     expect(screen.getByText(/Not sure\? That's okay/i)).toBeTruthy();
+  });
+
+  it('renders the reassurance line exactly once even with 2 questions (no duplication)', () => {
+    render(
+      <LocaleProvider initialLocale="en">
+        <ConfirmingQuestions
+          questions={['IS_CONDO', 'IS_SEPARATE_HOUSE']}
+          answers={{}}
+          onAnswer={vi.fn()}
+        />
+      </LocaleProvider>,
+    );
+    const matches = screen.queryAllByText(/Not sure\? That's okay/i);
+    expect(matches).toHaveLength(1);
+  });
+
+  // Fix 3: WCAG 1.3.1 — question card grouping
+  it('wraps each question card in role="group" labelled by the question text (WCAG 1.3.1)', () => {
+    render(
+      <LocaleProvider initialLocale="en">
+        <ConfirmingQuestions
+          questions={['IS_CONDO', 'IS_SEPARATE_HOUSE']}
+          answers={{}}
+          onAnswer={vi.fn()}
+        />
+      </LocaleProvider>,
+    );
+    const groups = screen.getAllByRole('group');
+    // Each question card is a group; heading <h2> is also a group boundary but we only care about the question divs
+    const questionGroups = groups.filter((g) =>
+      g.getAttribute('aria-labelledby')?.startsWith('question-label-'),
+    );
+    expect(questionGroups).toHaveLength(2);
+    // The labelled-by id points to the question text element
+    for (const group of questionGroups) {
+      const labelId = group.getAttribute('aria-labelledby')!;
+      const labelEl = document.getElementById(labelId);
+      expect(labelEl).toBeTruthy();
+      expect(labelEl?.tagName.toLowerCase()).toBe('p');
+    }
   });
 });

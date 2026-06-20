@@ -202,4 +202,27 @@ describe('fetchParcel (situs path)', () => {
     expect(ainScan).toBe(true);
     expect(out.facts).toEqual({ yearBuilt: 1931, units: 6, useCode: '0500' });
   });
+
+  it('falls back to the AIN query when fetchRollsBySitus THROWS (e.g. AbortError/timeout)', async () => {
+    // Simulates a 12s upstream timeout on the situs path — the AIN fallback must
+    // still be tried and its result returned (P2 fix: situs call wrapped in try/catch).
+    let ainCalled = false;
+    const fakeFetch = async (url: string) => {
+      if (url.includes('CAMS_Locator')) return { ok: true, json: async () => cams } as unknown as Response;
+      if (url.includes('pais_parcels')) return { ok: true, json: async () => pais } as unknown as Response;
+      if (url.includes('Parcel_Data')) {
+        const d = decodeURIComponent(url);
+        if (d.includes('SitusZIP5')) {
+          throw Object.assign(new Error('AbortError'), { name: 'AbortError' });
+        }
+        ainCalled = true;
+        return { ok: true, json: async () => rolls } as unknown as Response;
+      }
+      return { ok: true, json: async () => cams } as unknown as Response;
+    };
+    const out = await fetchParcel('1411 Murray Dr, Los Angeles', fakeFetch);
+    expect(ainCalled).toBe(true);
+    expect(out.ain).toBe('5425003009');
+    expect(out.facts).toEqual({ yearBuilt: 1931, units: 6, useCode: '0500' });
+  });
 });

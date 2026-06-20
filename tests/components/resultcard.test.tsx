@@ -54,7 +54,8 @@ describe('ResultCard', () => {
       { regime: 'RSO', confidence: 'high', reasons: [{ code: 'IN_LA_CITY' }], questions: [] },
       { lastVerified: '2026-06-04', now: new Date('2026-06-11') },
     );
-    expect(screen.getByText(/verified 2026-06-04/i)).toBeTruthy();
+    // EN locale: expects "June 4, 2026" (formatted), not the raw ISO string.
+    expect(screen.getByText(/verified June 4, 2026/i)).toBeTruthy();
   });
 
   it('hides the freshness badge (shows the pending notice instead) when the cap is stale', () => {
@@ -63,7 +64,7 @@ describe('ResultCard', () => {
       { regime: 'RSO', confidence: 'high', reasons: [{ code: 'IN_LA_CITY' }], questions: [] },
       { lastVerified: '2026-06-04', now: new Date('2026-07-15') },
     );
-    expect(screen.queryByText(/verified 2026-06-04/i)).toBeNull();
+    expect(screen.queryByText(/verified June 4, 2026/i)).toBeNull();
     expect(screen.getByText(/pending publication/i)).toBeTruthy();
   });
 
@@ -72,7 +73,7 @@ describe('ResultCard', () => {
       { regime: 'OUT_OF_JURISDICTION', confidence: 'high', reasons: [{ code: 'OUTSIDE_LA' }], questions: [] },
       { lastVerified: '2026-06-04', now: new Date('2026-06-11') },
     );
-    expect(screen.queryByText(/verified 2026-06-04/i)).toBeNull();
+    expect(screen.queryByText(/verified June 4, 2026/i)).toBeNull();
   });
 
   it('hides reassurance, confidence, and cap for OUT_OF_JURISDICTION', () => {
@@ -116,14 +117,18 @@ describe('ResultCard', () => {
     expect(screen.queryByText(/Final answer/i)).toBeNull();
   });
 
-  it('renders a labelled shield-check icon (role=img) for a covered result', () => {
+  it('renders the eyebrow label as visible text (not a labelled img) to avoid SR double-announcement', () => {
+    // Fix 1: eyebrow icon is now decorative (aria-hidden); the adjacent visible text is the only SR announcement.
     renderCard({
       regime: 'RSO',
       confidence: 'high',
       reasons: [{ code: 'IN_LA_CITY' }],
       questions: [],
     });
-    expect(screen.getByRole('img', { name: /protected/i })).toBeTruthy();
+    // The eyebrow text is present as visible text
+    expect(screen.getByText(/protected/i)).toBeTruthy();
+    // No role="img" with that label — would cause double-announcement
+    expect(screen.queryByRole('img', { name: /protected/i })).toBeNull();
   });
 
   it('renders a $60 example line for RSO (3% cap) on $2,000 rent within the valid cap period', () => {
@@ -163,5 +168,20 @@ describe('ResultCard', () => {
     });
     const confirmMatches = screen.queryAllByText(/Estimate from public records/i);
     expect(confirmMatches).toHaveLength(1);
+  });
+
+  it('confirm line is styled neutral (no amber warning classes) even on high-confidence FINAL path', () => {
+    const { container } = renderCard({
+      regime: 'RSO',
+      confidence: 'high',
+      reasons: [{ code: 'IN_LA_CITY' }],
+      questions: [],
+    });
+    // The confirm wrapper must NOT carry the old amber warning classes
+    const amberEl = container.querySelector('.border-warning.bg-warning-soft.text-warning');
+    expect(amberEl).toBeNull();
+    // The confirm text must still be present (legal honesty preserved)
+    expect(screen.getByText(/Estimate from public records/i)).toBeTruthy();
+    expect(screen.getByText(/Confirm free with the LA Housing Department/i)).toBeTruthy();
   });
 });

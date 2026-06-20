@@ -3,8 +3,9 @@ import { RegimeResult } from '@/lib/rules/types';
 import { rightsText, capLabel, capStaleness, stalenessMessage, isCovered } from '@/lib/content/rights';
 import { cityAuthority, countyAuthority } from '@/lib/content/help';
 import { LEGAL } from '@/lib/legal/constants';
-import { useT } from '@/lib/i18n/LocaleProvider';
+import { useT, useLocale } from '@/lib/i18n/LocaleProvider';
 import { Icon } from '@/components/Icon';
+import { formatDate } from '@/lib/format/date';
 
 function money(n: number): string {
   return n.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
@@ -33,12 +34,11 @@ function singleCapPct(regime: string, onDate: Date): number | null {
 }
 
 /**
- * Consolidated honest confirm line — mirrors the routing logic of the old
- * notFinalBanner (city→LAHD, county→DCBA, incorporated-city / OOJ → generic)
- * but condenses to a single line with:
- *   "Estimate from public records. Confirm free with <authority>: <phone>"
- * This preserves the substance of the old notFinalBanner:
- *   it's an estimate / not legal advice / confirm with the correct authority.
+ * Consolidated honest confirm line — routed to the correct authority:
+ *   City regimes (RSO/AB1482/JCO_ONLY) → LAHD
+ *   County regimes (COUNTY_RSTPO/COUNTY_JCO) → LA County DCBA
+ *   Incorporated-city / OOJ → generic "your local rent/housing authority"
+ * Condenses to a single line: "Estimate from public records. Confirm free with <authority>: <phone>"
  */
 function confirmLine(regime: string, t: ReturnType<typeof useT>, reasons: RegimeResult['reasons']): string {
   if (reasons.some((r) => r.code === 'INCORPORATED_CITY')) {
@@ -63,6 +63,7 @@ function eyebrowKey(covered: boolean, hasQuestions: boolean, confidence: string)
 
 export function ResultCard({ result, lastVerified, now = new Date() }: { result: RegimeResult; lastVerified?: string; now?: Date }) {
   const t = useT();
+  const { locale } = useLocale();
   const rights = rightsText(result.regime, t);
   const detailed = result.regime !== 'OUT_OF_JURISDICTION' && result.regime !== 'UNKNOWN';
   const covered = isCovered(result.regime);
@@ -93,7 +94,7 @@ export function ResultCard({ result, lastVerified, now = new Date() }: { result:
           <div className={`${heroSurface} p-5`}>
             {/* Eyebrow */}
             <p className={`mb-2 text-sm font-bold uppercase tracking-wide ${heroAccent}`}>
-              <Icon name={iconName} label={iconLabel} size={16} className="mr-1 inline-block align-text-bottom" />
+              <Icon name={iconName} size={16} className="mr-1 inline-block align-text-bottom" aria-hidden="true" />
               {iconLabel}
             </p>
 
@@ -103,10 +104,10 @@ export function ResultCard({ result, lastVerified, now = new Date() }: { result:
 
             <div className="flex items-start gap-3">
               <div>
-                <h2 className="font-display text-2xl font-bold leading-tight">{rights.title}</h2>
+                <h2 className="font-display text-2xl font-bold">{rights.title}</h2>
                 {detailed && (
                   <>
-                    <span className={`mt-2 inline-block rounded-full bg-surface px-3 py-0.5 text-sm font-semibold ${heroAccent}`}>
+                    <span className={`mt-2 inline-block rounded-pill bg-surface px-3 py-0.5 text-sm font-semibold ${heroAccent}`}>
                       {t(`result.confidence.${result.confidence}`)}
                     </span>
                     <p className="mt-2 text-sm font-medium uppercase tracking-wide text-muted-foreground">{t('result.legalIncrease')}</p>
@@ -124,11 +125,11 @@ export function ResultCard({ result, lastVerified, now = new Date() }: { result:
 
                     {/* Verified date pill or staleness warning */}
                     {staleness?.stale ? (
-                      <p className="mt-1 text-sm text-muted-foreground">⚠ {stalenessMessage(staleness, t, result.regime)}</p>
+                      <p className="mt-1 text-sm text-muted-foreground">⚠ {stalenessMessage(staleness, t, result.regime, locale)}</p>
                     ) : lastVerified ? (
                       <span className="mt-2 inline-flex items-center gap-1 rounded-pill bg-surface px-3 py-1 text-sm font-medium text-success">
-                        <Icon name="shield-check" label={t('result.verifiedBadge', { date: lastVerified })} size={14} />
-                        {t('result.verifiedBadge', { date: lastVerified })}
+                        <Icon name="shield-check" size={14} aria-hidden="true" />
+                        {t('result.verifiedBadge', { date: formatDate(lastVerified, locale) })}
                       </span>
                     ) : null}
                   </>
@@ -156,9 +157,10 @@ export function ResultCard({ result, lastVerified, now = new Date() }: { result:
               </p>
             )}
 
-            {/* ONE consolidated honest/confirm line (replaces old notFinalBanner) */}
-            <div className="mt-3 rounded-lg border border-warning bg-warning-soft p-2 text-sm font-semibold text-warning">
-              {confirmLine(result.regime, t, result.reasons)}
+            {/* ONE consolidated honest/confirm line */}
+            <div className="mt-3 rounded-lg border border-border bg-surface-muted p-2 text-sm text-muted-foreground flex items-start gap-1.5">
+              <Icon name="info" size={14} aria-hidden="true" className="mt-0.5 shrink-0" />
+              <span>{confirmLine(result.regime, t, result.reasons)}</span>
             </div>
           </div>
         </div>

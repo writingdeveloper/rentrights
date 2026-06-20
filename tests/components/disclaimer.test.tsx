@@ -7,13 +7,14 @@ import { LocaleProvider } from '@/lib/i18n/LocaleProvider';
 afterEach(cleanup);
 
 describe('Disclaimer', () => {
-  it('renders localized text including the lastVerified date', () => {
+  it('renders localized text including the lastVerified date (formatted, EN)', () => {
     render(
       <LocaleProvider initialLocale="en">
         <Disclaimer lastVerified="2026-06-02" />
       </LocaleProvider>,
     );
-    expect(screen.getByText(/2026-06-02/)).toBeTruthy();
+    // EN locale: expects "June 2, 2026" (formatted), not the raw ISO string.
+    expect(screen.getByText(/June 2, 2026/)).toBeTruthy();
     expect(screen.getByText(/not legal advice/i)).toBeTruthy();
   });
 });

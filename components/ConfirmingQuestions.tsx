@@ -63,6 +63,8 @@ export function ConfirmingQuestions({ questions, answers, onAnswer }: {
       <h2 className="text-sm font-semibold text-foreground">
         {t('question.heading', { count: questions.length })}
       </h2>
+      {/* Reassurance shown once for the whole callout, not duplicated per question */}
+      <p className="text-sm text-muted-foreground">{t('question.reassure')}</p>
       <div className="space-y-4">
         {questions.map((id, idx) => {
           const m = QUESTION_META[id];
@@ -79,13 +81,14 @@ export function ConfirmingQuestions({ questions, answers, onAnswer }: {
               {opt.common && <span className="ml-1 text-sm font-normal text-success">· {t('question.common')}</span>}
             </button>
           );
+          const qId = `question-label-${id}`;
           return (
-            <div key={id} className="rounded-xl border border-border bg-surface p-3">
+            <div key={id} role="group" aria-labelledby={qId} className="rounded-xl border border-border bg-surface p-3">
               {/* Progress indicator */}
               <p className="mb-1 text-sm font-medium text-muted-foreground">
                 {t('question.progress', { n: idx + 1, total: questions.length })}
               </p>
-              <p className="text-sm font-medium">{t(`question.${id}.q`)}</p>
+              <p id={qId} className="text-sm font-medium">{t(`question.${id}.q`)}</p>
               <p className="mt-1 text-sm text-muted-foreground">{t(`question.${id}.help`)}</p>
               <div className="mt-2 flex flex-col gap-2">
                 {renderBtn(m.primary)}
@@ -97,8 +100,6 @@ export function ConfirmingQuestions({ questions, answers, onAnswer }: {
                 >
                   {t('question.unsure')}
                 </button>
-                {/* Reassurance line near "I'm not sure" */}
-                <p className="text-sm text-muted-foreground">{t('question.reassure')}</p>
               </div>
             </div>
           );

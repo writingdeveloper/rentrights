@@ -15,7 +15,7 @@ import AxeBuilder from '@axe-core/playwright';
 // (.result-reveal opacity animation) so axe never samples a mid-transition,
 // partially transparent (blended -> low-contrast) frame. Reduced-motion users
 // get this same final state, and the settled colors are what people actually read.
-test.use({ reducedMotion: 'reduce' });
+test.use({ contextOptions: { reducedMotion: 'reduce' } });
 
 const TEST_ADDRESS = '1411 Murray Dr, Los Angeles, CA';
 // EN result: the heading h2 with the regime title
@@ -85,8 +85,8 @@ test.describe('a11y: home page (light)', () => {
   test('home ES — no serious/critical violations', async ({ page }) => {
     await page.goto('/');
     await page.getByRole('button', { name: 'Español' }).click();
-    // Spanish hero headline (hero.headline in es.json = "Tienes derechos.")
-    await expect(page.getByRole('heading', { level: 1, name: /Tienes derechos/i })).toBeVisible();
+    // Spanish hero headline (hero.headline in es.json = "Usted tiene derechos.")
+    await expect(page.getByRole('heading', { level: 1, name: /Usted tiene derechos/i})).toBeVisible();
     await assertNoA11yViolations(page);
   });
 });
@@ -103,7 +103,7 @@ test.describe('a11y: home page (dark)', () => {
   test('home ES — no serious/critical violations', async ({ page }) => {
     await page.goto('/');
     await page.getByRole('button', { name: 'Español' }).click();
-    await expect(page.getByRole('heading', { level: 1, name: /Tienes derechos/i })).toBeVisible();
+    await expect(page.getByRole('heading', { level: 1, name: /Usted tiene derechos/i})).toBeVisible();
     await assertNoA11yViolations(page);
   });
 });
