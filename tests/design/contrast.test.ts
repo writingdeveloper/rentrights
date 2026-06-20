@@ -12,14 +12,14 @@ function ratio(a: string, b: string): number {
 const light = {
   background: '#F6F4EF', surface: '#FFFDF9', surfaceMuted: '#EFEBE2',
   foreground: '#23262B', mutedForeground: '#5B5A54',
-  borderInput: '#857D6B', primary: '#1F6B4A', primaryStrong: '#18573C',
+  borderInput: '#857D6B', hcBorder: '#857D6B', primary: '#1F6B4A', primaryStrong: '#18573C',
   success: '#1F7A4D', successSoft: '#E3F3EA', warning: '#9C5400', warningSoft: '#FBEFDD',
   danger: '#B42318',
 };
 const dark = {
   background: '#15140F', surface: '#201E18', surfaceMuted: '#2A2720',
   foreground: '#ECE7DD', mutedForeground: '#B0A99B',
-  borderInput: '#6B6357', primary: '#5FC08A',
+  borderInput: '#6B6357', hcBorder: '#857D6B', primary: '#5FC08A',
   success: '#56C98A', successSoft: '#10241A', warning: '#E5A85A', warningSoft: '#241B10',
   danger: '#F0857A',
 };
@@ -41,6 +41,9 @@ describe('token contrast (WCAG 2.2 AA)', () => {
     });
     it(`${name}: input border (non-text) >= 3:1`, () => {
       expect(ratio(p.borderInput, p.background)).toBeGreaterThanOrEqual(3);
+    });
+    it(`${name}: high-contrast (prefers-contrast) border >= 3:1`, () => {
+      expect(ratio(p.hcBorder, p.background)).toBeGreaterThanOrEqual(3);
     });
   }
 });

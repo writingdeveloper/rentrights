@@ -97,6 +97,10 @@ summary:focus-visible,
   border-radius: 4px;
 }
 
+/* High-contrast mode. Intentionally the LAST :root override so that in
+   dark + high-contrast it wins the cascade over the dark block's --border:
+   #857D6B then holds for BOTH schemes (>=3:1 on light #F6F4EF AND dark #15140F).
+   Do not move this block above the dark @media block. */
 @media (prefers-contrast: more) {
   :root {
     --muted-foreground: var(--foreground);
