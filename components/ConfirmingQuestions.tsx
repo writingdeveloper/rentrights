@@ -76,7 +76,7 @@ export function ConfirmingQuestions({ questions, answers, onAnswer }: {
               }`}
             >
               {t(opt.labelKey)}
-              {opt.common && <span className="ml-1 text-xs font-normal text-success">· {t('question.common')}</span>}
+              {opt.common && <span className="ml-1 text-sm font-normal text-success">· {t('question.common')}</span>}
             </button>
           );
           return (

@@ -20,7 +20,7 @@ export function HowItWorks() {
       <ol className="flex flex-wrap items-start gap-2">
         {steps.map((step, i) => (
           <li key={i} className="flex items-center gap-2">
-            <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-primary text-white text-xs font-bold flex-shrink-0">
+            <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-primary text-background text-xs font-bold flex-shrink-0">
               {i + 1}
             </span>
             <span className="text-sm text-foreground">{step}</span>

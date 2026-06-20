@@ -9,7 +9,7 @@ export function Wordmark({ compact = false }: WordmarkProps) {
     return (
       <span className="inline-flex items-center gap-1.5">
         <span
-          className="inline-flex items-center justify-center rounded-lg bg-primary text-white"
+          className="inline-flex items-center justify-center rounded-lg bg-primary text-background"
           style={{ width: 22, height: 22 }}
         >
           <Key size={13} strokeWidth={1.5} color="currentColor" aria-hidden="true" />
@@ -24,7 +24,7 @@ export function Wordmark({ compact = false }: WordmarkProps) {
   return (
     <span className="inline-flex items-center gap-2">
       <span
-        className="inline-flex items-center justify-center rounded-xl bg-primary text-white"
+        className="inline-flex items-center justify-center rounded-xl bg-primary text-background"
         style={{ width: 32, height: 32 }}
       >
         <Key size={18} strokeWidth={1.5} color="currentColor" aria-hidden="true" />

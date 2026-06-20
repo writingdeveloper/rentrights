@@ -66,7 +66,7 @@ export default function Home() {
       {/* ── Header: Wordmark (full on home, compact on result) + lang toggle ── */}
       <div className="flex items-center justify-between">
         {isResult ? <Wordmark compact /> : <Wordmark />}
-        <div role="group" aria-label={t('page.langLabel')} className="flex gap-1 text-xs">
+        <div role="group" aria-label={t('page.langLabel')} className="flex gap-1 text-sm">
           <button
             type="button"
             aria-pressed={locale === 'en'}
@@ -143,7 +143,7 @@ export default function Home() {
           >
             {t('page.tryAgain')}
           </button>
-          <p className="text-xs text-muted-foreground">
+          <p className="text-sm text-muted-foreground">
             <a
               href="https://assessor.lacounty.gov/"
               target="_blank"
