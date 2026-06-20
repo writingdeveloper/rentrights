@@ -169,4 +169,19 @@ describe('ResultCard', () => {
     const confirmMatches = screen.queryAllByText(/Estimate from public records/i);
     expect(confirmMatches).toHaveLength(1);
   });
+
+  it('confirm line is styled neutral (no amber warning classes) even on high-confidence FINAL path', () => {
+    const { container } = renderCard({
+      regime: 'RSO',
+      confidence: 'high',
+      reasons: [{ code: 'IN_LA_CITY' }],
+      questions: [],
+    });
+    // The confirm wrapper must NOT carry the old amber warning classes
+    const amberEl = container.querySelector('.border-warning.bg-warning-soft.text-warning');
+    expect(amberEl).toBeNull();
+    // The confirm text must still be present (legal honesty preserved)
+    expect(screen.getByText(/Estimate from public records/i)).toBeTruthy();
+    expect(screen.getByText(/Confirm free with the LA Housing Department/i)).toBeTruthy();
+  });
 });

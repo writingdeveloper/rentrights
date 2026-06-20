@@ -105,10 +105,10 @@ export function ResultCard({ result, lastVerified, now = new Date() }: { result:
 
             <div className="flex items-start gap-3">
               <div>
-                <h2 className="font-display text-2xl font-bold leading-tight">{rights.title}</h2>
+                <h2 className="font-display text-2xl font-bold">{rights.title}</h2>
                 {detailed && (
                   <>
-                    <span className={`mt-2 inline-block rounded-full bg-surface px-3 py-0.5 text-sm font-semibold ${heroAccent}`}>
+                    <span className={`mt-2 inline-block rounded-pill bg-surface px-3 py-0.5 text-sm font-semibold ${heroAccent}`}>
                       {t(`result.confidence.${result.confidence}`)}
                     </span>
                     <p className="mt-2 text-sm font-medium uppercase tracking-wide text-muted-foreground">{t('result.legalIncrease')}</p>
@@ -159,8 +159,9 @@ export function ResultCard({ result, lastVerified, now = new Date() }: { result:
             )}
 
             {/* ONE consolidated honest/confirm line (replaces old notFinalBanner) */}
-            <div className="mt-3 rounded-lg border border-warning bg-warning-soft p-2 text-sm font-semibold text-warning">
-              {confirmLine(result.regime, t, result.reasons)}
+            <div className="mt-3 rounded-lg border border-border bg-surface-muted p-2 text-sm text-muted-foreground flex items-start gap-1.5">
+              <Icon name="info" size={14} aria-hidden="true" className="mt-0.5 shrink-0" />
+              <span>{confirmLine(result.regime, t, result.reasons)}</span>
             </div>
           </div>
         </div>
