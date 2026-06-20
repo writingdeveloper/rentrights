@@ -1,15 +1,17 @@
 @import "tailwindcss";
 
 :root {
-  --background: #FBFCFD;
-  --surface: #FFFFFF;
-  --surface-muted: #F2F5F8;
-  --foreground: #0E1726;
-  --muted-foreground: #52617A;
-  --border: #DBE2EA;
-  --border-strong: #AEBBCB;
-  --primary: #1A5FBF;
-  --primary-soft: #E7F0FB;
+  --background: #F6F4EF;
+  --surface: #FFFDF9;
+  --surface-muted: #EFEBE2;
+  --foreground: #23262B;
+  --muted-foreground: #5B5A54;
+  --border: #E2DCD0;
+  --border-strong: #B9B0A0;
+  --border-input: #857D6B;
+  --primary: #1F6B4A;
+  --primary-strong: #18573C;
+  --primary-soft: #E4EFE7;
   --success: #1F7A4D;
   --success-soft: #E3F3EA;
   --warning: #9C5400;
@@ -19,15 +21,17 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0C111A;
-    --surface: #141B26;
-    --surface-muted: #1C2533;
-    --foreground: #E8EDF3;
-    --muted-foreground: #9DAABD;
-    --border: #283142;
-    --border-strong: #3C485C;
-    --primary: #6BA6F2;
-    --primary-soft: #16243B;
+    --background: #15140F;
+    --surface: #201E18;
+    --surface-muted: #2A2720;
+    --foreground: #ECE7DD;
+    --muted-foreground: #B0A99B;
+    --border: #332F26;
+    --border-strong: #4A4537;
+    --border-input: #6B6357;
+    --primary: #5FC08A;
+    --primary-strong: #7AD0A0;
+    --primary-soft: #15281D;
     --success: #56C98A;
     --success-soft: #10241A;
     --warning: #E5A85A;
@@ -44,7 +48,9 @@
   --color-muted-foreground: var(--muted-foreground);
   --color-border: var(--border);
   --color-border-strong: var(--border-strong);
+  --color-border-input: var(--border-input);
   --color-primary: var(--primary);
+  --color-primary-strong: var(--primary-strong);
   --color-primary-soft: var(--primary-soft);
   --color-success: var(--success);
   --color-success-soft: var(--success-soft);
@@ -54,6 +60,12 @@
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-serif: var(--font-fraunces), ui-serif, Georgia, serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+  --shadow-sm: 0 1px 2px rgba(35,38,43,.06);
+  --shadow-md: 0 6px 20px rgba(35,38,43,.08);
+  --shadow-lg: 0 16px 40px rgba(35,38,43,.10);
+  --radius: 12px;
+  --radius-lg: 18px;
+  --radius-pill: 999px;
 }
 
 *,
@@ -88,7 +100,7 @@ summary:focus-visible,
 @media (prefers-contrast: more) {
   :root {
     --muted-foreground: var(--foreground);
-    --border: var(--border-strong);
+    --border: #857D6B;
   }
 }
 
@@ -101,3 +113,5 @@ summary:focus-visible,
 @media (prefers-reduced-motion: reduce) {
   .result-reveal { animation: none; }
 }
+
+.font-display { font-family: var(--font-serif); font-variation-settings: "opsz" 120, "SOFT" 0, "WONK" 1; letter-spacing: -0.02em; line-height: 1.05; }
