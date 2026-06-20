@@ -15,7 +15,7 @@ import AxeBuilder from '@axe-core/playwright';
 // (.result-reveal opacity animation) so axe never samples a mid-transition,
 // partially transparent (blended -> low-contrast) frame. Reduced-motion users
 // get this same final state, and the settled colors are what people actually read.
-test.use({ reducedMotion: 'reduce' });
+test.use({ contextOptions: { reducedMotion: 'reduce' } });
 
 const TEST_ADDRESS = '1411 Murray Dr, Los Angeles, CA';
 // EN result: the heading h2 with the regime title
