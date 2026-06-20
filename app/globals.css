@@ -108,6 +108,23 @@ summary:focus-visible,
   }
 }
 
+/* Skeleton shimmer — only plays when motion is OK */
+@keyframes skeleton-shimmer {
+  0%   { opacity: 1; }
+  50%  { opacity: 0.5; }
+  100% { opacity: 1; }
+}
+
+.skeleton-shimmer {
+  animation: skeleton-shimmer 1.5s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton-shimmer {
+    animation: none;
+  }
+}
+
 @keyframes result-reveal {
   from { opacity: 0; transform: translateY(6px); }
   to { opacity: 1; transform: none; }
