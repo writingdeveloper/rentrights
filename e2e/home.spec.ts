@@ -1,8 +1,9 @@
 import { test, expect } from '@playwright/test';
 
 /**
- * Phase 3 home-page IA tests.
- * DO NOT run these in CI until Phase 5 — they require a live preview URL.
+ * Home-page end-to-end tests.
+ * These run in CI via e2e.yml (scheduled) against a next dev server
+ * started by playwright.config.ts webServer.
  */
 
 test('home: hero headline is visible on first load', async ({ page }) => {

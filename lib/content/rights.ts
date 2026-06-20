@@ -1,7 +1,6 @@
 import { LEGAL } from '@/lib/legal/constants';
-import { Regime, ReasonItem } from '@/lib/rules/types';
+import { Regime } from '@/lib/rules/types';
 import { stalenessFor, Staleness } from '@/lib/legal/staleness';
-import { cityAuthority, countyAuthority } from '@/lib/content/help';
 import { formatDate } from '@/lib/format/date';
 
 type T = (key: string, params?: Record<string, string | number>) => string;
@@ -57,28 +56,6 @@ export function capStaleness(regime: Regime, onDate = new Date()): Staleness | n
   if (regime === 'AB1482') return stalenessFor(LEGAL.ab1482CapPct, onDate);
   if (regime === 'COUNTY_RSTPO') return stalenessFor(LEGAL.countyCapPct, onDate);
   return null;
-}
-
-/**
- * The "Not final — confirm with …" banner, routed to the correct enforcement
- * authority for the regime: City regimes (RSO/AB1482/JCO_ONLY) → LAHD;
- * County regimes (COUNTY_RSTPO/COUNTY_JCO) → LA County DCBA. For
- * OUT_OF_JURISDICTION / UNKNOWN we don't know the right agency, so we show a
- * generic "your local rent/housing authority" message rather than a wrong phone.
- * An incorporated-city AB 1482 result (reasons include INCORPORATED_CITY) is also
- * generic — LAHD only administers LA City, so we must not send those renters there.
- */
-export function notFinalBanner(regime: Regime, t: T, reasons: ReasonItem[] = []): string {
-  if (reasons.some((r) => r.code === 'INCORPORATED_CITY')) {
-    return t('result.notFinalGeneric');
-  }
-  if (regime === 'COUNTY_RSTPO' || regime === 'COUNTY_JCO') {
-    return t('result.notFinal', { agency: t('staleness.authority.dcba'), phone: countyAuthority.phone ?? '' });
-  }
-  if (regime === 'RSO' || regime === 'AB1482' || regime === 'JCO_ONLY') {
-    return t('result.notFinal', { agency: t('staleness.authority.lahd'), phone: cityAuthority.phone ?? '' });
-  }
-  return t('result.notFinalGeneric');
 }
 
 export function stalenessMessage(s: Staleness, t: T, regime?: Regime, locale: 'en' | 'es' = 'en'): string {
