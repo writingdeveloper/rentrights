@@ -9,7 +9,7 @@ import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
-const BLUE = '#1d4ed8';
+const BLUE = '#1F6B4A';
 
 // House mark on a solid blue field. `rounded` softens the corners (nice in browser
 // tabs); square + full-bleed is required for iOS / PWA maskable icons.
