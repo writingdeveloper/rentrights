@@ -9,6 +9,7 @@ import {
   MapPin,
   Phone,
   Share2,
+  Globe,
 } from 'lucide-react';
 import type { LucideProps } from 'lucide-react';
 
@@ -23,6 +24,7 @@ const ICONS = {
   'map-pin': MapPin,
   'phone': Phone,
   'share-2': Share2,
+  'globe': Globe,
 } as const;
 
 type IconName = keyof typeof ICONS;

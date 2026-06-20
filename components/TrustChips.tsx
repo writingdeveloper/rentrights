@@ -25,6 +25,7 @@ export function TrustChips({ date }: TrustChipsProps) {
         {t('trust.free')}
       </span>
       <span className="inline-flex items-center gap-1.5 rounded-pill border border-border bg-surface px-3 py-1.5 text-sm text-muted-foreground">
+        <Icon name="globe" size={14} />
         {t('trust.bilingual')}
       </span>
     </div>

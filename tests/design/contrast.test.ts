@@ -19,7 +19,7 @@ const light = {
 const dark = {
   background: '#15140F', surface: '#201E18', surfaceMuted: '#2A2720',
   foreground: '#ECE7DD', mutedForeground: '#B0A99B',
-  borderInput: '#6B6357', hcBorder: '#857D6B', primary: '#5FC08A',
+  borderInput: '#857D6B', hcBorder: '#857D6B', primary: '#5FC08A',
   success: '#56C98A', successSoft: '#10241A', warning: '#E5A85A', warningSoft: '#241B10',
   danger: '#F0857A',
 };
@@ -39,8 +39,9 @@ describe('token contrast (WCAG 2.2 AA)', () => {
       const onPrimary = name === 'light' ? '#FFFDF9' : '#15140F';
       expect(ratio(onPrimary, p.primary)).toBeGreaterThanOrEqual(4.5);
     });
-    it(`${name}: input border (non-text) >= 3:1`, () => {
+    it(`${name}: input border (non-text) >= 3:1 on bg AND surface`, () => {
       expect(ratio(p.borderInput, p.background)).toBeGreaterThanOrEqual(3);
+      expect(ratio(p.borderInput, p.surface)).toBeGreaterThanOrEqual(3);
     });
     it(`${name}: high-contrast (prefers-contrast) border >= 3:1`, () => {
       expect(ratio(p.hcBorder, p.background)).toBeGreaterThanOrEqual(3);

@@ -86,6 +86,9 @@ export default function Home() {
         </div>
       </div>
 
+      {/* sr-only h1 for the loading & error states (home uses Hero's visible h1; result has its own) */}
+      {!isHome && !isResult && <h1 className="sr-only">{t('hero.headline')}</h1>}
+
       {/* ── Home state: Hero → form → trust chips → how it works ── */}
       {isHome && (
         <>
