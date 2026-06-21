@@ -218,6 +218,18 @@ export default function Home() {
 
       {/* ── SeoFaq always at the bottom of main so it stays below the fold ── */}
       <SeoFaq />
+
+      {/* ── Footer: unobtrusive open-source link ── */}
+      <footer className="mt-6 text-center">
+        <a
+          href="https://github.com/writingdeveloper/rentrights"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-sm text-muted-foreground underline underline-offset-2 hover:text-foreground"
+        >
+          {t('page.viewSource')}
+        </a>
+      </footer>
     </main>
   );
 }
