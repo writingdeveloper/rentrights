@@ -1,4 +1,5 @@
 'use client';
+import { useState } from 'react';
 import { RegimeResult } from '@/lib/rules/types';
 import { rightsText, capLabel, capStaleness, stalenessMessage, isCovered } from '@/lib/content/rights';
 import { cityAuthority, countyAuthority } from '@/lib/content/help';
@@ -81,8 +82,10 @@ export function ResultCard({ result, lastVerified, now = new Date() }: { result:
 
   // $ example: only when there is a single numeric cap available.
   const capPct = detailed ? singleCapPct(result.regime, now) : null;
-  const EXAMPLE_RENT = 2000;
-  const exampleAmount = capPct != null ? Math.round(EXAMPLE_RENT * capPct / 100) : null;
+  // Editable example rent — user can type their own rent to personalise the $ amount.
+  const DEFAULT_EXAMPLE_RENT = 2000;
+  const [exampleRent, setExampleRent] = useState(DEFAULT_EXAMPLE_RENT);
+  const exampleAmount = capPct != null ? Math.round(exampleRent * capPct / 100) : null;
 
   return (
     <div className="overflow-hidden rounded-2xl border border-border shadow-sm">
@@ -113,14 +116,40 @@ export function ResultCard({ result, lastVerified, now = new Date() }: { result:
                     <p className="mt-2 text-sm font-medium uppercase tracking-wide text-muted-foreground">{t('result.legalIncrease')}</p>
                     <p className={`font-display text-3xl font-extrabold tabular-nums ${heroAccent}`}>{capLabel(result.regime, t, now)}</p>
 
-                    {/* $ example line — only when a single numeric cap exists */}
-                    {exampleAmount != null && (
-                      <p className="mt-1 text-sm text-muted-foreground">
-                        {t('result.capExample', {
-                          rent: money(EXAMPLE_RENT),
-                          amount: money(exampleAmount),
-                        })}
-                      </p>
+                    {/* $ example line — only when a single numeric cap exists.
+                        User can type their own rent; the dollar amount updates live. */}
+                    {capPct != null && (
+                      <div className="mt-2 space-y-1">
+                        <label
+                          htmlFor="example-rent-input"
+                          className="block text-sm text-muted-foreground"
+                        >
+                          {t('result.exampleRentLabel')}
+                        </label>
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm text-muted-foreground">$</span>
+                          <input
+                            id="example-rent-input"
+                            type="number"
+                            min={0}
+                            value={exampleRent}
+                            onChange={(e) => {
+                              const v = parseInt(e.target.value, 10);
+                              setExampleRent(isNaN(v) || v < 0 ? 0 : v);
+                            }}
+                            className="w-28 min-h-11 rounded-lg border border-border bg-surface px-3 text-sm tabular-nums"
+                            aria-label={t('result.exampleRentLabel')}
+                          />
+                        </div>
+                        {exampleAmount != null && (
+                          <p className="text-sm text-muted-foreground">
+                            {t('result.capExample', {
+                              rent: money(exampleRent),
+                              amount: money(exampleAmount),
+                            })}
+                          </p>
+                        )}
+                      </div>
                     )}
 
                     {/* Verified date pill or staleness warning */}

@@ -4,6 +4,7 @@ import { cleanup, render, screen } from '@testing-library/react';
 import { EvictionNotice } from '@/components/EvictionNotice';
 import { LocaleProvider } from '@/lib/i18n/LocaleProvider';
 import { LEGAL } from '@/lib/legal/constants';
+import { HELP_ORGS } from '@/lib/content/help';
 
 afterEach(cleanup);
 
@@ -34,5 +35,39 @@ describe('EvictionNotice', () => {
   it('renders the Spanish summary when locale is es', () => {
     renderNotice('es');
     expect(screen.getByText(/aviso de desalojo/i)).toBeTruthy();
+  });
+
+  it('summary communicates urgency (deadline mention)', () => {
+    renderNotice();
+    const summary = screen.getByRole('group')?.querySelector('summary') ??
+      document.querySelector('summary');
+    // The summary must convey urgency — short deadlines
+    expect(summary?.textContent).toMatch(/Act now|deadlines|plazos/i);
+  });
+
+  it('surfaces Stay Housed LA phone inline (from HELP_ORGS, not hardcoded)', () => {
+    const stayHoused = HELP_ORGS.find((o) => o.name === 'Stay Housed LA')!;
+    expect(stayHoused).toBeTruthy();
+    expect(stayHoused.phone).toBeTruthy();
+    renderNotice();
+    // The phone number should appear in the document
+    expect(document.body.textContent).toContain(stayHoused.phone);
+    // It should be a tel: link
+    const telLink = screen.getAllByRole('link').find(
+      (a) => a.getAttribute('href')?.startsWith('tel:') && a.textContent?.includes(stayHoused.phone!.replace(/\s/g, '').slice(0, 5)),
+    );
+    expect(telLink).toBeTruthy();
+  });
+
+  it('Stay Housed LA phone in EvictionNotice matches the HELP_ORGS entry (not hardcoded)', () => {
+    const stayHoused = HELP_ORGS.find((o) => o.name === 'Stay Housed LA')!;
+    renderNotice();
+    const telLinks = screen.getAllByRole('link').filter((a) => a.getAttribute('href')?.startsWith('tel:'));
+    const stayHousedTel = telLinks.find((a) => {
+      const href = a.getAttribute('href') ?? '';
+      const digits = stayHoused.phone!.replace(/[^0-9]/g, '');
+      return href.includes(digits);
+    });
+    expect(stayHousedTel).toBeTruthy();
   });
 });

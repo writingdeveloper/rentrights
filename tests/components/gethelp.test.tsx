@@ -27,6 +27,34 @@ describe('GetHelp', () => {
     expect(items[0].textContent).toContain('DCBA');
   });
 
+  it('excludes LAHD (city-only agency) when incorporatedCity=true', () => {
+    render(
+      <LocaleProvider initialLocale="en">
+        <GetHelp incorporatedCity />
+      </LocaleProvider>,
+    );
+    // LAHD must not appear at all — it only serves City of LA
+    expect(screen.queryByText(/LAHD \(LA Housing Department\)/)).toBeNull();
+    // But legal-aid and statewide orgs should still appear
+    expect(screen.getByText('Stay Housed LA')).toBeTruthy();
+  });
+
+  it('shows LAHD in the default (city) list but hides it for incorporatedCity', () => {
+    const { unmount } = render(
+      <LocaleProvider initialLocale="en">
+        <GetHelp />
+      </LocaleProvider>,
+    );
+    expect(screen.getByText(/LAHD \(LA Housing Department\)/)).toBeTruthy();
+    unmount();
+    render(
+      <LocaleProvider initialLocale="en">
+        <GetHelp incorporatedCity />
+      </LocaleProvider>,
+    );
+    expect(screen.queryByText(/LAHD \(LA Housing Department\)/)).toBeNull();
+  });
+
   it('lists the Tenant Power Toolkit (eviction-defense self-help)', () => {
     render(
       <LocaleProvider initialLocale="en">

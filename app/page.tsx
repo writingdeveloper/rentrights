@@ -190,7 +190,8 @@ export default function Home() {
           {/* Band 2 — What to do. Pending confirming-questions (and the records
               warning that explains them) come FIRST, right under the verdict, so
               the renter immediately sees whether more input is needed; their
-              absence means the result is complete. */}
+              absence means the result is complete. EvictionNotice is second so
+              a renter in a crisis (served court papers) finds the lifeline fast. */}
           <section className="space-y-4">
             {data.dataWarnings?.map((w: string, i: number) => (
               <p key={i} className="text-sm text-muted-foreground">{t(`warning.${w}`)}</p>
@@ -202,13 +203,16 @@ export default function Home() {
                 onAnswer={(next) => { setAnswers(next); run(address, next); }}
               />
             )}
+            <EvictionNotice />
             {data.result.questions.length === 0 && <IncreaseChecker regime={data.result.regime} />}
             {isCovered(data.result.regime) && <WhatToDoNow regime={data.result.regime} reasons={data.result.reasons} />}
-            <EvictionNotice />
           </section>
           {/* Band 3 — Get help + details. */}
           <section className="space-y-4">
-            <GetHelp unincorporatedCounty={data.jurisdiction?.placeName === null && data.jurisdiction?.inLACounty === true} />
+            <GetHelp
+              unincorporatedCounty={data.jurisdiction?.placeName === null && data.jurisdiction?.inLACounty === true}
+              incorporatedCity={data.result.reasons.some((r: { code: string }) => r.code === 'INCORPORATED_CITY')}
+            />
             <RecordsDetails reasons={data.result.reasons} />
             <ShareButton address={address} answers={answers} locale={locale} />
             <Disclaimer lastVerified={data.lastVerified} />
@@ -218,6 +222,18 @@ export default function Home() {
 
       {/* ── SeoFaq always at the bottom of main so it stays below the fold ── */}
       <SeoFaq />
+
+      {/* ── Footer: unobtrusive open-source link ── */}
+      <footer className="mt-6 text-center">
+        <a
+          href="https://github.com/writingdeveloper/rentrights"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-sm text-muted-foreground underline underline-offset-2 hover:text-foreground"
+        >
+          {t('page.viewSource')}
+        </a>
+      </footer>
     </main>
   );
 }

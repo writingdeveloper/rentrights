@@ -63,6 +63,8 @@ export function ConfirmingQuestions({ questions, answers, onAnswer }: {
       <h2 className="text-sm font-semibold text-foreground">
         {t('question.heading', { count: questions.length })}
       </h2>
+      {/* One-line framing: WHY these questions matter */}
+      <p className="text-sm text-foreground">{t('question.why')}</p>
       {/* Reassurance shown once for the whole callout, not duplicated per question */}
       <p className="text-sm text-muted-foreground">{t('question.reassure')}</p>
       <div className="space-y-4">
