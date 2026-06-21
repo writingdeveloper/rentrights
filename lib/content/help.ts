@@ -109,10 +109,18 @@ export const countyAuthority: HelpOrg = HELP_ORGS.find((o) => o.tags.includes('c
 
 /**
  * Returns HELP_ORGS ordered by relevance for the given address context.
- * When the address is in unincorporated LA County, the County DCBA resource
- * is surfaced first because County rules (not City RSO) apply there.
+ *
+ * - unincorporatedCounty: surfaces County DCBA first (County rules apply).
+ * - incorporatedCity: EXCLUDES the City-of-LA-only org (LAHD, tagged 'city')
+ *   because LAHD has no jurisdiction outside the City of LA. The statewide
+ *   and county-wide orgs (legal-aid, hotline, eviction-defense, county) are
+ *   still appropriate; only the city-tagged org is wrong jurisdiction.
  */
-export function orgsFor(opts: { unincorporatedCounty?: boolean } = {}): HelpOrg[] {
+export function orgsFor(opts: { unincorporatedCounty?: boolean; incorporatedCity?: boolean } = {}): HelpOrg[] {
+  if (opts.incorporatedCity) {
+    // Exclude city-tagged org (LAHD) — it only covers the City of LA.
+    return HELP_ORGS.filter((o) => !o.tags.includes('city'));
+  }
   if (opts.unincorporatedCounty) {
     const county = HELP_ORGS.filter((o) => o.tags.includes('county'));
     const rest = HELP_ORGS.filter((o) => !o.tags.includes('county'));

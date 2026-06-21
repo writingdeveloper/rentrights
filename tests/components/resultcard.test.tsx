@@ -131,7 +131,7 @@ describe('ResultCard', () => {
     expect(screen.queryByRole('img', { name: /protected/i })).toBeNull();
   });
 
-  it('renders a $60 example line for RSO (3% cap) on $2,000 rent within the valid cap period', () => {
+  it('renders a $60 example line for RSO (3% cap) on $2,000 default rent within the valid cap period', () => {
     renderCard(
       {
         regime: 'RSO',
@@ -141,12 +141,29 @@ describe('ResultCard', () => {
       },
       { now: new Date('2026-06-11') },
     );
-    // 3% of $2,000 = $60/mo
+    // 3% of default $2,000 = $60/mo
     expect(screen.getByText(/\$60/)).toBeTruthy();
     expect(screen.getByText(/example/i)).toBeTruthy();
   });
 
-  it('omits the $ example line when the RSO cap is pending (no single numeric value)', () => {
+  it('shows a labelled editable rent input when a single cap exists', () => {
+    renderCard(
+      {
+        regime: 'RSO',
+        confidence: 'high',
+        reasons: [{ code: 'IN_LA_CITY' }],
+        questions: [],
+      },
+      { now: new Date('2026-06-11') },
+    );
+    // The label and input must be present and associated
+    const label = screen.getByText(/See it for your rent:/i);
+    expect(label).toBeTruthy();
+    const input = screen.getByRole('spinbutton'); // number input
+    expect(input).toBeTruthy();
+  });
+
+  it('omits the editable rent field and $ example when the RSO cap is pending (no single numeric value)', () => {
     renderCard(
       {
         regime: 'RSO',
@@ -157,6 +174,7 @@ describe('ResultCard', () => {
       { now: new Date('2026-07-15') },
     );
     expect(screen.queryByText(/example/i)).toBeNull();
+    expect(screen.queryByRole('spinbutton')).toBeNull();
   });
 
   it('renders exactly one consolidated honest/confirm line (not multiple banners)', () => {

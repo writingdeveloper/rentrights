@@ -3,9 +3,9 @@ import { orgsFor } from '@/lib/content/help';
 import { useT } from '@/lib/i18n/LocaleProvider';
 import { Icon } from '@/components/Icon';
 
-export function GetHelp({ unincorporatedCounty = false }: { unincorporatedCounty?: boolean }) {
+export function GetHelp({ unincorporatedCounty = false, incorporatedCity = false }: { unincorporatedCounty?: boolean; incorporatedCity?: boolean }) {
   const t = useT();
-  const orgs = orgsFor({ unincorporatedCounty });
+  const orgs = orgsFor({ unincorporatedCounty, incorporatedCity });
   return (
     <section className="mt-6">
       <h2 className="text-sm font-semibold">{t('help.title')}</h2>
