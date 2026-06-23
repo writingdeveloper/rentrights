@@ -10,6 +10,7 @@ import {
   Phone,
   Share2,
   Globe,
+  ChevronDown,
 } from 'lucide-react';
 import type { LucideProps } from 'lucide-react';
 
@@ -25,6 +26,7 @@ const ICONS = {
   'phone': Phone,
   'share-2': Share2,
   'globe': Globe,
+  'chevron-down': ChevronDown,
 } as const;
 
 type IconName = keyof typeof ICONS;

@@ -61,6 +61,7 @@ export default function Home() {
 
   const isHome = !loading && !data && !error;
   const isResult = !loading && !!data;
+  const incorporatedCity = !!data && data.result.reasons.some((r) => r.code === 'INCORPORATED_CITY');
 
   return (
     <main className="mx-auto max-w-2xl px-4 py-10">
@@ -204,14 +205,18 @@ export default function Home() {
               />
             )}
             <EvictionNotice />
-            {data.result.questions.length === 0 && <IncreaseChecker regime={data.result.regime} />}
+            <IncreaseChecker
+              regime={data.result.regime}
+              incorporatedCity={incorporatedCity}
+              preliminary={data.result.questions.length > 0}
+            />
             {isCovered(data.result.regime) && <WhatToDoNow regime={data.result.regime} reasons={data.result.reasons} />}
           </section>
           {/* Band 3 — Get help + details. */}
           <section className="space-y-4">
             <GetHelp
               unincorporatedCounty={data.jurisdiction?.placeName === null && data.jurisdiction?.inLACounty === true}
-              incorporatedCity={data.result.reasons.some((r: { code: string }) => r.code === 'INCORPORATED_CITY')}
+              incorporatedCity={incorporatedCity}
             />
             <RecordsDetails reasons={data.result.reasons} />
             <ShareButton address={address} answers={answers} locale={locale} />

@@ -232,5 +232,19 @@
   "increase.countyTierNote": "A higher cap may apply — up to 4% for self-certified small-property landlords, or up to 5% for luxury units. Confirm your tier with LA County DCBA.",
   "increase.countyJcoAb1482Note": "AB 1482 may still cap rent increases for buildings over approximately 15 years old — confirm with DCBA.",
   "page.viewSource": "View source on GitHub",
-  "question.why": "Your home's type and age decide which law protects you."
+  "question.why": "Your home's type and age decide which law protects you.",
+  "staleness.authority.cityGeneric": "your city's rent or housing office",
+  "rights.RSO.plain": "In plain terms: your landlord can raise your rent only a small, capped amount each year and generally can't evict you without a legal reason.",
+  "rights.AB1482.plain": "In plain terms: California limits how much your rent can rise each year, and after a year your landlord generally needs a legal reason to evict you.",
+  "rights.JCO_ONLY.plain": "In plain terms: there's no cap on your rent, but your landlord generally still needs a legal reason to evict you.",
+  "rights.COUNTY_RSTPO.plain": "In plain terms: your yearly rent increase is capped and your landlord generally needs a legal reason to evict you.",
+  "rights.COUNTY_JCO.plain": "In plain terms: your landlord generally needs a legal reason to evict you — and a rent cap may also apply. Check below.",
+  "increase.preliminary": "Preliminary — based on your likely protection. Answer the questions above for a firmer result.",
+  "result.confidenceHint": "Lower only because a couple of property details aren't in public records yet — your answers below fill that in.",
+  "result.sourceLabel": "Source: {source}",
+  "result.effectiveRange": "In effect {from} – {to}",
+  "result.effectiveFrom": "In effect since {from}",
+  "result.capChangeSoon": "Heads up: this cap is scheduled to change around {date} — {who} publishes the new figure then. Check back to see it.",
+  "result.incorporatedCeilingNote": "This is California's statewide maximum — {placeName} may cap increases lower. Confirm your local limit with your city's rent office.",
+  "result.ab1482MaybeNewNote": "Because your exact build year isn't confirmed: buildings under about 15 years old can be exempt from this cap (new construction). If yours is newer it may not apply — but Just Cause eviction protection still does. Check your building's year."
 }

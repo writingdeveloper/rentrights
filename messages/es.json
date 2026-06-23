@@ -232,5 +232,19 @@
   "increase.countyTierNote": "Es posible que aplique un tope más alto — hasta 4% para arrendadores de propiedades pequeñas autocertificados, o hasta 5% para unidades de lujo. Confirme su categoría con el DCBA del Condado de LA.",
   "increase.countyJcoAb1482Note": "La AB 1482 aún podría limitar los aumentos de renta en edificios de más de aproximadamente 15 años de antigüedad — confírmelo con el DCBA.",
   "page.viewSource": "Ver el código en GitHub",
-  "question.why": "El tipo y la antigüedad de su vivienda determinan qué ley lo protege."
+  "question.why": "El tipo y la antigüedad de su vivienda determinan qué ley lo protege.",
+  "staleness.authority.cityGeneric": "la oficina de renta o vivienda de su ciudad",
+  "rights.RSO.plain": "En palabras simples: su arrendador solo puede subir su renta una cantidad pequeña y limitada cada año, y por lo general no puede desalojarlo sin una razón legal.",
+  "rights.AB1482.plain": "En palabras simples: California limita cuánto puede subir su renta cada año, y después de un año su arrendador por lo general necesita una razón legal para desalojarlo.",
+  "rights.JCO_ONLY.plain": "En palabras simples: no hay tope para su renta, pero su arrendador por lo general aún necesita una razón legal para desalojarlo.",
+  "rights.COUNTY_RSTPO.plain": "En palabras simples: su aumento de renta anual tiene un tope y su arrendador por lo general necesita una razón legal para desalojarlo.",
+  "rights.COUNTY_JCO.plain": "En palabras simples: su arrendador por lo general necesita una razón legal para desalojarlo — y también podría aplicar un tope de renta. Verifique abajo.",
+  "increase.preliminary": "Preliminar — según su protección probable. Responda las preguntas de arriba para un resultado más firme.",
+  "result.confidenceHint": "Más baja solo porque un par de datos de la propiedad aún no están en los registros públicos — sus respuestas de abajo lo completan.",
+  "result.sourceLabel": "Fuente: {source}",
+  "result.effectiveRange": "Vigente del {from} al {to}",
+  "result.effectiveFrom": "Vigente desde el {from}",
+  "result.capChangeSoon": "Aviso: este tope cambiará alrededor del {date} — {who} publica la nueva cifra entonces. Vuelva a consultar para verla.",
+  "result.incorporatedCeilingNote": "Este es el máximo estatal de California — {placeName} podría limitar los aumentos a menos. Confirme su límite local con la oficina de renta de su ciudad.",
+  "result.ab1482MaybeNewNote": "Como no se confirma el año exacto de construcción: los edificios de menos de unos 15 años pueden estar exentos de este tope (construcción nueva). Si el suyo es más nuevo, podría no aplicar — pero la protección de desalojo por Causa Justa sí. Verifique el año de su edificio."
 }
