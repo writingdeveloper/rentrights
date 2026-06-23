@@ -246,5 +246,10 @@
   "result.effectiveFrom": "Vigente desde el {from}",
   "result.capChangeSoon": "Aviso: este tope cambiará alrededor del {date} — {who} publica la nueva cifra entonces. Vuelva a consultar para verla.",
   "result.incorporatedCeilingNote": "Este es el máximo estatal de California — {placeName} podría limitar los aumentos a menos. Confirme su límite local con la oficina de renta de su ciudad.",
-  "result.ab1482MaybeNewNote": "Como no se confirma el año exacto de construcción: los edificios de menos de unos 15 años pueden estar exentos de este tope (construcción nueva). Si el suyo es más nuevo, podría no aplicar — pero la protección de desalojo por Causa Justa sí. Verifique el año de su edificio."
+  "result.ab1482MaybeNewNote": "Como no se confirma el año exacto de construcción: los edificios de menos de unos 15 años pueden estar exentos de este tope (construcción nueva). Si el suyo es más nuevo, podría no aplicar — pero la protección de desalojo por Causa Justa sí. Verifique el año de su edificio.",
+  "share.saveImage": "Guardar imagen para compartir",
+  "share.cardEyebrow": "Sus derechos de renta en LA",
+  "share.cardCapLabel": "Aumento legal anual",
+  "share.cardAsOf": "Al {date}",
+  "share.cardDisclaimer": "Estimación, no asesoría legal — confírmelo con su autoridad de vivienda."
 }

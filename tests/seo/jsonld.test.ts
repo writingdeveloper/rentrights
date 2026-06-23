@@ -4,6 +4,7 @@ import {
   webSiteJsonLd,
   webApplicationJsonLd,
   faqPageJsonLd,
+  articleJsonLd,
 } from '@/lib/seo/jsonld';
 
 const BASE = 'https://rentrights.org';
@@ -41,6 +42,22 @@ describe('jsonld builders', () => {
     expect(a.applicationCategory).toBe('UtilitiesApplication');
     expect(a.isAccessibleForFree).toBe(true);
     expect(a.offers).toEqual({ '@type': 'Offer', price: 0, priceCurrency: 'USD' });
+  });
+
+  it('article carries dated modified/published and links the org as author + publisher', () => {
+    const a = articleJsonLd({
+      base: BASE,
+      url: `${BASE}/guides/g`,
+      headline: 'H',
+      description: 'D',
+      dateModified: '2026-06-19',
+    });
+    expect(a['@type']).toBe('Article');
+    expect(a.headline).toBe('H');
+    expect(a.dateModified).toBe('2026-06-19');
+    expect(a.datePublished).toBe('2026-06-19');
+    expect(a.author).toEqual({ '@id': `${BASE}#org` });
+    expect(a.publisher).toEqual({ '@id': `${BASE}#org` });
   });
 
   it('faqPage maps each {q,a} to a Question/Answer, preserving count', () => {
