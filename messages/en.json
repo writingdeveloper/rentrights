@@ -246,5 +246,10 @@
   "result.effectiveFrom": "In effect since {from}",
   "result.capChangeSoon": "Heads up: this cap is scheduled to change around {date} — {who} publishes the new figure then. Check back to see it.",
   "result.incorporatedCeilingNote": "This is California's statewide maximum — {placeName} may cap increases lower. Confirm your local limit with your city's rent office.",
-  "result.ab1482MaybeNewNote": "Because your exact build year isn't confirmed: buildings under about 15 years old can be exempt from this cap (new construction). If yours is newer it may not apply — but Just Cause eviction protection still does. Check your building's year."
+  "result.ab1482MaybeNewNote": "Because your exact build year isn't confirmed: buildings under about 15 years old can be exempt from this cap (new construction). If yours is newer it may not apply — but Just Cause eviction protection still does. Check your building's year.",
+  "share.saveImage": "Save shareable image",
+  "share.cardEyebrow": "Your LA rent rights",
+  "share.cardCapLabel": "Legal annual increase",
+  "share.cardAsOf": "As of {date}",
+  "share.cardDisclaimer": "Estimate, not legal advice — confirm with your housing authority."
 }

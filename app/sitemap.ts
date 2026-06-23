@@ -22,5 +22,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.8,
       alternates: { languages },
     },
+    {
+      // Cornerstone SEO/GEO explainer.
+      url: `${base}/guides/la-rent-increase-2026`,
+      lastModified,
+      changeFrequency: 'monthly',
+      priority: 0.7,
+    },
   ];
 }

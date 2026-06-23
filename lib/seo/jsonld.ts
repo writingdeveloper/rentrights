@@ -65,3 +65,24 @@ export function faqPageJsonLd(faqs: FaqItem[]): Json {
     })),
   };
 }
+
+export function articleJsonLd(o: {
+  base: string;
+  url: string;
+  headline: string;
+  description: string;
+  dateModified: string;
+}): Json {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: o.headline,
+    description: o.description,
+    mainEntityOfPage: o.url,
+    inLanguage: 'en',
+    dateModified: o.dateModified,
+    datePublished: o.dateModified,
+    author: { '@id': `${o.base}#org` },
+    publisher: { '@id': `${o.base}#org` },
+  };
+}

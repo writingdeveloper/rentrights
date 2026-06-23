@@ -7,6 +7,7 @@ import { GetHelp } from '@/components/GetHelp';
 import { UserAnswers } from '@/lib/rules/types';
 import { useT, useLocale } from '@/lib/i18n/LocaleProvider';
 import { ShareButton } from '@/components/ShareButton';
+import { ShareImageButton } from '@/components/ShareImageButton';
 import { IncreaseChecker } from '@/components/IncreaseChecker';
 import { WhatToDoNow } from '@/components/WhatToDoNow';
 import { EvictionNotice } from '@/components/EvictionNotice';
@@ -220,6 +221,7 @@ export default function Home() {
             />
             <RecordsDetails reasons={data.result.reasons} />
             <ShareButton address={address} answers={answers} locale={locale} />
+            {isCovered(data.result.regime) && <ShareImageButton regime={data.result.regime} />}
             <Disclaimer lastVerified={data.lastVerified} />
           </section>
         </div>
