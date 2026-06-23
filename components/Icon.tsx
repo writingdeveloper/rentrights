@@ -11,6 +11,7 @@ import {
   Share2,
   Globe,
   ChevronDown,
+  CalendarClock,
 } from 'lucide-react';
 import type { LucideProps } from 'lucide-react';
 
@@ -27,6 +28,7 @@ const ICONS = {
   'share-2': Share2,
   'globe': Globe,
   'chevron-down': ChevronDown,
+  'calendar-clock': CalendarClock,
 } as const;
 
 type IconName = keyof typeof ICONS;

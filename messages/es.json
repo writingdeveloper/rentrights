@@ -251,5 +251,8 @@
   "share.cardEyebrow": "Sus derechos de renta en LA",
   "share.cardCapLabel": "Aumento legal anual",
   "share.cardAsOf": "Al {date}",
-  "share.cardDisclaimer": "Estimación, no asesoría legal — confírmelo con su autoridad de vivienda."
+  "share.cardDisclaimer": "Estimación, no asesoría legal — confírmelo con su autoridad de vivienda.",
+  "reminder.button": "Agregar recordatorio para volver a consultar",
+  "reminder.summary": "Volver a consultar mi tope de renta en LA — puede haber cambiado",
+  "reminder.description": "Su tope de renta en LA estaba programado para cambiar alrededor del {date}. Vuelva a consultar su dirección en RentRights para ver el tope legal actual."
 }
