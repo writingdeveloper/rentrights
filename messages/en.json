@@ -251,5 +251,8 @@
   "share.cardEyebrow": "Your LA rent rights",
   "share.cardCapLabel": "Legal annual increase",
   "share.cardAsOf": "As of {date}",
-  "share.cardDisclaimer": "Estimate, not legal advice — confirm with your housing authority."
+  "share.cardDisclaimer": "Estimate, not legal advice — confirm with your housing authority.",
+  "reminder.button": "Add a reminder to re-check",
+  "reminder.summary": "Re-check my LA rent cap — it may have changed",
+  "reminder.description": "Your LA rent cap was scheduled to change around {date}. Re-check your address at RentRights for the current legal cap."
 }

@@ -8,6 +8,7 @@ import { UserAnswers } from '@/lib/rules/types';
 import { useT, useLocale } from '@/lib/i18n/LocaleProvider';
 import { ShareButton } from '@/components/ShareButton';
 import { ShareImageButton } from '@/components/ShareImageButton';
+import { ReminderButton } from '@/components/ReminderButton';
 import { IncreaseChecker } from '@/components/IncreaseChecker';
 import { WhatToDoNow } from '@/components/WhatToDoNow';
 import { EvictionNotice } from '@/components/EvictionNotice';
@@ -221,7 +222,10 @@ export default function Home() {
             />
             <RecordsDetails reasons={data.result.reasons} />
             <ShareButton address={address} answers={answers} locale={locale} />
-            {isCovered(data.result.regime) && <ShareImageButton regime={data.result.regime} />}
+            <div className="flex flex-wrap gap-2">
+              {isCovered(data.result.regime) && <ShareImageButton regime={data.result.regime} />}
+              <ReminderButton regime={data.result.regime} />
+            </div>
             <Disclaimer lastVerified={data.lastVerified} />
           </section>
         </div>
