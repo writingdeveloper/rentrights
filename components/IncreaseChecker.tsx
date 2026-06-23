@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { Regime } from '@/lib/rules/types';
 import { checkIncrease } from '@/lib/rules/increase';
+import { caveatAuthorityKey } from '@/lib/content/rights';
 import { useT } from '@/lib/i18n/LocaleProvider';
 import { Icon } from '@/components/Icon';
 
@@ -9,10 +10,19 @@ function money(n: number): string {
   return n.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
 }
 
-export function IncreaseChecker({ regime }: { regime: Regime }) {
+export function IncreaseChecker({
+  regime,
+  incorporatedCity = false,
+  preliminary = false,
+}: {
+  regime: Regime;
+  incorporatedCity?: boolean;
+  preliminary?: boolean;
+}) {
   const t = useT();
-  const isCounty = regime === 'COUNTY_RSTPO' || regime === 'COUNTY_JCO';
-  const agency = t(isCounty ? 'staleness.authority.dcba' : 'staleness.authority.lahd');
+  // Route the "confirm with…" caveat to the correct authority — never LAHD for an
+  // incorporated city (LAHD covers the City of LA only).
+  const agency = t(caveatAuthorityKey(regime, incorporatedCity));
   const [current, setCurrent] = useState('');
   const [proposed, setProposed] = useState('');
 
@@ -22,6 +32,7 @@ export function IncreaseChecker({ regime }: { regime: Regime }) {
     return (
       <section className="mt-6">
         <h2 className="text-sm font-semibold">{t('increase.noCapHeading')}</h2>
+        {preliminary && <p className="mt-1 text-sm text-muted-foreground">{t('increase.preliminary')}</p>}
         <p className="mt-1 text-sm text-muted-foreground">{t('increase.noCap')}</p>
         {/* Item 8: COUNTY_JCO no-cap understates AB 1482 — strengthen disclosure. */}
         {regime === 'COUNTY_JCO' && (
@@ -80,6 +91,7 @@ export function IncreaseChecker({ regime }: { regime: Regime }) {
       {/* Elevated card */}
       <div className="rounded-lg bg-surface p-4 shadow-md sm:p-5">
         <h2 className="text-base font-semibold">{t('increase.cardTitle')}</h2>
+        {preliminary && <p className="mt-1 text-sm text-muted-foreground">{t('increase.preliminary')}</p>}
         <div className="mt-3 flex gap-2">
           <label className="flex-1 text-sm text-muted-foreground">
             {t('increase.currentLabel')}

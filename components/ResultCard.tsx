@@ -1,7 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { RegimeResult } from '@/lib/rules/types';
-import { rightsText, capLabel, capStaleness, stalenessMessage, isCovered } from '@/lib/content/rights';
+import { rightsText, capLabel, capStaleness, stalenessMessage, isCovered, capPeriodFor, upcomingCapChange } from '@/lib/content/rights';
 import { cityAuthority, countyAuthority } from '@/lib/content/help';
 import { LEGAL } from '@/lib/legal/constants';
 import { useT, useLocale } from '@/lib/i18n/LocaleProvider';
@@ -87,6 +87,14 @@ export function ResultCard({ result, lastVerified, now = new Date() }: { result:
   const [exampleRent, setExampleRent] = useState(DEFAULT_EXAMPLE_RENT);
   const exampleAmount = capPct != null ? Math.round(exampleRent * capPct / 100) : null;
 
+  // Round-2 result enrichments (all derived from data we already have):
+  const incPlaceName = result.reasons.find((r) => r.code === 'INCORPORATED_CITY')?.params?.placeName;
+  const saidAfter1978 = result.reasons.some((r) => r.code === 'SAID_BUILT_AFTER_1978');
+  const capPeriod = detailed ? capPeriodFor(result.regime, now) : null;
+  const capChange = detailed ? upcomingCapChange(result.regime, now) : null;
+  const capChangeAuthorityKey =
+    result.regime === 'COUNTY_RSTPO' ? 'staleness.authority.dcba' : 'staleness.authority.lahd';
+
   return (
     <div className="overflow-hidden rounded-2xl border border-border shadow-sm">
       {/* Left status rail */}
@@ -108,13 +116,21 @@ export function ResultCard({ result, lastVerified, now = new Date() }: { result:
             <div className="flex items-start gap-3">
               <div>
                 <h2 className="font-display text-2xl font-bold">{rights.title}</h2>
+                {detailed && <p className="mt-1.5 text-sm text-foreground">{t(`rights.${result.regime}.plain`)}</p>}
                 {detailed && (
                   <>
                     <span className={`mt-2 inline-block rounded-pill bg-surface px-3 py-0.5 text-sm font-semibold ${heroAccent}`}>
                       {t(`result.confidence.${result.confidence}`)}
                     </span>
+                    {hasQuestions && <p className="mt-1 text-sm text-muted-foreground">{t('result.confidenceHint')}</p>}
                     <p className="mt-2 text-sm font-medium uppercase tracking-wide text-muted-foreground">{t('result.legalIncrease')}</p>
                     <p className={`font-display text-3xl font-extrabold tabular-nums ${heroAccent}`}>{capLabel(result.regime, t, now)}</p>
+                    {result.regime === 'AB1482' && incPlaceName && (
+                      <p className="mt-1 text-sm text-muted-foreground">{t('result.incorporatedCeilingNote', { placeName: String(incPlaceName) })}</p>
+                    )}
+                    {result.regime === 'AB1482' && saidAfter1978 && (
+                      <p className="mt-1 text-sm text-muted-foreground">{t('result.ab1482MaybeNewNote')}</p>
+                    )}
 
                     {/* $ example line — only when a single numeric cap exists.
                         User can type their own rent; the dollar amount updates live. */}
@@ -152,15 +168,35 @@ export function ResultCard({ result, lastVerified, now = new Date() }: { result:
                       </div>
                     )}
 
-                    {/* Verified date pill or staleness warning */}
+                    {/* Verified date — expandable to its dated source (trust) — or staleness warning */}
                     {staleness?.stale ? (
                       <p className="mt-1 text-sm text-muted-foreground">⚠ {stalenessMessage(staleness, t, result.regime, locale)}</p>
                     ) : lastVerified ? (
-                      <span className="mt-2 inline-flex items-center gap-1 rounded-pill bg-surface px-3 py-1 text-sm font-medium text-success">
-                        <Icon name="shield-check" size={14} aria-hidden="true" />
-                        {t('result.verifiedBadge', { date: formatDate(lastVerified, locale) })}
-                      </span>
+                      <details className="mt-2">
+                        <summary className="inline-flex cursor-pointer list-none items-center gap-1 rounded-pill bg-surface px-3 py-1 text-sm font-medium text-success [&::-webkit-details-marker]:hidden">
+                          <Icon name="shield-check" size={14} aria-hidden="true" />
+                          {t('result.verifiedBadge', { date: formatDate(lastVerified, locale) })}
+                          <Icon name="chevron-down" size={14} aria-hidden="true" />
+                        </summary>
+                        {capPeriod && (
+                          <div className="mt-2 space-y-0.5 text-sm text-muted-foreground">
+                            <p>{t('result.sourceLabel', { source: capPeriod.source })}</p>
+                            <p>
+                              {capPeriod.effectiveTo
+                                ? t('result.effectiveRange', { from: formatDate(capPeriod.effectiveFrom, locale), to: formatDate(capPeriod.effectiveTo, locale) })
+                                : t('result.effectiveFrom', { from: formatDate(capPeriod.effectiveFrom, locale) })}
+                            </p>
+                          </div>
+                        )}
+                      </details>
                     ) : null}
+
+                    {/* Upcoming pending cap change (e.g. RSO/County July-1 figures) */}
+                    {capChange && (
+                      <p className="mt-2 rounded-lg border border-border bg-surface-muted p-2 text-sm text-muted-foreground">
+                        {t('result.capChangeSoon', { date: formatDate(capChange.date, locale), who: t(capChangeAuthorityKey) })}
+                      </p>
+                    )}
                   </>
                 )}
               </div>

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { capStaleness, stalenessMessage, rightsText, capLabel, isCovered } from '@/lib/content/rights';
+import { capStaleness, stalenessMessage, rightsText, capLabel, isCovered, caveatAuthorityKey, capPeriodFor, upcomingCapChange } from '@/lib/content/rights';
 import { translate } from '@/lib/i18n/t';
 import { CATALOG } from '@/lib/i18n/catalog';
 import { LEGAL } from '@/lib/legal/constants';
@@ -120,5 +120,53 @@ describe('legal positioning (information, not advice)', () => {
     const a = t('faq.a6').toLowerCase();
     expect(a).toContain('general legal information');
     expect(a).toContain('specific situation');
+  });
+});
+
+describe('caveatAuthorityKey (increase-checker routing)', () => {
+  it('routes incorporated-city renters to a generic city office, never LAHD', () => {
+    expect(caveatAuthorityKey('AB1482', true)).toBe('staleness.authority.cityGeneric');
+    expect(t(caveatAuthorityKey('AB1482', true)).toLowerCase()).not.toContain('lahd');
+  });
+  it('routes City-of-LA RSO/AB1482 to LAHD', () => {
+    expect(caveatAuthorityKey('AB1482', false)).toBe('staleness.authority.lahd');
+    expect(caveatAuthorityKey('RSO')).toBe('staleness.authority.lahd');
+  });
+  it('routes County regimes to DCBA', () => {
+    expect(caveatAuthorityKey('COUNTY_RSTPO')).toBe('staleness.authority.dcba');
+    expect(caveatAuthorityKey('COUNTY_JCO')).toBe('staleness.authority.dcba');
+  });
+});
+
+describe('capPeriodFor', () => {
+  it('returns the active RSO period with its dated source', () => {
+    const p = capPeriodFor('RSO', new Date('2026-06-02'));
+    expect(p?.value).toBe(3);
+    expect(p?.source).toBe('LAHD');
+  });
+  it('returns the pending (null) RSO period after 2026-06-30', () => {
+    expect(capPeriodFor('RSO', new Date('2026-08-01'))?.value).toBeNull();
+  });
+  it('returns null for regimes without a cap', () => {
+    expect(capPeriodFor('JCO_ONLY')).toBeNull();
+    expect(capPeriodFor('COUNTY_JCO')).toBeNull();
+  });
+});
+
+describe('upcomingCapChange', () => {
+  it('flags the July 1, 2026 RSO change inside the 90-day window', () => {
+    expect(upcomingCapChange('RSO', new Date('2026-06-22'))).toEqual({ date: '2026-07-01' });
+  });
+  it('flags the County change too', () => {
+    expect(upcomingCapChange('COUNTY_RSTPO', new Date('2026-06-22'))).toEqual({ date: '2026-07-01' });
+  });
+  it('does not flag when the change is more than 90 days out', () => {
+    expect(upcomingCapChange('RSO', new Date('2026-03-01'))).toBeNull();
+  });
+  it('does not flag once the pending figure is already in effect', () => {
+    expect(upcomingCapChange('RSO', new Date('2026-08-01'))).toBeNull();
+  });
+  it('returns null for AB1482 (next figure already known, not pending)', () => {
+    expect(upcomingCapChange('AB1482', new Date('2026-06-22'))).toBeNull();
   });
 });
