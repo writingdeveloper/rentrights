@@ -1,9 +1,8 @@
 import type { Metadata, Viewport } from 'next';
 import { Fraunces, Inter } from 'next/font/google';
-import { cookies, headers } from 'next/headers';
 import './globals.css';
 import { LocaleProvider } from '@/lib/i18n/LocaleProvider';
-import { pickInitialLocale } from '@/lib/i18n/detect';
+import { getServerLocale, isForcedEsPath } from '@/lib/i18n/server-locale';
 import { translate } from '@/lib/i18n/t';
 import { CATALOG } from '@/lib/i18n/catalog';
 import { siteUrl } from '@/lib/seo/site-url';
@@ -15,22 +14,6 @@ import { organizationJsonLd, webSiteJsonLd, webApplicationJsonLd } from '@/lib/s
 const inter = Inter({ variable: '--font-inter', subsets: ['latin'], display: 'swap' });
 const fraunces = Fraunces({ variable: '--font-fraunces', subsets: ['latin'], display: 'swap', axes: ['opsz', 'SOFT', 'WONK'] });
 
-async function getLocale() {
-  const h = await headers();
-  // The /es route (via middleware) forces Spanish regardless of cookie/Accept-Language.
-  const forced = h.get('x-rr-locale');
-  if (forced === 'en' || forced === 'es') return forced;
-  const cookieValue = (await cookies()).get('rr_locale')?.value;
-  return pickInitialLocale(cookieValue, h.get('accept-language'));
-}
-
-// True only on the /es URL (the middleware sets this header just there), so it
-// identifies the PATH for canonical/hreflang — distinct from a Spanish rendering
-// of "/" that an Accept-Language: es user negotiates.
-async function isSpanishPath() {
-  return (await headers()).get('x-rr-locale') === 'es';
-}
-
 export const viewport: Viewport = {
   colorScheme: 'light dark',
   themeColor: [
@@ -40,13 +23,13 @@ export const viewport: Viewport = {
 };
 
 export async function generateMetadata(): Promise<Metadata> {
-  const locale = await getLocale();
+  const locale = await getServerLocale();
   const c = CATALOG[locale];
   const title = translate(c, 'meta.title', undefined, CATALOG.en);
   const description = translate(c, 'meta.description', undefined, CATALOG.en);
   const keywords = translate(c, 'meta.keywords', undefined, CATALOG.en);
   const ogLocale = locale === 'es' ? 'es_ES' : 'en_US';
-  const esPath = await isSpanishPath();
+  const esPath = await isForcedEsPath();
   const alternates = pageAlternates(esPath);
   return {
     metadataBase: new URL(siteUrl()),
@@ -82,7 +65,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  const locale = await getLocale();
+  const locale = await getServerLocale();
   const base = siteUrl();
   return (
     <html lang={locale} className={`${inter.variable} ${fraunces.variable} h-full antialiased`}>

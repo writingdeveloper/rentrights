@@ -12,3 +12,16 @@ export function pageAlternates(isEsPath: boolean): {
     languages: { en: '/', es: '/es', 'x-default': '/' },
   };
 }
+
+// Same pattern for the cornerstone guide: EN at /guides/<slug>, ES at /es/guides/<slug>.
+export function cornerstoneAlternates(isEsPath: boolean): {
+  canonical: string;
+  languages: Record<string, string>;
+} {
+  const en = '/guides/la-rent-increase-2026';
+  const es = '/es/guides/la-rent-increase-2026';
+  return {
+    canonical: isEsPath ? es : en,
+    languages: { en, es, 'x-default': en },
+  };
+}

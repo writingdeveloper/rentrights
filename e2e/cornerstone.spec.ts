@@ -19,3 +19,13 @@ test('cornerstone guide renders the dated caps, CTA, and schema', async ({ page 
   expect(ld).toContain('"Article"');
   expect(ld).toContain('"FAQPage"');
 });
+
+test('Spanish mirror renders at /es/guides/... with html lang=es', async ({ page }) => {
+  await page.goto('/es/guides/la-rent-increase-2026');
+  await expect(
+    page.getByRole('heading', { level: 1, name: /Cuánto puede subir mi renta/i }),
+  ).toBeVisible();
+  await expect(page.getByText(/hasta 3%/i).first()).toBeVisible();
+  // The proxy forces Spanish, so the root layout sets <html lang="es">.
+  await expect(page.locator('html')).toHaveAttribute('lang', 'es');
+});

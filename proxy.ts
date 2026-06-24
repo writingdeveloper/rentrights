@@ -11,10 +11,14 @@ import type { NextRequest } from 'next/server';
 // file is the renamed `middleware.ts`.
 export function proxy(req: NextRequest) {
   const url = req.nextUrl.clone();
-  url.pathname = '/';
+  // Strip the /es prefix and rewrite to the underlying route, forcing Spanish:
+  //   /es                              -> /
+  //   /es/guides/la-rent-increase-2026 -> /guides/la-rent-increase-2026
+  const stripped = url.pathname.replace(/^\/es(?=\/|$)/, '');
+  url.pathname = stripped === '' ? '/' : stripped;
   const headers = new Headers(req.headers);
   headers.set('x-rr-locale', 'es');
   return NextResponse.rewrite(url, { request: { headers } });
 }
 
-export const config = { matcher: ['/es', '/es/'] };
+export const config = { matcher: ['/es', '/es/', '/es/guides/:path*'] };

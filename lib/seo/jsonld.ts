@@ -72,6 +72,7 @@ export function articleJsonLd(o: {
   headline: string;
   description: string;
   dateModified: string;
+  inLanguage?: string;
 }): Json {
   return {
     '@context': 'https://schema.org',
@@ -79,7 +80,7 @@ export function articleJsonLd(o: {
     headline: o.headline,
     description: o.description,
     mainEntityOfPage: o.url,
-    inLanguage: 'en',
+    inLanguage: o.inLanguage ?? 'en',
     dateModified: o.dateModified,
     datePublished: o.dateModified,
     author: { '@id': `${o.base}#org` },
