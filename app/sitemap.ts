@@ -6,6 +6,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const base = siteUrl();
   const lastModified = new Date(CONTENT_LAST_UPDATED);
   const languages = { en: `${base}/`, es: `${base}/es` };
+  const guideLanguages = {
+    en: `${base}/guides/la-rent-increase-2026`,
+    es: `${base}/es/guides/la-rent-increase-2026`,
+  };
   return [
     {
       url: `${base}/`,
@@ -23,11 +27,20 @@ export default function sitemap(): MetadataRoute.Sitemap {
       alternates: { languages },
     },
     {
-      // Cornerstone SEO/GEO explainer.
+      // Cornerstone SEO/GEO explainer (EN).
       url: `${base}/guides/la-rent-increase-2026`,
       lastModified,
       changeFrequency: 'monthly',
       priority: 0.7,
+      alternates: { languages: guideLanguages },
+    },
+    {
+      // Cornerstone explainer (ES) — its own crawlable URL.
+      url: `${base}/es/guides/la-rent-increase-2026`,
+      lastModified,
+      changeFrequency: 'monthly',
+      priority: 0.6,
+      alternates: { languages: guideLanguages },
     },
   ];
 }
