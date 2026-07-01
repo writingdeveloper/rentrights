@@ -25,13 +25,13 @@ describe('checkIncrease', () => {
     expect(over.allowedMaxRent).toBe(2160);
   });
 
-  it('RSO pending range: within / over / uncertain', () => {
-    expect(checkIncrease({ regime: 'RSO', currentRent: 2000, proposedRent: 2010, onDate: PENDING }).verdict).toBe('WITHIN_RANGE');
-    expect(checkIncrease({ regime: 'RSO', currentRent: 2000, proposedRent: 2100, onDate: PENDING }).verdict).toBe('OVER_RANGE');
-    const u = checkIncrease({ regime: 'RSO', currentRent: 2000, proposedRent: 2050, onDate: PENDING });
-    expect(u.verdict).toBe('UNCERTAIN_RANGE');
-    expect(u.allowedMaxAtFloor).toBe(2020);
-    expect(u.allowedMaxAtCeiling).toBe(2080);
+  it('RSO 3% cap on 2026-07-01+ (published figure): within / over', () => {
+    expect(checkIncrease({ regime: 'RSO', currentRent: 2000, proposedRent: 2010, onDate: PENDING }).verdict).toBe('WITHIN_CAP');
+    expect(checkIncrease({ regime: 'RSO', currentRent: 2000, proposedRent: 2100, onDate: PENDING }).verdict).toBe('OVER_CAP');
+    const r = checkIncrease({ regime: 'RSO', currentRent: 2000, proposedRent: 2060, onDate: PENDING });
+    expect(r.verdict).toBe('WITHIN_CAP');
+    expect(r.capPct).toBe(3);
+    expect(r.allowedMaxRent).toBe(2060);
   });
 
   it('JCO_ONLY: no cap', () => {
@@ -73,13 +73,11 @@ describe('checkIncrease', () => {
     expect(checkIncrease({ regime: 'COUNTY_JCO', currentRent: 2000, proposedRent: 9999, onDate: NOW }).verdict).toBe('NO_CAP');
   });
 
-  it('COUNTY_RSTPO pending range (after 2026-06-30, ceiling 3% / no floor): within / uncertain / over', () => {
-    // 60% of CPI capped at 3%, exact % pending DCBA → ceiling 3% ($2060), floor 0% ($2000).
-    expect(checkIncrease({ regime: 'COUNTY_RSTPO', currentRent: 2000, proposedRent: 2000, onDate: PENDING }).verdict).toBe('WITHIN_RANGE');
-    const u = checkIncrease({ regime: 'COUNTY_RSTPO', currentRent: 2000, proposedRent: 2040, onDate: PENDING });
-    expect(u.verdict).toBe('UNCERTAIN_RANGE');
-    expect(u.capCeilingPct).toBe(3);
-    expect(u.allowedMaxAtCeiling).toBe(2060);
-    expect(checkIncrease({ regime: 'COUNTY_RSTPO', currentRent: 2000, proposedRent: 2100, onDate: PENDING }).verdict).toBe('OVER_RANGE');
+  it('COUNTY_RSTPO 1.919% cap on 2026-07-01+ (published figure): within / over', () => {
+    // DCBA published 1.919% (60% of CPI, max 3%) — max rent = 2000 * 1.01919 = 2038.38.
+    expect(checkIncrease({ regime: 'COUNTY_RSTPO', currentRent: 2000, proposedRent: 2030, onDate: PENDING }).verdict).toBe('WITHIN_CAP');
+    const over = checkIncrease({ regime: 'COUNTY_RSTPO', currentRent: 2000, proposedRent: 2100, onDate: PENDING });
+    expect(over.verdict).toBe('OVER_CAP');
+    expect(over.capPct).toBe(1.919);
   });
 });

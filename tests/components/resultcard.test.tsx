@@ -58,14 +58,14 @@ describe('ResultCard', () => {
     expect(screen.getByText(/verified June 4, 2026/i)).toBeTruthy();
   });
 
-  it('hides the freshness badge (shows the pending notice instead) when the cap is stale', () => {
-    // 2026-07-15: the RSO cap is pending publication (value:null from 2026-07-01).
+  it('shows the freshness badge on 2026-07-15 (RSO 3% published, not pending)', () => {
+    // 2026-07-15: RSO has value=3 effective 2026-07-01; not stale, so badge shows.
     renderCard(
       { regime: 'RSO', confidence: 'high', reasons: [{ code: 'IN_LA_CITY' }], questions: [] },
       { lastVerified: '2026-06-04', now: new Date('2026-07-15') },
     );
-    expect(screen.queryByText(/verified June 4, 2026/i)).toBeNull();
-    expect(screen.getByText(/pending publication/i)).toBeTruthy();
+    expect(screen.getByText(/verified June 4, 2026/i)).toBeTruthy();
+    expect(screen.queryByText(/pending publication/i)).toBeNull();
   });
 
   it('renders no freshness badge for non-detailed results even with a lastVerified date', () => {
@@ -163,7 +163,8 @@ describe('ResultCard', () => {
     expect(input).toBeTruthy();
   });
 
-  it('omits the editable rent field and $ example when the RSO cap is pending (no single numeric value)', () => {
+  it('shows the editable rent field and $ example on 2026-07-15 (RSO 3% published)', () => {
+    // RSO has value=3 effective 2026-07-01; $ example and input should render.
     renderCard(
       {
         regime: 'RSO',
@@ -173,8 +174,8 @@ describe('ResultCard', () => {
       },
       { now: new Date('2026-07-15') },
     );
-    expect(screen.queryByText(/example/i)).toBeNull();
-    expect(screen.queryByRole('spinbutton')).toBeNull();
+    expect(screen.getByText(/example/i)).toBeTruthy();
+    expect(screen.getByRole('spinbutton')).toBeTruthy();
   });
 
   it('renders exactly one consolidated honest/confirm line (not multiple banners)', () => {

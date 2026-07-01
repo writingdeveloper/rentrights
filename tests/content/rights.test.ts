@@ -14,15 +14,13 @@ describe('capStaleness', () => {
   it('is not stale for RSO on 2026-06-02', () => {
     expect(capStaleness('RSO', new Date('2026-06-02'))?.stale).toBe(false);
   });
-  it('flags RSO as pending once the new-formula period begins', () => {
+  it('RSO is not stale on 2026-08-01 (published 3% covers through 2027-06-30)', () => {
     const s = capStaleness('RSO', new Date('2026-08-01'));
-    expect(s?.stale).toBe(true);
-    expect(s?.reason).toBe('pending publication');
+    expect(s?.stale).toBe(false);
   });
-  it('flags County RSTPO as pending once the published figure lapses (after 2026-06-30)', () => {
+  it('County RSTPO is not stale on 2026-08-01 (published 1.919% covers through 2027-06-30)', () => {
     const s = capStaleness('COUNTY_RSTPO', new Date('2026-08-01'));
-    expect(s?.stale).toBe(true);
-    expect(s?.reason).toBe('pending publication');
+    expect(s?.stale).toBe(false);
   });
 });
 
@@ -56,8 +54,8 @@ describe('capLabel', () => {
   it('formats the RSO cap on 2026-06-02', () => {
     expect(capLabel('RSO', t, new Date('2026-06-02'))).toBe('up to 3%');
   });
-  it('formats the County cap as pending (ceiling-only) after 2026-06-30', () => {
-    expect(capLabel('COUNTY_RSTPO', t, new Date('2026-08-01'))).toContain('up to 3%');
+  it('formats the County cap as 1.919% after 2026-07-01 (figure published)', () => {
+    expect(capLabel('COUNTY_RSTPO', t, new Date('2026-08-01'))).toBe('up to 1.919%');
   });
 });
 
@@ -144,8 +142,8 @@ describe('capPeriodFor', () => {
     expect(p?.value).toBe(3);
     expect(p?.source).toBe('LAHD');
   });
-  it('returns the pending (null) RSO period after 2026-06-30', () => {
-    expect(capPeriodFor('RSO', new Date('2026-08-01'))?.value).toBeNull();
+  it('returns the published RSO period (value 3) after 2026-07-01', () => {
+    expect(capPeriodFor('RSO', new Date('2026-08-01'))?.value).toBe(3);
   });
   it('returns null for regimes without a cap', () => {
     expect(capPeriodFor('JCO_ONLY')).toBeNull();
@@ -154,11 +152,11 @@ describe('capPeriodFor', () => {
 });
 
 describe('upcomingCapChange', () => {
-  it('flags the July 1, 2026 RSO change inside the 90-day window', () => {
-    expect(upcomingCapChange('RSO', new Date('2026-06-22'))).toEqual({ date: '2026-07-01' });
+  it('does not flag the 2026-07-01 RSO change (figure now published, not pending)', () => {
+    expect(upcomingCapChange('RSO', new Date('2026-06-22'))).toBeNull();
   });
-  it('flags the County change too', () => {
-    expect(upcomingCapChange('COUNTY_RSTPO', new Date('2026-06-22'))).toEqual({ date: '2026-07-01' });
+  it('does not flag the 2026-07-01 County change (figure now published, not pending)', () => {
+    expect(upcomingCapChange('COUNTY_RSTPO', new Date('2026-06-22'))).toBeNull();
   });
   it('does not flag when the change is more than 90 days out', () => {
     expect(upcomingCapChange('RSO', new Date('2026-03-01'))).toBeNull();

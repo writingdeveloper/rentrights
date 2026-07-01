@@ -5,12 +5,12 @@ export interface CapPeriod extends DatedValue<number | null> {
   ceilingPct?: number;
 }
 
-// All figures re-verified 2026-06-19 against LAHD / CA Civil Code / LA County DCBA —
-// see docs/superpowers/plans/2026-06-04-rentrights-legal-corrections.md. The RSO
-// 2026-07-01 figure stays pending (new 90%-of-CPI formula, floor 1% / ceiling 4%);
-// "3% through 2027" is an uncorroborated third-party conflation and is NOT adopted.
+// All figures re-verified 2026-07-01 against LAHD / CA Civil Code / LA County DCBA —
+// see docs/superpowers/plans/2026-06-04-rentrights-legal-corrections.md. RSO 2026-07-01
+// figure (3%) confirmed on housing.lacity.gov/renter-protections-2; County figure
+// (1.919%) confirmed on dcba.lacounty.gov/rentstabilizationprogram/.
 export const LEGAL = {
-  lastVerified: '2026-06-19',
+  lastVerified: '2026-07-01',
 
   // RSO eligibility: certificate of occupancy on or before Oct 1, 1978.
   rsoBuildCutoffYear: 1978,
@@ -20,13 +20,13 @@ export const LEGAL = {
   rsoCapPct: [
     { value: 3, effectiveFrom: '2025-07-01', effectiveTo: '2026-06-30', source: 'LAHD', expectedUpdate: '2026-07-01' },
     {
-      value: null,
+      value: 3,
       floorPct: 1,
       ceilingPct: 4,
       effectiveFrom: '2026-07-01',
+      effectiveTo: '2027-06-30',
       source: 'LAHD',
-      expectedUpdate: '2026-07-01',
-      note: 'New formula: 90% of CPI, floor 1% / ceiling 4%. LAHD publishes the exact % ~July 1.',
+      expectedUpdate: '2027-07-01',
     },
   ] as CapPeriod[],
 
@@ -44,15 +44,12 @@ export const LEGAL = {
   countyCapPct: [
     { value: 1.93, effectiveFrom: '2025-07-01', effectiveTo: '2026-06-30', source: 'LA County DCBA RSTPO (60% of CPI, max 3%)', expectedUpdate: '2026-07-01' },
     {
-      // Pending: DCBA publishes the 2026-07-01 figure (60% of CPI, capped at 3%)
-      // ~July 1. No published floor for the County formula → treated as 0% by the
-      // increase checker (ceiling-only range), mirroring the RSO pending entry.
-      value: null,
+      value: 1.919,
       ceilingPct: 3,
       effectiveFrom: '2026-07-01',
+      effectiveTo: '2027-06-30',
       source: 'LA County DCBA RSTPO (60% of CPI, max 3%)',
-      expectedUpdate: '2026-07-01',
-      note: 'DCBA publishes the exact % ~July 1.',
+      expectedUpdate: '2027-07-01',
     },
   ] as CapPeriod[],
 
