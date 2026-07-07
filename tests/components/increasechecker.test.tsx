@@ -1,13 +1,24 @@
 // @vitest-environment jsdom
-import { afterEach, describe, it, expect } from 'vitest';
+import { afterEach, beforeEach, describe, it, expect, vi } from 'vitest';
 import { cleanup, render, screen, fireEvent } from '@testing-library/react';
 import { IncreaseChecker } from '@/components/IncreaseChecker';
 import { LocaleProvider } from '@/lib/i18n/LocaleProvider';
 import { CATALOG } from '@/lib/i18n/catalog';
 
-afterEach(cleanup);
-
 describe('IncreaseChecker', () => {
+  // Pin "now" inside the published RSO 3% period (value != null) so the WITHIN_CAP /
+  // OVER_CAP verdicts are deterministic no matter when the suite runs. After the
+  // 2026-06-30 cap-change date the live RSO cap becomes a pending "being updated"
+  // range (WITHIN_RANGE / OVER_RANGE) — that transition has its own test below.
+  // Only Date is faked, so React's scheduler/microtasks are untouched.
+  beforeEach(() => {
+    vi.useFakeTimers({ toFake: ['Date'] });
+    vi.setSystemTime(new Date('2026-06-15T12:00:00Z'));
+  });
+  afterEach(() => {
+    cleanup();
+    vi.useRealTimers();
+  });
   it('flags an over-cap increase for an RSO unit', () => {
     render(
       <LocaleProvider initialLocale="en">
@@ -96,5 +107,24 @@ describe('IncreaseChecker', () => {
     expect(CATALOG.en['increase.uncertain'].length).toBeGreaterThan(0);
     expect(typeof CATALOG.es['increase.uncertain']).toBe('string');
     expect(CATALOG.es['increase.uncertain'].length).toBeGreaterThan(0);
+  });
+
+  it('renders the "cap is being updated" range verdict after the RSO cap-change date', () => {
+    // Post-2026-06-30 the RSO cap is a pending 90%-of-CPI band (floor 1% / ceiling 4%)
+    // until LAHD publishes the exact %, so the checker shows a range — not a fixed cap.
+    vi.setSystemTime(new Date('2026-07-07T12:00:00Z'));
+    render(
+      <LocaleProvider initialLocale="en">
+        <IncreaseChecker regime="RSO" />
+      </LocaleProvider>,
+    );
+    fireEvent.change(screen.getByLabelText('Current monthly rent'), { target: { value: '2000' } });
+    fireEvent.change(screen.getByLabelText('Proposed new rent'), { target: { value: '2020' } });
+    // Short word verdict still reads "within the legal limit"…
+    expect(screen.getByText(/Within the legal limit/i)).toBeTruthy();
+    // …but the detailed sentence is the range/"being updated" copy, not "within the legal cap".
+    expect(screen.getByText(/within the legal range/i)).toBeTruthy();
+    expect(screen.getByText(/being updated/i)).toBeTruthy();
+    expect(screen.queryByText(/within the legal cap/i)).toBeNull();
   });
 });

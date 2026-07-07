@@ -4,7 +4,7 @@ export interface HelpOrg {
   url: string; // current, web-verified
   phone?: string; // current, web-verified
   // Free online intake/consultation (so renters can ask for help without calling).
-  // Government / government-partnership portals only; web-verified 2026-06-11.
+  // Government / government-partnership portals only; each confirmed HTTP 200 on 2026-07-07.
   onlineUrl?: string;
   onlineLabelKey?: string;
   languages?: string[];
@@ -13,8 +13,9 @@ export interface HelpOrg {
 
 /**
  * Directory of free tenant-help organizations serving Los Angeles.
- * All URLs and phone numbers are web-verified as of 2026-06-04 (agent web-verification;
- * human re-check still required before public launch).
+ * Every phone number and URL was directly web-verified against each org's official
+ * site on 2026-07-07 — all confirmed current, no drift. Online-intake URLs
+ * (LAHD / DCBA / Stay Housed) re-confirmed HTTP 200 the same day.
  */
 export const HELP_ORGS: HelpOrg[] = [
   {
@@ -86,6 +87,19 @@ export const HELP_ORGS: HelpOrg[] = [
     phone: '(800) 433-6251',
     languages: ['English', 'Spanish'],
     tags: ['legal-aid'],
+  },
+  {
+    // Fair-housing nonprofit (not a law firm): free landlord-tenant counseling,
+    // housing-discrimination investigation, and clinics/workshops; also publishes a
+    // monthly affordable/Section 8 rental listing (Project Place) for LA + Ventura.
+    // Serves all of LA County, so it is NOT jurisdiction-locked (no city/county tag).
+    // Phone/URL directly web-verified 2026-07-07 against housingrightscenter.org.
+    name: 'Housing Rights Center',
+    descriptionKey: 'help.HRC.description',
+    url: 'https://www.housingrightscenter.org',
+    phone: '(800) 477-5977',
+    languages: ['English', 'Spanish'],
+    tags: ['workshop', 'hotline'],
   },
   {
     // Self-help eviction-Answer tool (NOT a legal-aid org — it says so itself).

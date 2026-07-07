@@ -128,6 +128,7 @@
   "help.CES.description": "Grupo comunitario de inquilinos desde 1973; Clínica de Derechos del Inquilino gratuita los sábados por Zoom y apoyo ante desalojos indebidos en LA.",
   "help.ICLC.description": "Bufete de derecho de pobreza que combate la falta de vivienda y la pérdida de vivienda de inquilinos de bajos ingresos, veteranos y personas con discapacidad en LA.",
   "help.NLSLA.description": "Ayuda legal gratuita para defensa contra desalojos, control de rentas y discriminación de vivienda para residentes de bajos ingresos en todo el Condado de LA.",
+  "help.HRC.description": "Organización sin fines de lucro de vivienda justa: consejería gratuita entre inquilinos y propietarios, investigación de discriminación de vivienda y educación. También publica un listado mensual de vivienda asequible y de Sección 8 (Project Place) para los condados de LA y Ventura.",
   "help.TPT.description": "Herramienta gratuita y bilingüe de autoayuda para responder a una demanda de desalojo presentando su Contestación (Answer). Operada por organizaciones de inquilinos — no es un bufete y no da asesoría legal.",
   "eviction.summary": "¿Recibió un aviso de desalojo o papeles de la corte? Actúe ya — los plazos son cortos.",
   "eviction.body": "Si le entregaron una demanda de desalojo (un \"unlawful detainer\"), por lo general tiene {days} días hábiles de corte — sin contar fines de semana ni días feriados de la corte — para presentar una respuesta, o el arrendador puede ganar automáticamente. Actúe rápido.",
