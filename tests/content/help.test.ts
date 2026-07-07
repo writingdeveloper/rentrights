@@ -25,4 +25,16 @@ describe('HELP_ORGS', () => {
     const list = orgsFor({ unincorporatedCounty: true });
     expect(list[0].tags).toContain('county');
   });
+
+  it('includes Housing Rights Center with a phone, https url, and i18n key', () => {
+    const hrc = HELP_ORGS.find((o) => o.name.toLowerCase().includes('housing rights center'));
+    expect(hrc).toBeDefined();
+    expect(hrc!.phone && hrc!.phone.length > 0).toBe(true);
+    expect(hrc!.url.startsWith('https://')).toBe(true);
+    expect(hrc!.descriptionKey).toBe('help.HRC.description');
+    expect(hrc!.tags.length).toBeGreaterThan(0);
+    // Not jurisdiction-locked: HRC serves all LA County, so it must survive the
+    // incorporated-city filter (which only drops the City-of-LA-only org).
+    expect(orgsFor({ incorporatedCity: true }).some((o) => o === hrc)).toBe(true);
+  });
 });

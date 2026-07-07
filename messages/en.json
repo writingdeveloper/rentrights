@@ -128,6 +128,7 @@
   "help.CES.description": "Grassroots tenant-organizing group since 1973; free Saturday Tenants' Rights Clinic via Zoom and wrongful-eviction support in LA.",
   "help.ICLC.description": "Poverty-law firm fighting homelessness and housing loss for low-income tenants, veterans, and people with disabilities in LA.",
   "help.NLSLA.description": "Free legal aid for eviction defense, rent control, and housing discrimination for low-income residents throughout LA County.",
+  "help.HRC.description": "Nonprofit fair-housing agency: free landlord-tenant counseling, housing-discrimination investigation, and education. Also publishes a monthly affordable & Section 8 rental listing (Project Place) for LA & Ventura counties.",
   "help.TPT.description": "Free, bilingual self-help tool to respond to an eviction lawsuit by filing your Answer. Run by tenant organizations — it is not a law firm and does not give legal advice.",
   "eviction.summary": "Got an eviction notice or court papers? Act now — deadlines are short.",
   "eviction.body": "If you've been served with an eviction lawsuit (an \"unlawful detainer\"), you generally have {days} court days — not counting weekends or court holidays — to file a response, or the landlord can win automatically. Act quickly.",
