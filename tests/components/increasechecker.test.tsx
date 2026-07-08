@@ -110,9 +110,10 @@ describe('IncreaseChecker', () => {
   });
 
   it('renders the "cap is being updated" range verdict after the RSO cap-change date', () => {
-    // Post-2026-06-30 the RSO cap is a pending 90%-of-CPI band (floor 1% / ceiling 4%)
-    // until LAHD publishes the exact %, so the checker shows a range — not a fixed cap.
-    vi.setSystemTime(new Date('2026-07-07T12:00:00Z'));
+    // At the next cap change (2027-07-01) the RSO cap is again a pending 90%-of-CPI band
+    // (floor 1% / ceiling 4%) until LAHD publishes the exact %, so the checker shows a
+    // range — not a fixed cap. (2026-07-01–2027-06-30 is published at 3%.)
+    vi.setSystemTime(new Date('2027-07-07T12:00:00Z'));
     render(
       <LocaleProvider initialLocale="en">
         <IncreaseChecker regime="RSO" />

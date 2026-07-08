@@ -4,4 +4,4 @@
 // copy — NOT for result-screen-only changes (those aren't in the static HTML)
 // and NOT tied to LEGAL.lastVerified (legal figures can change without the
 // home content changing, and vice versa).
-export const CONTENT_LAST_UPDATED = '2026-06-19';
+export const CONTENT_LAST_UPDATED = '2026-07-07';
