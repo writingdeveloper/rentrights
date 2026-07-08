@@ -14,13 +14,18 @@ describe('capStaleness', () => {
   it('is not stale for RSO on 2026-06-02', () => {
     expect(capStaleness('RSO', new Date('2026-06-02'))?.stale).toBe(false);
   });
-  it('flags RSO as pending once the new-formula period begins', () => {
-    const s = capStaleness('RSO', new Date('2026-08-01'));
+  it('is not stale for RSO/County in the published 2026-07 window', () => {
+    // LAHD 3% + DCBA 1.919% are published for 2026-07-01–2027-06-30 (verified 2026-07-07).
+    expect(capStaleness('RSO', new Date('2026-08-01'))?.stale).toBe(false);
+    expect(capStaleness('COUNTY_RSTPO', new Date('2026-08-01'))?.stale).toBe(false);
+  });
+  it('flags RSO as pending once the next new-formula period begins (2027-07-01)', () => {
+    const s = capStaleness('RSO', new Date('2027-08-01'));
     expect(s?.stale).toBe(true);
     expect(s?.reason).toBe('pending publication');
   });
-  it('flags County RSTPO as pending once the published figure lapses (after 2026-06-30)', () => {
-    const s = capStaleness('COUNTY_RSTPO', new Date('2026-08-01'));
+  it('flags County RSTPO as pending once the published figure lapses (after 2027-06-30)', () => {
+    const s = capStaleness('COUNTY_RSTPO', new Date('2027-08-01'));
     expect(s?.stale).toBe(true);
     expect(s?.reason).toBe('pending publication');
   });
@@ -56,8 +61,12 @@ describe('capLabel', () => {
   it('formats the RSO cap on 2026-06-02', () => {
     expect(capLabel('RSO', t, new Date('2026-06-02'))).toBe('up to 3%');
   });
-  it('formats the County cap as pending (ceiling-only) after 2026-06-30', () => {
-    expect(capLabel('COUNTY_RSTPO', t, new Date('2026-08-01'))).toContain('up to 3%');
+  it('formats the published 2026-07 figures (RSO 3%, County 1.919%)', () => {
+    expect(capLabel('RSO', t, new Date('2026-08-01'))).toBe('up to 3%');
+    expect(capLabel('COUNTY_RSTPO', t, new Date('2026-08-01'))).toBe('up to 1.919%');
+  });
+  it('formats the County cap as pending (ceiling-only) after 2027-06-30', () => {
+    expect(capLabel('COUNTY_RSTPO', t, new Date('2027-08-01'))).toContain('up to 3%');
   });
 });
 
@@ -144,8 +153,11 @@ describe('capPeriodFor', () => {
     expect(p?.value).toBe(3);
     expect(p?.source).toBe('LAHD');
   });
-  it('returns the pending (null) RSO period after 2026-06-30', () => {
-    expect(capPeriodFor('RSO', new Date('2026-08-01'))?.value).toBeNull();
+  it('returns the published RSO 3% period in the 2026-07 window', () => {
+    expect(capPeriodFor('RSO', new Date('2026-08-01'))?.value).toBe(3);
+  });
+  it('returns the pending (null) RSO period after 2027-06-30', () => {
+    expect(capPeriodFor('RSO', new Date('2027-08-01'))?.value).toBeNull();
   });
   it('returns null for regimes without a cap', () => {
     expect(capPeriodFor('JCO_ONLY')).toBeNull();
@@ -154,11 +166,11 @@ describe('capPeriodFor', () => {
 });
 
 describe('upcomingCapChange', () => {
-  it('flags the July 1, 2026 RSO change inside the 90-day window', () => {
-    expect(upcomingCapChange('RSO', new Date('2026-06-22'))).toEqual({ date: '2026-07-01' });
+  it('flags the July 1, 2027 RSO change inside the 90-day window', () => {
+    expect(upcomingCapChange('RSO', new Date('2027-06-22'))).toEqual({ date: '2027-07-01' });
   });
   it('flags the County change too', () => {
-    expect(upcomingCapChange('COUNTY_RSTPO', new Date('2026-06-22'))).toEqual({ date: '2026-07-01' });
+    expect(upcomingCapChange('COUNTY_RSTPO', new Date('2027-06-22'))).toEqual({ date: '2027-07-01' });
   });
   it('does not flag when the change is more than 90 days out', () => {
     expect(upcomingCapChange('RSO', new Date('2026-03-01'))).toBeNull();

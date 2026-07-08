@@ -18,8 +18,8 @@ describe('cornerstoneRows', () => {
     expect(co.cap).toMatch(/%/);
   });
 
-  it('reflects the RSO pending range once the published figure lapses (after 2026-06-30)', () => {
-    const rows = cornerstoneRows(new Date('2026-08-01'));
+  it('reflects the RSO pending range once the published figure lapses (after 2027-06-30)', () => {
+    const rows = cornerstoneRows(new Date('2027-08-01'));
     const rso = rows.find((r) => r.key === 'RSO')!;
     expect(rso.cap).toMatch(/1[–-]4%/);
     expect(rso.cap.toLowerCase()).toContain('lahd');

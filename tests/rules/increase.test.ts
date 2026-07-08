@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { checkIncrease } from '@/lib/rules/increase';
 
 const NOW = new Date('2026-06-02'); // RSO 3%, AB1482 8.0%
-const PENDING = new Date('2026-08-01'); // RSO new-formula (value null, floor 1 / ceiling 4)
+const PENDING = new Date('2027-08-01'); // 2027-07-01 pending window (value null, floor 1 / ceiling 4)
 
 describe('checkIncrease', () => {
   it('RSO 3%: within cap', () => {
@@ -32,6 +32,16 @@ describe('checkIncrease', () => {
     expect(u.verdict).toBe('UNCERTAIN_RANGE');
     expect(u.allowedMaxAtFloor).toBe(2020);
     expect(u.allowedMaxAtCeiling).toBe(2080);
+  });
+
+  it('publishes RSO 3% and County 1.919% for the 2026-07-01–2027-06-30 window', () => {
+    const d = new Date('2026-08-01'); // inside the published 2026-07 window
+    const rso = checkIncrease({ regime: 'RSO', currentRent: 2000, proposedRent: 2060, onDate: d });
+    expect(rso.verdict).toBe('WITHIN_CAP');
+    expect(rso.capPct).toBe(3);
+    const co = checkIncrease({ regime: 'COUNTY_RSTPO', currentRent: 2000, proposedRent: 2030, onDate: d });
+    expect(co.verdict).toBe('WITHIN_CAP');
+    expect(co.capPct).toBe(1.919);
   });
 
   it('JCO_ONLY: no cap', () => {

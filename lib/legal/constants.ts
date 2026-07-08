@@ -5,12 +5,15 @@ export interface CapPeriod extends DatedValue<number | null> {
   ceilingPct?: number;
 }
 
-// All figures re-verified 2026-06-19 against LAHD / CA Civil Code / LA County DCBA —
-// see docs/superpowers/plans/2026-06-04-rentrights-legal-corrections.md. The RSO
-// 2026-07-01 figure stays pending (new 90%-of-CPI formula, floor 1% / ceiling 4%);
-// "3% through 2027" is an uncorroborated third-party conflation and is NOT adopted.
+// Figures re-verified 2026-07-07 against primary .gov sources. LAHD
+// (housing.lacity.gov/renter-protections-2) confirms the RSO 2026-07-01–2027-06-30
+// increase is 3% (new 90%-of-CPI formula, band 1%–4%). LA County DCBA's official
+// RSTPO bulletin (Revised 3/2/2026, "Past and Current Allowable Increases") lists the
+// 2026-07-01–2027-06-30 General increase as 1.919% (Small Property 2.919% / Luxury
+// 3.919%). Both replace the earlier "pending publication" placeholders — the prior
+// caution about an "uncorroborated 3%" is now resolved by the primary LAHD source.
 export const LEGAL = {
-  lastVerified: '2026-06-19',
+  lastVerified: '2026-07-07',
 
   // RSO eligibility: certificate of occupancy on or before Oct 1, 1978.
   rsoBuildCutoffYear: 1978,
@@ -20,13 +23,27 @@ export const LEGAL = {
   rsoCapPct: [
     { value: 3, effectiveFrom: '2025-07-01', effectiveTo: '2026-06-30', source: 'LAHD', expectedUpdate: '2026-07-01' },
     {
+      // LAHD published 3% for this window (housing.lacity.gov/renter-protections-2,
+      // read 2026-07-07): "the annual rent increase … effective July 1, 2026, through
+      // June 30, 2027, is 3%" — the new 90%-of-CPI formula (band 1%–4%) yields 3%.
+      value: 3,
+      effectiveFrom: '2026-07-01',
+      effectiveTo: '2027-06-30',
+      source: 'LAHD',
+      expectedUpdate: '2027-07-01',
+      note: 'LAHD set 3% for 2026-07-01–2027-06-30 under the new 90%-of-CPI formula (band 1%–4%).',
+    },
+    {
+      // 2027-07-01 figure not yet published — genuinely pending until LAHD sets it
+      // (~July 2027) under the 90%-of-CPI formula (band 1%–4%). value:null keeps the
+      // checker in its honest "cap is being updated" range state for that window.
       value: null,
       floorPct: 1,
       ceilingPct: 4,
-      effectiveFrom: '2026-07-01',
+      effectiveFrom: '2027-07-01',
       source: 'LAHD',
-      expectedUpdate: '2026-07-01',
-      note: 'New formula: 90% of CPI, floor 1% / ceiling 4%. LAHD publishes the exact % ~July 1.',
+      expectedUpdate: '2027-07-01',
+      note: 'New 90%-of-CPI formula; LAHD publishes the exact % ~July 1, 2027.',
     },
   ] as CapPeriod[],
 
@@ -44,15 +61,25 @@ export const LEGAL = {
   countyCapPct: [
     { value: 1.93, effectiveFrom: '2025-07-01', effectiveTo: '2026-06-30', source: 'LA County DCBA RSTPO (60% of CPI, max 3%)', expectedUpdate: '2026-07-01' },
     {
-      // Pending: DCBA publishes the 2026-07-01 figure (60% of CPI, capped at 3%)
-      // ~July 1. No published floor for the County formula → treated as 0% by the
-      // increase checker (ceiling-only range), mirroring the RSO pending entry.
-      value: null,
+      // DCBA published 1.919% for this window — official RSTPO bulletin (Revised
+      // 3/2/2026), "Past and Current Allowable Increases" table: General 1.919%,
+      // Small Property 2.919%, Luxury 3.919% (60% of CPI, standard cap 3%).
+      value: 1.919,
       ceilingPct: 3,
       effectiveFrom: '2026-07-01',
+      effectiveTo: '2027-06-30',
       source: 'LA County DCBA RSTPO (60% of CPI, max 3%)',
-      expectedUpdate: '2026-07-01',
-      note: 'DCBA publishes the exact % ~July 1.',
+      expectedUpdate: '2027-07-01',
+    },
+    {
+      // 2027-07-01 figure not yet published — genuinely pending until DCBA sets it
+      // (~July 2027), 60% of CPI capped at 3%. Mirrors the RSO pending entry.
+      value: null,
+      ceilingPct: 3,
+      effectiveFrom: '2027-07-01',
+      source: 'LA County DCBA RSTPO (60% of CPI, max 3%)',
+      expectedUpdate: '2027-07-01',
+      note: 'DCBA publishes the exact % ~July 1, 2027.',
     },
   ] as CapPeriod[],
 

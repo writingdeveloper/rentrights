@@ -59,10 +59,10 @@ describe('ResultCard', () => {
   });
 
   it('hides the freshness badge (shows the pending notice instead) when the cap is stale', () => {
-    // 2026-07-15: the RSO cap is pending publication (value:null from 2026-07-01).
+    // 2027-07-15: the RSO cap is pending publication again (value:null from 2027-07-01).
     renderCard(
       { regime: 'RSO', confidence: 'high', reasons: [{ code: 'IN_LA_CITY' }], questions: [] },
-      { lastVerified: '2026-06-04', now: new Date('2026-07-15') },
+      { lastVerified: '2026-06-04', now: new Date('2027-07-15') },
     );
     expect(screen.queryByText(/verified June 4, 2026/i)).toBeNull();
     expect(screen.getByText(/pending publication/i)).toBeTruthy();
@@ -171,7 +171,7 @@ describe('ResultCard', () => {
         reasons: [{ code: 'IN_LA_CITY' }],
         questions: [],
       },
-      { now: new Date('2026-07-15') },
+      { now: new Date('2027-07-15') },
     );
     expect(screen.queryByText(/example/i)).toBeNull();
     expect(screen.queryByRole('spinbutton')).toBeNull();
