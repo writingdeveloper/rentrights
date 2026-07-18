@@ -10,6 +10,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     en: `${base}/guides/la-rent-increase-2026`,
     es: `${base}/es/guides/la-rent-increase-2026`,
   };
+  const privacyLanguages = { en: `${base}/privacy`, es: `${base}/es/privacy` };
   return [
     {
       url: `${base}/`,
@@ -41,6 +42,22 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'monthly',
       priority: 0.6,
       alternates: { languages: guideLanguages },
+    },
+    {
+      // Privacy policy (EN).
+      url: `${base}/privacy`,
+      lastModified,
+      changeFrequency: 'yearly',
+      priority: 0.3,
+      alternates: { languages: privacyLanguages },
+    },
+    {
+      // Privacy policy (ES) — its own crawlable URL.
+      url: `${base}/es/privacy`,
+      lastModified,
+      changeFrequency: 'yearly',
+      priority: 0.2,
+      alternates: { languages: privacyLanguages },
     },
   ];
 }

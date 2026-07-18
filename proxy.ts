@@ -14,6 +14,7 @@ export function proxy(req: NextRequest) {
   // Strip the /es prefix and rewrite to the underlying route, forcing Spanish:
   //   /es                              -> /
   //   /es/guides/la-rent-increase-2026 -> /guides/la-rent-increase-2026
+  //   /es/privacy                      -> /privacy
   const stripped = url.pathname.replace(/^\/es(?=\/|$)/, '');
   url.pathname = stripped === '' ? '/' : stripped;
   const headers = new Headers(req.headers);
@@ -21,4 +22,4 @@ export function proxy(req: NextRequest) {
   return NextResponse.rewrite(url, { request: { headers } });
 }
 
-export const config = { matcher: ['/es', '/es/', '/es/guides/:path*'] };
+export const config = { matcher: ['/es', '/es/', '/es/guides/:path*', '/es/privacy'] };

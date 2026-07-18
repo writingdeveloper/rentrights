@@ -92,6 +92,11 @@ export function CornerstoneArticle({ now, locale, base, path }: { now: Date; loc
           <p>
             <Link href={homeHref} className="font-medium text-primary underline underline-offset-2">{s.cta}</Link>
           </p>
+          <p>
+            <Link href={locale === 'es' ? '/es/privacy' : '/privacy'} className="underline underline-offset-2">
+              {locale === 'es' ? 'Privacidad' : 'Privacy'}
+            </Link>
+          </p>
         </section>
       </article>
     </main>

@@ -234,8 +234,8 @@ export default function Home() {
       {/* ── SeoFaq always at the bottom of main so it stays below the fold ── */}
       <SeoFaq />
 
-      {/* ── Footer: unobtrusive open-source link ── */}
-      <footer className="mt-6 text-center">
+      {/* ── Footer: unobtrusive open-source + privacy links ── */}
+      <footer className="mt-6 flex justify-center gap-4 text-center">
         <a
           href="https://github.com/writingdeveloper/rentrights"
           target="_blank"
@@ -243,6 +243,12 @@ export default function Home() {
           className="text-sm text-muted-foreground underline underline-offset-2 hover:text-foreground"
         >
           {t('page.viewSource')}
+        </a>
+        <a
+          href={locale === 'es' ? '/es/privacy' : '/privacy'}
+          className="text-sm text-muted-foreground underline underline-offset-2 hover:text-foreground"
+        >
+          {t('page.privacy')}
         </a>
       </footer>
     </main>
