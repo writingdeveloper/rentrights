@@ -26,9 +26,9 @@ describe('TrustChips', () => {
     expect(screen.getByText('Updated June 12, 2026')).toBeTruthy();
   });
 
-  it('renders "Free, nothing saved" chip (EN)', () => {
+  it('renders "Free, no address saved" chip (EN)', () => {
     renderChips('en');
-    expect(screen.getByText('Free, nothing saved')).toBeTruthy();
+    expect(screen.getByText('Free, no address saved')).toBeTruthy();
   });
 
   it('renders bilingual chip', () => {
@@ -39,7 +39,7 @@ describe('TrustChips', () => {
   it('renders Spanish labels (ES)', () => {
     renderChips('es');
     expect(screen.getByText('Registros públicos')).toBeTruthy();
-    expect(screen.getByText('Gratis, no guardamos nada')).toBeTruthy();
+    expect(screen.getByText('Gratis, sin guardar su dirección')).toBeTruthy();
   });
 
   it('renders the date in ES template (formatted, ES)', () => {
