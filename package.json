@@ -40,6 +40,6 @@
   "overrides": {
     "postcss": "^8.5.10",
     "esbuild": "^0.28.1",
-    "undici": ">=7.28.0"
+    "undici": ">=8.10.0"
   }
 }
